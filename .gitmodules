@@ -1,0 +1,3 @@
+[submodule "Potronum/qt-solutions"]
+	path = Potronum/qt-solutions
+	url = https://github.com/QuasarApp/qt-solutions.git

@@ -1,8 +1,8 @@
 # Patronum
 This is extension libraries for control your daemons based on QtServices from qt-solutions.
 
-### Why is Patronum
-Because this library offer easy interface for control your demons like the magic of Harry Potter offer control dementors.
+### Why is Patronum?
+Becouse This library offers easy interface to control your demons likewise the magic of Harry Potter controls dementors
 
 ## Main features
 
