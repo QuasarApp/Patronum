@@ -1,0 +1,4 @@
+<map id="Patronum::ServicePrivate::sendCmd" name="Patronum::ServicePrivate::sendCmd">
+<area shape="rect" id="node2" href="$classPatronum_1_1LocalSocket.html#af377c356127078531ca56c651ba34169" title="isValid &#45; check validation of socket " alt="" coords="431,5,589,47"/>
+<area shape="rect" id="node3" href="$classPatronum_1_1LocalSocket.html#a940d36cc32f1061fd83e7c6a1df8b7ac" title="send &#45; send data to service " alt="" coords="224,35,383,76"/>
+</map>
