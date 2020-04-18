@@ -9,6 +9,7 @@ cmake_minimum_required(VERSION 3.1)
 
 project(Patronum LANGUAGES CXX)
 add_subdirectory(qt-solutions/qtservice)
+add_subdirectory(QuasarAppLib)
 
 include(qt-solutions/CMake/ProjectOut.cmake)
 include(qt-solutions/CMake/Version.cmake)
@@ -29,7 +30,7 @@ file(GLOB SOURCE_CPP
 )
 
 add_library(${PROJECT_NAME} SHARED ${SOURCE_CPP})
-target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::Core Qt-Service)
+target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::Core Qt-Service QuasarApp)
 target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")
 
 setVersion(0 1 0)

@@ -9,12 +9,16 @@ class LocalSocket;
 class IService;
 class IController;
 
-class ServicePrivate : public QObject
+class ServicePrivate: public QObject
 {
     Q_OBJECT
 public:
     ServicePrivate(const QString& name, IController* controller = nullptr,
                    IService* service = nullptr, QObject *parent = nullptr);
+
+    bool sendCmdResult(const QVariantMap& result);
+    bool sendFeaturesRequest();
+    bool sendCmd(const QList<Feature>& result);
 
 signals:
     void sigListFeatures(QList<Feature>);

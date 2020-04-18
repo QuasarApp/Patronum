@@ -12,7 +12,7 @@ class IService
 public:
     IService();
 
-    virtual void handleReceve(const Feature& data) = 0;
+    virtual void handleReceve(const QList<Feature>& data) = 0;
     virtual QList<Feature> supportedFeatures() = 0;
 
 };

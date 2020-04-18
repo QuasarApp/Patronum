@@ -2,7 +2,7 @@
 #define ICONTROLER_H
 
 #include <QList>
-
+#include <QVariantMap>
 
 namespace Patronum {
 
@@ -13,6 +13,8 @@ class IController
 public:
     IController();
     virtual void handleFeatures(const QList<Feature>& features) = 0;
+    virtual void handleResponce(const QVariantMap& feature) = 0;
+
 };
 }
 

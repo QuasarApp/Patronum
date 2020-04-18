@@ -8,7 +8,8 @@ namespace Patronum {
 enum class Command: char {
     FeaturesRequest,
     Features,
-    Feature
+    Feature,
+    FeatureResponce
 };
 
 struct Package

@@ -4,9 +4,12 @@
 
 namespace Patronum {
 
-Feature::Feature(const QString &cmd, const QVariantList &arg) {
+Feature::Feature(const QString &cmd, const QVariant &arg,
+                 const QString &description, const QString &example) {
     _cmd = cmd;
     _arg = arg;
+    _description = description;
+    _example = example;
 }
 
 QString Feature::cmd() const {
@@ -17,12 +20,28 @@ void Feature::setCmd(const QString &cmd) {
     _cmd = cmd;
 }
 
-QVariantList Feature::arg() const {
+QVariant Feature::arg() const {
     return _arg;
 }
 
 void Feature::setArg(const QVariantList &arg) {
     _arg = arg;
+}
+
+QString Feature::description() const {
+    return _description;
+}
+
+void Feature::setDescription(const QString &description) {
+    _description = description;
+}
+
+QString Feature::example() const {
+    return _example;
+}
+
+void Feature::setExample(const QString &example) {
+    _example = example;
 }
 
 QDataStream &operator<<(QDataStream &stream, const Feature &obj) {
