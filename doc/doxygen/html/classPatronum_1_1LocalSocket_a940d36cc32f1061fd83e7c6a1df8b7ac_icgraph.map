@@ -1,0 +1,6 @@
+<map id="Patronum::LocalSocket::send" name="Patronum::LocalSocket::send">
+<area shape="rect" id="node2" href="$classPatronum_1_1ServicePrivate.html#a9b494310d615526c44a41bea0bfd0b6e" title="Patronum::ServicePrivate\l::sendCmdResult" alt="" coords="212,5,383,47"/>
+<area shape="rect" id="node3" href="$classPatronum_1_1ServicePrivate.html#aab65952ecbca00382d16ada1abe181b1" title="Patronum::ServicePrivate\l::sendFeaturesRequest" alt="" coords="212,71,383,112"/>
+<area shape="rect" id="node5" href="$classPatronum_1_1ServicePrivate.html#a467f602a8c667836d7630cffd4069edf" title="Patronum::ServicePrivate\l::sendCmd" alt="" coords="212,136,383,177"/>
+<area shape="rect" id="node4" href="$classPatronum_1_1Controller.html#a7a7cccdbccaa46f0c8eeb0e7220fa04a" title="send &#45; this method send request to service " alt="" coords="431,104,573,145"/>
+</map>
