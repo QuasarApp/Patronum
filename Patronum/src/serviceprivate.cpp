@@ -131,7 +131,7 @@ void ServicePrivate::handleReceve(QByteArray data) {
 
         QList<Feature> feature;
         stream >> feature;
-        _service->handleReceve(feature);
+        _service->handleReceive(feature);
 
         break;
 

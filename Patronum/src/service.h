@@ -33,10 +33,10 @@ public:
 // IService interface
 protected:
     /**
-     * @brief handleReceve - this method invoce when service receive new command from terminal of controller of this service
+     * @brief handleReceive - this method invoce when service receive new command from terminal of controller of this service
      * @param data - is list of commands from controller
      */
-    void handleReceve(const QList<Feature> &data) {
+    void handleReceive(const QList<Feature> &data) {
         Q_UNUSED(data)
     };
 
