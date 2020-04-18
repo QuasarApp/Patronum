@@ -11,7 +11,6 @@ project(Patronum LANGUAGES CXX)
 add_subdirectory(qt-solutions/qtservice)
 
 include(qt-solutions/CMake/ProjectOut.cmake)
-include(qt-solutions/CMake/ccache.cmake)
 include(qt-solutions/CMake/Version.cmake)
 
 
