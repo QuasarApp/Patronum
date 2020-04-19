@@ -6,7 +6,7 @@
 
 namespace Patronum {
 
-class ServicePrivate;
+class ControllerPrivate;
 
 /**
  * @brief The Controller class provide control functionality for your service
@@ -56,7 +56,7 @@ protected:
     void handleResponce(const QVariantMap &feature);
 
 private:
-    ServicePrivate *d_ptr = nullptr;
+    ControllerPrivate *d_ptr = nullptr;
     QList<Feature> _features;
     bool _responce = false;
 

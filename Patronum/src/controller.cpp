@@ -1,5 +1,5 @@
 #include "controller.h"
-#include "serviceprivate.h"
+#include "controllerprivate.h"
 #include <QDateTime>
 #include <QVariantMap>
 #include <quasarapp.h>
@@ -8,7 +8,7 @@ namespace Patronum {
 
 Controller::Controller(const QString &name):
     QtServiceController(name) {
-    d_ptr = new ServicePrivate(name, this);
+    d_ptr = new ControllerPrivate(name, this);
 }
 
 bool Controller::send(int argc, char **argv) {
