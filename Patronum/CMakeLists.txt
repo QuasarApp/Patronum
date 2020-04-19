@@ -8,6 +8,11 @@
 cmake_minimum_required(VERSION 3.1)
 
 project(Patronum LANGUAGES CXX)
+if(TARGET ${PROJECT_NAME})
+  message("The ${PROJECT_NAME} arledy included in main Project")
+  return()
+endif()
+
 add_subdirectory(qt-solutions/qtservice)
 add_subdirectory(QuasarAppLib)
 
