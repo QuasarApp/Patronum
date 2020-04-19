@@ -18,7 +18,7 @@ class PATRONUM_LIBRARYSHARED_EXPORT Controller : public QtServiceController, pro
 {
 public:
     /**
-     * @brief Controller
+     * @brief Controller - base constructor
      * @param name - name of you service
      */
     Controller(const QString& name);
