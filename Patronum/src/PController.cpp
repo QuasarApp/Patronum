@@ -1,4 +1,4 @@
-#include "controller.h"
+#include "PController.h"
 #include "controllerprivate.h"
 #include <QDateTime>
 #include <QVariantMap>

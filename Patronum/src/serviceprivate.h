@@ -1,7 +1,7 @@
 #ifndef SERVICEPRIVATE_H
 #define SERVICEPRIVATE_H
 #include <QObject>
-#include <feature.h>
+#include <PFeature.h>
 
 namespace Patronum {
 
@@ -23,6 +23,7 @@ private:
 
 private slots:
     void handleReceve(QByteArray data);
+
 };
 
 }

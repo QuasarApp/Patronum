@@ -11,7 +11,7 @@ class Feature;
 class IController
 {
 public:
-    IController();
+    IController() = default;
     virtual void handleFeatures(const QList<Feature>& features) = 0;
     virtual void handleResponce(const QVariantMap& feature) = 0;
 

@@ -1,4 +1,4 @@
-#include "feature.h"
+#include "PFeature.h"
 
 #include <QDataStream>
 
