@@ -3,7 +3,6 @@
 #include "Patronum_global.h"
 #include "PFeature.h"
 #include "IPService.h"
-#include "package.h"
 #include "serviceprivate.h"
 #include <qtservice.h>
 #include <quasarapp.h>
