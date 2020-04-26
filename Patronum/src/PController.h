@@ -1,7 +1,7 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 #include "Patronum_global.h"
-#include "icontroller.h"
+#include "IPController.h"
 #include <qtservice.h>
 
 namespace Patronum {
@@ -18,7 +18,7 @@ class PATRONUM_LIBRARYSHARED_EXPORT Controller : public QtServiceController, pro
 {
 public:
     /**
-     * @brief Controller
+     * @brief Controller - base constructor
      * @param name - name of you service
      */
     Controller(const QString& name);

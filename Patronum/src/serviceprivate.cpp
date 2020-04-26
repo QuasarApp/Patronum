@@ -1,6 +1,6 @@
 #include "serviceprivate.h"
 
-#include "iservice.h"
+#include "IPService.h"
 #include "localsocket.h"
 #include "package.h"
 #include <quasarapp.h>

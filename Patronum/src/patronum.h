@@ -1,8 +1,8 @@
 #ifndef PATRONUM_H
 #define PATRONUM_H
 
-#include "controller.h"
-#include "service.h"
+#include "PController.h"
+#include "PService.h"
 
 namespace Patronum {}
 #endif // PATRONUM_H

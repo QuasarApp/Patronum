@@ -8,6 +8,11 @@
 cmake_minimum_required(VERSION 3.1)
 
 project(Patronum LANGUAGES CXX)
+if(TARGET ${PROJECT_NAME})
+  message("The ${PROJECT_NAME} arledy included in main Project")
+  return()
+endif()
+
 add_subdirectory(qt-solutions/qtservice)
 add_subdirectory(QuasarAppLib)
 
@@ -27,10 +32,13 @@ find_package(Qt5 COMPONENTS Core REQUIRED)
 
 file(GLOB SOURCE_CPP
     "src/*.cpp"
+    "src/Private/*.cpp"
+
 )
 
 add_library(${PROJECT_NAME} SHARED ${SOURCE_CPP})
-target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::Core Qt-Service QuasarApp)
+target_link_libraries(${PROJECT_NAME} PUBLIC Qt5::Core Qt-Service QuasarApp)
 target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")
+target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src/Private")
 
 setVersion(0 1 0)

@@ -1,6 +1,6 @@
 #ifndef CONTROLLERPRIVATE_H
 #define CONTROLLERPRIVATE_H
-#include <feature.h>
+#include <PFeature.h>
 
 namespace Patronum {
 

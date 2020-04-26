@@ -1,5 +1,5 @@
 #include "controllerprivate.h"
-#include "icontroller.h"
+#include "IPController.h"
 #include "localsocket.h"
 #include <quasarapp.h>
 #include "package.h"
