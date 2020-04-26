@@ -10,9 +10,9 @@ class ControllerPrivate;
 
 /**
  * @brief The Controller class provide control functionality for your service
- * how to use :
- * just inherit from the Service Controller and override the methods you need.
- * So, invoke the send methon, and if you need to get a responce from your service then invoke a waitForResponce method.
+ * ###How to use :
+ * - just inherit from the Service Controller and override the methods you need.
+ * - So, invoke the send methon, and if you need to get a responce from your service then invoke a waitForResponce method.
  */
 class PATRONUM_LIBRARYSHARED_EXPORT Controller : public QtServiceController, protected IController
 {

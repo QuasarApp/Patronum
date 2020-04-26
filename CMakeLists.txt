@@ -12,10 +12,12 @@ if(TARGET ${PROJECT_NAME})
   return()
 endif()
 
-include(Patronum/qt-solutions/CMake/ccache.cmake)
+include(Patronum/QuasarAppLib/CMake/ccache.cmake)
 # Add sub directories
 add_subdirectory(Patronum)
 
-include(Patronum/qt-solutions/CMake/QuasarAppCITargets.cmake)
+include(Patronum/QuasarAppLib/CMake/QuasarAppCITargets.cmake)
+
+addDoc("Patronum" ${CMAKE_CURRENT_SOURCE_DIR}/doxygen.conf)
 
 initAll()

@@ -16,8 +16,8 @@ endif()
 add_subdirectory(qt-solutions/qtservice)
 add_subdirectory(QuasarAppLib)
 
-include(qt-solutions/CMake/ProjectOut.cmake)
-include(qt-solutions/CMake/Version.cmake)
+include(QuasarAppLib/CMake/ProjectOut.cmake)
+include(QuasarAppLib/CMake/Version.cmake)
 
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)

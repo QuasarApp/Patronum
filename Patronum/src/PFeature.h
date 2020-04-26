@@ -9,9 +9,8 @@
 namespace Patronum {
 
 /**
- * @brief The Feature class - it is atomic type for describe service command
+ * @brief The Feature class it is atomic type for describe service command
  */
-
 class PATRONUM_LIBRARYSHARED_EXPORT Feature
 {
 public:

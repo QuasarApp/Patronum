@@ -9,12 +9,12 @@
 
 namespace Patronum {
 
-/**
- * Service -
- * How to use
- * just inherit from the Service class and override the methods you need.
- */
 template<class Application>
+/**
+ * @brief The Service class it is  class for create a services from daemons.
+ * ###How to use :
+ * - just inherit from the Service class and override the methods you need.
+ */
 class PATRONUM_LIBRARYSHARED_EXPORT Service : public QtService<Application>, protected IService
 {
 public:
