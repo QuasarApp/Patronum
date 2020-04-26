@@ -4,3 +4,6 @@
 [submodule "Patronum/QuasarAppLib"]
 	path = Patronum/QuasarAppLib
 	url = https://github.com/QuasarApp/QuasarAppLib.git
+[submodule "res/DoxyStyle"]
+	path = res/DoxyStyle
+	url = https://github.com/QuasarApp/DoxyStyle.git
