@@ -1,8 +1,9 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 #include "Patronum_global.h"
-#include "IPController.h"
+#include <IPController.h>
 #include <qtservice.h>
+#include "PFeature.h"
 
 namespace Patronum {
 

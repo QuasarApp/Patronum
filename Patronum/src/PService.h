@@ -2,8 +2,8 @@
 #define SERVICE_H
 #include "Patronum_global.h"
 #include "PFeature.h"
-#include "IPService.h"
 #include "serviceprivate.h"
+#include <IPService.h>
 #include <qtservice.h>
 #include <quasarapp.h>
 
