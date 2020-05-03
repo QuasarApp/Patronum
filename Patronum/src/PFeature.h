@@ -32,6 +32,8 @@ public:
     QString example() const;
     void setExample(const QString &example);
 
+    QString toString() const;
+
 private:
     QString _cmd;
     QString _description;

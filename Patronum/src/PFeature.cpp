@@ -44,6 +44,13 @@ void Feature::setExample(const QString &example) {
     _example = example;
 }
 
+QString Feature::toString() const {
+    if (_description.size())
+        return _cmd + ": " + _description;
+
+    return _cmd;
+}
+
 QDataStream &operator<<(QDataStream &stream, const Feature &obj) {
     stream << obj._cmd << obj._arg;
 

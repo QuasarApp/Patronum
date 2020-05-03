@@ -34,9 +34,26 @@ protected:
     /**
      * @brief handleReceive - this method invoce when service receive new command from terminal of controller of this service
      * @param data - is list of commands from controller
+     * Default inplementation send message abount error.
      */
     void handleReceive(const QList<Feature> &data) {
         Q_UNUSED(data)
+
+        auto list = supportedFeatures();
+
+        QStringList stringList;
+
+        for (const auto&i : list) {
+            stringList += i.toString();
+        }
+
+        QVariantMap result;
+
+        result["Error"] = "Wrong command!";
+        result["Available commands"] = stringList;
+
+        sendResuylt(result);
+
     };
 
     /**
