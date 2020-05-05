@@ -56,10 +56,19 @@ protected:
      */
     void handleResponce(const QVariantMap &feature);
 
+    /**
+     * @brief defaultInstallLocation - this method must be return a path for service executable or wrapper
+     *  Override this method if you want add support install option for controller
+     */
+    virtual QString defaultInstallLocation();
+
+
 private:
     ControllerPrivate *d_ptr = nullptr;
     QList<Feature> _features;
     bool _responce = false;
+
+    void printDefaultHelp() const;
 
 };
 }

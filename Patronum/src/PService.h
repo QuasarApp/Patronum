@@ -61,7 +61,8 @@ protected:
      * @return list of supported features of this service. override this method for correctly work of your pair (service and controller)
      */
     QList<Feature> supportedFeatures() {
-        return QList<Feature>();
+        QList<Feature> result;
+        return result;
     }
 
     /**

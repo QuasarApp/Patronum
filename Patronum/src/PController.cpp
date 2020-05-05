@@ -24,7 +24,33 @@ bool Controller::send(int argc, char **argv) {
             return false;
         }
 
+        printDefaultHelp();
+
         return true;
+    }
+
+    if (QuasarAppUtils::Params::isEndable("start")) {
+        return start();
+    }
+
+    if (QuasarAppUtils::Params::isEndable("stop")) {
+        return stop();
+    }
+
+    if (QuasarAppUtils::Params::isEndable("resume")) {
+        return resume();
+    }
+
+    if (QuasarAppUtils::Params::isEndable("pause")) {
+        return pause();
+    }
+
+    if (QuasarAppUtils::Params::isEndable("install")) {
+        return install(defaultInstallLocation());
+    }
+
+    if (QuasarAppUtils::Params::isEndable("uninstall")) {
+        return uninstall();
     }
 
     QList<Feature> sendData = {};
@@ -84,6 +110,23 @@ void Controller::handleResponce(const QVariantMap &responce) {
 
     QuasarAppUtils::Help::print(options);
 
+}
+
+QString Controller::defaultInstallLocation() {
+    return "";
+}
+
+void Controller::printDefaultHelp() const {
+    QuasarAppUtils::Help::Charters help{{"General options of this controller",{
+        {"start",    QObject::tr("Start a service")},
+        {"stop",     QObject::tr("Stop a service")},
+        {"pause",    QObject::tr("Pause a service")},
+        {"resume",   QObject::tr("Resume a service")},
+        {"install",  QObject::tr("Install a service")},
+        {"uninstall", QObject::tr("Uninstall a service")}
+    }}};
+
+    QuasarAppUtils::Help::print(help);
 }
 
 }

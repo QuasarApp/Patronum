@@ -9,6 +9,11 @@ namespace Patronum {
 ControllerPrivate::ControllerPrivate(const QString &name, IController *controller, QObject *parent):
     QObject(parent) {
     _socket = new LocalSocket(name);
+
+    if (!_socket->connectToTarget()) {
+        QuasarAppUtils::Params::log("Connect to service fail !");
+    };
+
     _controller = controller;
 
     QObject::connect(_socket, &LocalSocket::sigReceve,

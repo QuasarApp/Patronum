@@ -42,10 +42,16 @@ public:
     virtual bool isValid() const = 0;
 
     /**
-     * @brief reconnect
-     * @return true if socket connected to host;
+     * @brief listen
+     * @return true if a scoket deploy seccusseful
      */
-    virtual bool reconnect() = 0;
+    virtual bool listen() = 0;
+
+    /**
+     * @brief connectToTarget
+     * @return true if a scoket connect seccusseful
+     */
+    virtual bool connectToTarget() = 0;
 
     State state() const;
 

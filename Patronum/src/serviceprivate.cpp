@@ -10,6 +10,12 @@ namespace Patronum {
 Patronum::ServicePrivate::ServicePrivate(const QString &name, IService *service, QObject *parent):
     QObject(parent) {
     _socket = new LocalSocket(name);
+
+    if (!_socket->listen()) {
+        QuasarAppUtils::Params::log("Fail to create a terminal sicket!");
+        abort();
+    };
+
     _service = service;
 
     QObject::connect(_socket, &LocalSocket::sigReceve,

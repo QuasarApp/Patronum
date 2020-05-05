@@ -1,18 +1,28 @@
 #include "localsocket.h"
 
+#include <QLocalServer>
 #include <QLocalSocket>
+#include <quasarapp.h>
+
 namespace Patronum {
 
 LocalSocket::LocalSocket(const QString &target) {
-    m_socket = new QLocalSocket(this);
-    m_socket->connectToServer(target);
+    m_target = "P" + target;
+}
+
+bool LocalSocket::registerSokcet(QLocalSocket *socket) {
+    m_socket = socket;
 
     connect(m_socket, &QLocalSocket::stateChanged,
-            this, &LocalSocket::handeStateChanged);
+            this, &LocalSocket::handleStateChanged);
 
     connect(m_socket, &QLocalSocket::readyRead,
-            this, &LocalSocket::handeReadyRead);
+            this, &LocalSocket::handleReadyRead);
 
+    connect(m_socket, qOverload<QLocalSocket::LocalSocketError>(&QLocalSocket::error),
+            this, &LocalSocket::handleSocketError);
+
+    return m_socket->isValid();
 }
 
 bool LocalSocket::send(const QByteArray &data) {
@@ -27,12 +37,40 @@ bool LocalSocket::isValid() const {
     return m_state == State::Connected;
 }
 
-bool LocalSocket::reconnect() {
-    m_socket->connectToServer();
-    return isValid();
+bool LocalSocket::listen() {
+    if (!m_server) {
+        m_server = new QLocalServer(this);
+
+        connect(m_server, &QLocalServer::newConnection,
+                this, &LocalSocket::handleIncomming);
+    }
+
+    if (!m_server->listen(m_target)) {
+        QuasarAppUtils::Params::log("listen is failed! " + m_server->errorString(),
+                                    QuasarAppUtils::Error);
+        return false;
+    }
+
+    return true;
 }
 
-void LocalSocket::handeStateChanged(QLocalSocket::LocalSocketState socketState) {
+bool LocalSocket::connectToTarget() {
+
+    if (!m_socket) {
+        m_socket = new QLocalSocket(this);
+        if (!registerSokcet(m_socket)) {
+            QuasarAppUtils::Params::log("registerSokcet is failed!",
+                                        QuasarAppUtils::Error);
+            return false;
+        }
+    }
+
+    m_socket->connectToServer(m_target);
+
+    return m_socket->isValid();
+}
+
+void LocalSocket::handleStateChanged(QLocalSocket::LocalSocketState socketState) {
     if (socketState == QLocalSocket::LocalSocketState::ConnectedState) {
         m_state = State::Connected;
     } else {
@@ -42,8 +80,31 @@ void LocalSocket::handeStateChanged(QLocalSocket::LocalSocketState socketState) 
     emit sigStateChanged(m_state);
 }
 
-void LocalSocket::handeReadyRead() {
+void LocalSocket::handleReadyRead() {
     auto data = m_socket->readAll();
     emit sigReceve(data);
 }
+
+void LocalSocket::handleIncomming() {
+    if (m_socket) {
+        m_socket->deleteLater();
+        m_socket = nullptr;
+    }
+    registerSokcet(m_server->nextPendingConnection());
+}
+
+void LocalSocket::handleSocketError(QLocalSocket::LocalSocketError) {
+
+    auto _sender = dynamic_cast<QLocalSocket*>(sender());
+
+    if (!_sender) {
+        QuasarAppUtils::Params::log("Unknown error occurred!", QuasarAppUtils::Error);
+        return;
+    }
+
+    QuasarAppUtils::Params::log("Socket connection fail: " + _sender->errorString(),
+                                QuasarAppUtils::Warning);
+
+}
+
 }

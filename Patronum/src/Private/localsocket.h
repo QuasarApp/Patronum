@@ -6,6 +6,8 @@
 #include <QLocalSocket>
 #include <QObject>
 
+class QLocalServer;
+
 namespace Patronum {
 
 /**
@@ -26,7 +28,8 @@ public:
 public:
     bool send(const QByteArray &data);
     bool isValid() const;
-    bool reconnect();
+    bool listen();
+    bool connectToTarget();
 
 signals:
     void sigReceve(QByteArray data);
@@ -34,9 +37,17 @@ signals:
 
 private:
     QLocalSocket *m_socket = nullptr;
+    QLocalServer *m_server = nullptr;
+    QString m_target;
+
+    bool registerSokcet(QLocalSocket *socket);
+
 private slots:
-    void handeStateChanged(QLocalSocket::LocalSocketState socketState);
-    void handeReadyRead();
+    void handleStateChanged(QLocalSocket::LocalSocketState socketState);
+    void handleReadyRead();
+    void handleIncomming();
+    void handleSocketError(QLocalSocket::LocalSocketError);
+    void handleServerError(QLocalSocket::LocalSocketError);
 
 };
 }
