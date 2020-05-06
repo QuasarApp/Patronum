@@ -6,7 +6,7 @@
 #
 
 cmake_minimum_required(VERSION 3.10)
-project(Patronum)
+project(Patronum LANGUAGES CXX)
 if(TARGET ${PROJECT_NAME})
   message("The ${PROJECT_NAME} arledy included in main Project")
   return()
@@ -15,6 +15,7 @@ endif()
 include(Patronum/QuasarAppLib/CMake/ccache.cmake)
 # Add sub directories
 add_subdirectory(Patronum)
+add_subdirectory(Tests)
 
 include(Patronum/QuasarAppLib/CMake/QuasarAppCITargets.cmake)
 

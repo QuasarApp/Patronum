@@ -24,7 +24,7 @@ public:
      * @param argv - test of arguments
      * @param name - name of your service
      */
-    Service(int argc, char **argv, const QString &name)
+    Service(int argc, const char *argv[], const QString &name)
         : QtService<Application>(argc, argv, name) {
         d_ptr = new ServicePrivate(name, this);
 
@@ -37,7 +37,6 @@ protected:
      * Default inplementation send message abount error.
      */
     void handleReceive(const QList<Feature> &data) {
-        Q_UNUSED(data)
 
         auto list = supportedFeatures();
 
@@ -49,7 +48,12 @@ protected:
 
         QVariantMap result;
 
-        result["Error"] = "Wrong command!";
+        QString commandList;
+        for (const auto&i : data ) {
+            commandList += i.toString() + " ";
+        }
+
+        result["Error"] = "Wrong command! The commands : " + commandList  + " is notsupported";
         result["Available commands"] = stringList;
 
         sendResuylt(result);
@@ -72,6 +76,15 @@ protected:
      */
     bool sendResuylt(const QVariantMap &result) {
         return d_ptr->sendCmdResult(result);
+    }
+
+    /**
+     * @brief sendResuylt this method send text responce to controller
+     * @param result - message
+     * @return true if data sendet is seccusseful
+     */
+    bool sendResuylt(const QString &result) {
+        return d_ptr->sendCmdResult({{"Result:", result}});
     }
 
     /**
