@@ -3,6 +3,7 @@
 #include "IPService.h"
 #include "localsocket.h"
 #include "package.h"
+#include <QCoreApplication>
 #include <quasarapp.h>
 
 namespace Patronum {
@@ -12,8 +13,8 @@ Patronum::ServicePrivate::ServicePrivate(const QString &name, IService *service,
     _socket = new LocalSocket(name);
 
     if (!_socket->listen()) {
-        QuasarAppUtils::Params::log("Fail to create a terminal sicket!");
-        abort();
+        QuasarAppUtils::Params::log("Fail to create a terminal socket!");
+        QCoreApplication::exit(1);
     };
 
     _service = service;
