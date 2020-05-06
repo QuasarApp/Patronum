@@ -47,7 +47,6 @@ private slots:
     void handleReadyRead();
     void handleIncomming();
     void handleSocketError(QLocalSocket::LocalSocketError);
-    void handleServerError(QLocalSocket::LocalSocketError);
 
 };
 }
