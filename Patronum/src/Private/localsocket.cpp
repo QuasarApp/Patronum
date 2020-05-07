@@ -22,7 +22,7 @@ bool LocalSocket::registerSokcet(QLocalSocket *socket) {
     connect(m_socket, qOverload<QLocalSocket::LocalSocketError>(&QLocalSocket::error),
             this, &LocalSocket::handleSocketError);
 
-    return m_socket->isValid();
+    return true;
 }
 
 bool LocalSocket::send(const QByteArray &data) {

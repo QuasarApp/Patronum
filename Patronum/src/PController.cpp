@@ -11,7 +11,7 @@ Controller::Controller(const QString &name):
     d_ptr = new ControllerPrivate(name, this);
 }
 
-bool Controller::send(int argc, char **argv) {
+bool Controller::send(int argc, const char **argv) {
     if (!QuasarAppUtils::Params::parseParams(argc, argv)) {
         return false;
     }
@@ -63,15 +63,8 @@ bool Controller::send(int argc, char **argv) {
 }
 
 bool Controller::waitForResponce(int msec) {
-    _responce = false;
 
-    qint64 waitFor = QDateTime::currentMSecsSinceEpoch() + msec;
-
-    while (!_responce && QDateTime::currentMSecsSinceEpoch() < waitFor) {
-        QCoreApplication::processEvents();
-    }
-
-    return _responce;
+    return d_ptr->waitForResponce(msec);
 }
 
 void Controller::handleFeatures(const QList<Feature> &features) {
@@ -95,10 +88,7 @@ void Controller::handleFeatures(const QList<Feature> &features) {
         options.insert(cmd, description);
     }
 
-    _features = features;
     QuasarAppUtils::Help::print(options);
-
-    _responce = true;
 }
 
 void Controller::handleResponce(const QVariantMap &responce) {
@@ -114,6 +104,10 @@ void Controller::handleResponce(const QVariantMap &responce) {
 
 QString Controller::defaultInstallLocation() {
     return "";
+}
+
+QList<Feature> Controller::features() {
+    return d_ptr->features();
 }
 
 void Controller::printDefaultHelp() const {

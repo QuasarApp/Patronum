@@ -30,7 +30,7 @@ public:
      * @param argv - arguments list
      * @return true if all sendet seccussful
      */
-    bool send(int argc, char **argv);
+    bool send(int argc, const char **argv);
 
     /**
      * @brief waitForResponce - waut for get a responce from servece
@@ -52,9 +52,9 @@ protected:
     /**
      * @brief handleResponce - override this method if you want create a custom reaction of get responce from service
      * Default inplementation print responce to console.
-     * @param feature - responce from service
+     * @param responce - responce from service
      */
-    void handleResponce(const QVariantMap &feature);
+    void handleResponce(const QVariantMap &responce);
 
     /**
      * @brief defaultInstallLocation - this method must be return a path for service executable or wrapper
@@ -62,11 +62,16 @@ protected:
      */
     virtual QString defaultInstallLocation();
 
+    /**
+     * @brief features - this metho return current features of connected service.
+     * @note If Responed from service not received then return empty list.
+     * @return features list
+     */
+    QList<Feature> features();
+
 
 private:
     ControllerPrivate *d_ptr = nullptr;
-    QList<Feature> _features;
-    bool _responce = false;
 
     void printDefaultHelp() const;
 

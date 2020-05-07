@@ -1,6 +1,8 @@
 #include "controllerprivate.h"
 #include "IPController.h"
 #include "localsocket.h"
+#include <QCoreApplication>
+#include <QDateTime>
 #include <quasarapp.h>
 #include "package.h"
 
@@ -43,12 +45,37 @@ bool ControllerPrivate::sendCmd(const QList<Feature> &result) {
         return false;
     }
 
-    QByteArray responce;
-    QDataStream stream(&responce, QIODevice::WriteOnly);
+    QByteArray request;
+    QDataStream stream(&request, QIODevice::WriteOnly);
 
     stream << Command::Feature << result;
 
-    return _socket->send(responce);
+    if (_socket->send(request)){
+        _responce = false;
+        return true;
+    }
+
+    return false;
+}
+
+bool Patronum::ControllerPrivate::waitForResponce(int msec) {
+    _responce = false;
+
+    qint64 waitFor = QDateTime::currentMSecsSinceEpoch() + msec;
+
+    while (!_responce && QDateTime::currentMSecsSinceEpoch() < waitFor) {
+        QCoreApplication::processEvents();
+    }
+
+    return _responce;
+}
+
+QList<Feature> ControllerPrivate::features() const {
+    return _features;
+}
+
+bool ControllerPrivate::isConnected() const {
+    return _responce;
 }
 
 void ControllerPrivate::handleReceve(QByteArray data) {
@@ -73,6 +100,9 @@ void ControllerPrivate::handleReceve(QByteArray data) {
 
         QList<Feature> features;
         stream >> features;
+        _features = features;
+
+        _responce = true;
 
         _controller->handleFeatures(features);
 
@@ -88,6 +118,8 @@ void ControllerPrivate::handleReceve(QByteArray data) {
         }
 
         QDataStream stream(package->data);
+
+        _responce = true;
 
         QVariantMap feature;
         stream >> feature;

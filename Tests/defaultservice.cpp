@@ -1,12 +1,12 @@
 #include "defaultservice.h"
 
-const char* arg[] = {
-    "/",
-    "-e"
+char* arg[] = {
+    const_cast<char*>("/"),
+    const_cast<char*>("-e")
 };
 
 DefaultService::DefaultService():
-    Patronum::Service<QCoreApplication>(0, arg, "TestPatronum") {
+    Patronum::Service<QCoreApplication>(2, arg, "TestPatronum") {
 
 }
 
@@ -19,7 +19,7 @@ void DefaultService::handleReceive(const QList<Patronum::Feature> &data) {
     QList<Patronum::Feature> notSupportedList;
     for (const auto& i : data) {
         if (i.cmd() == "ping") {
-            sendResuylt("pomg");
+            sendResuylt("pong");
         } else {
             notSupportedList += i;
         }

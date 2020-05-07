@@ -1,10 +1,9 @@
 #include <QtTest>
 
-#include <quasarapp.h>
 #include <QCoreApplication>
+#include "defaultcontroller.h"
+#include "defaultservice.h"
 #include "testutils.h"
-
-#include <patronum.h>
 
 #define TEST_LOCAL_HOST "127.0.0.1"
 #define TEST_PORT 27777
@@ -19,15 +18,13 @@ private:
 public:
     testProtockol();
 
-    void connectTest(Patronum::Service *service, Patronum::Controller *terminal);
 
     ~testProtockol();
 
 private slots:
     void initTestCase();
-    void testPakageData();
-    void testBaseNode();
-    void testUser();
+    void connectTest();
+
 
 
 };
@@ -37,9 +34,24 @@ testProtockol::testProtockol() {
 
 }
 
-void testProtockol::connectTest(NP::Client *cli, NP::BaseNode *serv) {
-    QVERIFY(serv->run(TEST_LOCAL_HOST, TEST_PORT));
-    QVERIFY(TestUtils::connectFunc(cli, TEST_LOCAL_HOST, TEST_PORT));
+void testProtockol::connectTest() {
+    DefaultService serv;
+
+    QTimer::singleShot(0, [](){
+        const char* arg[] = {
+            "/",
+            "fd"
+        };
+        DefaultController cli;
+
+        QVERIFY(cli.send(2 , arg));
+        QVERIFY(cli.waitForResponce(1000));
+        QVERIFY(cli.getResponce().value("Result") == "pong");
+    });
+
+
+    QVERIFY(serv.exec() == 0);
+
 }
 
 testProtockol::~testProtockol() {
@@ -51,4 +63,4 @@ void testProtockol::initTestCase() {
 
 QTEST_APPLESS_MAIN(testProtockol)
 
-#include "tst_testsnakeserver.moc"
+#include "tst_unittests.moc"
