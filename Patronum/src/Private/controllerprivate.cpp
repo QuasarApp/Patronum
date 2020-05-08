@@ -33,7 +33,7 @@ bool ControllerPrivate::sendFeaturesRequest() {
     QByteArray responce;
     QDataStream stream(&responce, QIODevice::WriteOnly);
 
-    stream << Command::FeaturesRequest;
+    stream << static_cast<quint8>(Command::FeaturesRequest);
 
     return _socket->send(responce);
 }
@@ -48,9 +48,10 @@ bool ControllerPrivate::sendCmd(const QList<Feature> &result) {
     QByteArray request;
     QDataStream stream(&request, QIODevice::WriteOnly);
 
-    stream << static_cast<char>(Command::Feature) << result;
+    stream << static_cast<quint8>(Command::Feature);
+    stream << result;
 
-    if (_socket->send(request)){
+    if (_socket->send(request)) {
         _responce = false;
         return true;
     }
@@ -66,6 +67,7 @@ bool Patronum::ControllerPrivate::waitForResponce(int msec) {
     while (!_responce && QDateTime::currentMSecsSinceEpoch() < waitFor) {
         QCoreApplication::processEvents();
     }
+    QCoreApplication::processEvents();
 
     return _responce;
 }
@@ -80,13 +82,13 @@ bool ControllerPrivate::isConnected() const {
 
 void ControllerPrivate::handleReceve(QByteArray data) {
 
-    if (data.size() < 2) {
+    const Package package = Package::parsePackage(data);
+
+    if (!package.isValid()) {
         return;
     }
 
-    const Package *package = reinterpret_cast<const Package *>( data.data());
-
-    switch (package->cmd) {
+    switch (package.cmd()) {
 
     case Command::Features: {
 
@@ -96,7 +98,7 @@ void ControllerPrivate::handleReceve(QByteArray data) {
             break;
         }
 
-        QDataStream stream(package->data);
+        QDataStream stream(package.data());
 
         QList<Feature> features;
         stream >> features;
@@ -117,13 +119,13 @@ void ControllerPrivate::handleReceve(QByteArray data) {
             break;
         }
 
-        QDataStream stream(package->data);
+        QDataStream stream(package.data());
 
         _responce = true;
 
-        QVariantMap feature;
-        stream >> feature;
-        _controller->handleResponce(feature);
+        QVariantMap responce;
+        stream >> responce;
+        _controller->handleResponce(responce);
 
         break;
 

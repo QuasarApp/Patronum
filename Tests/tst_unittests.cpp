@@ -19,6 +19,7 @@ public:
     testPatronum();
 
     void testPing();
+    void testRandomCommad();
 
     ~testPatronum();
 
@@ -38,7 +39,7 @@ testPatronum::testPatronum() {
 void testPatronum::testPing() {
     const char* arg[] = {
         "/",
-        "fd"
+        "ping"
     };
     DefaultController cli;
 
@@ -47,11 +48,26 @@ void testPatronum::testPing() {
     QVERIFY(cli.getResponce().value("Result") == "pong");
 }
 
+void testPatronum::testRandomCommad() {
+    const char* arg[] = {
+        "/",
+        "fd"
+    };
+    DefaultController cli;
+
+    QVERIFY(cli.send(2 , arg));
+    QVERIFY(cli.waitForResponce(1000));
+    QVERIFY(cli.getResponce().contains("Error"));
+}
+
+
 void testPatronum::connectTest() {
     DefaultService serv;
 
-    QTimer::singleShot(0, [this](){
+    QTimer::singleShot(0, [this]() {
+        testRandomCommad();
         testPing();
+
         QCoreApplication::exit(0);
     });
 

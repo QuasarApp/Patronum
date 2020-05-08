@@ -87,7 +87,7 @@ protected:
      * @return true if data sendet is seccusseful
      */
     bool sendResuylt(const QString &result) {
-        return d_ptr->sendCmdResult({{"Result:", result}});
+        return d_ptr->sendCmdResult({{"Result", result}});
     }
 
     /**

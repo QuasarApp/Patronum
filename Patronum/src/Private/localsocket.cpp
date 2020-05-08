@@ -30,6 +30,8 @@ bool LocalSocket::registerSokcet(QLocalSocket *socket) {
     connect(m_socket, qOverload<QLocalSocket::LocalSocketError>(&QLocalSocket::error),
             this, &LocalSocket::handleSocketError);
 
+    handleStateChanged(m_socket->state());
+
     return true;
 }
 
@@ -79,6 +81,7 @@ bool LocalSocket::connectToTarget() {
 }
 
 void LocalSocket::handleStateChanged(QLocalSocket::LocalSocketState socketState) {
+
     if (socketState == QLocalSocket::LocalSocketState::ConnectedState) {
         m_state = State::Connected;
     } else {
@@ -95,6 +98,7 @@ void LocalSocket::handleReadyRead() {
 
 void LocalSocket::handleIncomming() {
     if (m_socket) {
+        m_socket->disconnect();
         m_socket->deleteLater();
         m_socket = nullptr;
     }

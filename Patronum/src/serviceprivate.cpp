@@ -4,6 +4,7 @@
 #include "localsocket.h"
 #include "package.h"
 #include <QCoreApplication>
+#include <QTimer>
 #include <quasarapp.h>
 
 namespace Patronum {
@@ -12,10 +13,12 @@ Patronum::ServicePrivate::ServicePrivate(const QString &name, IService *service,
     QObject(parent) {
     _socket = new LocalSocket(name, this);
 
-    if (!_socket->listen()) {
-        QuasarAppUtils::Params::log("Fail to create a terminal socket!");
-        QCoreApplication::exit(1);
-    };
+    QTimer::singleShot(0, [this](){
+        if (!_socket->listen()) {
+            QuasarAppUtils::Params::log("Fail to create a terminal socket!");
+            QCoreApplication::exit(1);
+        };
+    });
 
     _service = service;
 
@@ -32,12 +35,7 @@ bool ServicePrivate::sendCmdResult(const QVariantMap &result) {
         return false;
     }
 
-    QByteArray responce;
-    QDataStream stream(&responce, QIODevice::WriteOnly);
-
-    stream << static_cast<char>(Command::FeatureResponce) << result;
-
-    return _socket->send(responce);
+    return _socket->send(Package::createPackage(Command::FeatureResponce, result));
 }
 
 void ServicePrivate::handleReceve(QByteArray data) {
@@ -46,9 +44,9 @@ void ServicePrivate::handleReceve(QByteArray data) {
         return;
     }
 
-    const Package *package = reinterpret_cast<const Package *>( data.data());
+    const Package package = Package::parsePackage(data);
 
-    switch (package->cmd) {
+    switch (package.cmd()) {
 
     case Command::FeaturesRequest: {
 
@@ -68,7 +66,9 @@ void ServicePrivate::handleReceve(QByteArray data) {
         QByteArray sendData;
         QDataStream stream(&sendData, QIODevice::WriteOnly);
 
-        stream << static_cast<char>(Command::Features) << features;
+        stream << static_cast<quint8>(Command::Features);
+        stream << features;
+
         if (!_socket->send(sendData)) {
             QuasarAppUtils::Params::log("scoket is closed!",
                                         QuasarAppUtils::Error);
@@ -85,7 +85,7 @@ void ServicePrivate::handleReceve(QByteArray data) {
             break;
         }
 
-        QDataStream stream(package->data);
+        QDataStream stream(package.data());
 
         QList<Feature> feature;
         stream >> feature;
