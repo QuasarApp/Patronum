@@ -1,6 +1,8 @@
 #include "controllerprivate.h"
 #include "IPController.h"
 #include "localsocket.h"
+#include <QCoreApplication>
+#include <QDateTime>
 #include <quasarapp.h>
 #include "package.h"
 
@@ -8,7 +10,7 @@ namespace Patronum {
 
 ControllerPrivate::ControllerPrivate(const QString &name, IController *controller, QObject *parent):
     QObject(parent) {
-    _socket = new LocalSocket(name);
+    _socket = new LocalSocket(name, this);
 
     if (!_socket->connectToTarget()) {
         QuasarAppUtils::Params::log("Connect to service fail !");
@@ -31,7 +33,7 @@ bool ControllerPrivate::sendFeaturesRequest() {
     QByteArray responce;
     QDataStream stream(&responce, QIODevice::WriteOnly);
 
-    stream << Command::FeaturesRequest;
+    stream << static_cast<quint8>(Command::FeaturesRequest);
 
     return _socket->send(responce);
 }
@@ -43,23 +45,50 @@ bool ControllerPrivate::sendCmd(const QList<Feature> &result) {
         return false;
     }
 
-    QByteArray responce;
-    QDataStream stream(&responce, QIODevice::WriteOnly);
+    QByteArray request;
+    QDataStream stream(&request, QIODevice::WriteOnly);
 
-    stream << Command::Feature << result;
+    stream << static_cast<quint8>(Command::Feature);
+    stream << result;
 
-    return _socket->send(responce);
+    if (_socket->send(request)) {
+        _responce = false;
+        return true;
+    }
+
+    return false;
+}
+
+bool Patronum::ControllerPrivate::waitForResponce(int msec) {
+    _responce = false;
+
+    qint64 waitFor = QDateTime::currentMSecsSinceEpoch() + msec;
+
+    while (!_responce && QDateTime::currentMSecsSinceEpoch() < waitFor) {
+        QCoreApplication::processEvents();
+    }
+    QCoreApplication::processEvents();
+
+    return _responce;
+}
+
+QList<Feature> ControllerPrivate::features() const {
+    return _features;
+}
+
+bool ControllerPrivate::isConnected() const {
+    return _responce;
 }
 
 void ControllerPrivate::handleReceve(QByteArray data) {
 
-    if (data.size() < 2) {
+    const Package package = Package::parsePackage(data);
+
+    if (!package.isValid()) {
         return;
     }
 
-    const Package *package = reinterpret_cast<const Package *>( data.data());
-
-    switch (package->cmd) {
+    switch (package.cmd()) {
 
     case Command::Features: {
 
@@ -69,10 +98,13 @@ void ControllerPrivate::handleReceve(QByteArray data) {
             break;
         }
 
-        QDataStream stream(package->data);
+        QDataStream stream(package.data());
 
         QList<Feature> features;
         stream >> features;
+        _features = features;
+
+        _responce = true;
 
         _controller->handleFeatures(features);
 
@@ -87,11 +119,13 @@ void ControllerPrivate::handleReceve(QByteArray data) {
             break;
         }
 
-        QDataStream stream(package->data);
+        QDataStream stream(package.data());
 
-        QVariantMap feature;
-        stream >> feature;
-        _controller->handleResponce(feature);
+        _responce = true;
+
+        QVariantMap responce;
+        stream >> responce;
+        _controller->handleResponce(responce);
 
         break;
 

@@ -6,12 +6,20 @@
 
 namespace Patronum {
 
-LocalSocket::LocalSocket(const QString &target) {
+LocalSocket::LocalSocket(const QString &target, QObject *ptr):
+    QObject(ptr) {
     m_target = "P" + target;
+}
+
+LocalSocket::~LocalSocket() {
+
 }
 
 bool LocalSocket::registerSokcet(QLocalSocket *socket) {
     m_socket = socket;
+
+    if (m_socket->parent() != this)
+        m_socket->setParent(this);
 
     connect(m_socket, &QLocalSocket::stateChanged,
             this, &LocalSocket::handleStateChanged);
@@ -22,7 +30,9 @@ bool LocalSocket::registerSokcet(QLocalSocket *socket) {
     connect(m_socket, qOverload<QLocalSocket::LocalSocketError>(&QLocalSocket::error),
             this, &LocalSocket::handleSocketError);
 
-    return m_socket->isValid();
+    handleStateChanged(m_socket->state());
+
+    return true;
 }
 
 bool LocalSocket::send(const QByteArray &data) {
@@ -71,6 +81,7 @@ bool LocalSocket::connectToTarget() {
 }
 
 void LocalSocket::handleStateChanged(QLocalSocket::LocalSocketState socketState) {
+
     if (socketState == QLocalSocket::LocalSocketState::ConnectedState) {
         m_state = State::Connected;
     } else {
@@ -87,6 +98,7 @@ void LocalSocket::handleReadyRead() {
 
 void LocalSocket::handleIncomming() {
     if (m_socket) {
+        m_socket->disconnect();
         m_socket->deleteLater();
         m_socket = nullptr;
     }

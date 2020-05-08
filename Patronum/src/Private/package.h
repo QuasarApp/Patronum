@@ -2,20 +2,48 @@
 #define PACKAGE_H
 
 #include <QDataStream>
+#include <PFeature.h>
+#include <QVariantMap>
 
 namespace Patronum {
 
-enum class Command: char {
+class Feature;
+
+enum class Command: quint8 {
     FeaturesRequest,
     Features,
     Feature,
     FeatureResponce
 };
 
-struct Package
+/**
+ * @brief The Package class
+ * this is base package class with cmd and data
+ */
+class Package
 {
-    Command cmd;
-    char* data;
+public:
+    Command cmd() const;
+    QByteArray data() const;
+    bool isValid() const;
+
+    template<class DATA>
+    static QByteArray createPackage(Command cmd, const DATA &data) {
+        QByteArray result;
+        QDataStream stream(&result, QIODevice::WriteOnly);
+
+        stream << cmd;
+        stream << data;
+
+        return result;
+    }
+    static Package parsePackage(const QByteArray& data);
+
+private:
+    Package();
+
+    unsigned char m_cmd;
+    QByteArray m_data;
 };
 
 }

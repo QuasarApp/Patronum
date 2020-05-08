@@ -15,12 +15,21 @@ public:
     bool sendFeaturesRequest();
     bool sendCmd(const QList<Feature>& result);
 
+    bool waitForResponce(int msec);
+
+    QList<Feature> features() const;
+
+    bool isConnected() const;
+
 signals:
     void sigListFeatures(QList<Feature>);
 
 private:
     LocalSocket *_socket = nullptr;
     IController *_controller = nullptr;
+    bool _responce = false;
+    QList<Feature> _features;
+
 
 private slots:
     void handleReceve(QByteArray data);

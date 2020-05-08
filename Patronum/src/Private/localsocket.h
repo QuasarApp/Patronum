@@ -22,7 +22,8 @@ public:
      * @brief LocalSocket
      * @param target - target it is localSocket name or ip:port
      */
-    LocalSocket(const QString& target);
+    LocalSocket(const QString& target, QObject* ptr = nullptr);
+    ~LocalSocket();
 
     // ISocketWraper interface
 public:

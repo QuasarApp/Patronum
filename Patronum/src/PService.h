@@ -24,10 +24,13 @@ public:
      * @param argv - test of arguments
      * @param name - name of your service
      */
-    Service(int argc, char **argv, const QString &name)
+    Service(int argc, char *argv[], const QString &name)
         : QtService<Application>(argc, argv, name) {
         d_ptr = new ServicePrivate(name, this);
 
+    }
+    ~Service() override {
+        delete d_ptr;
     }
 // IService interface
 protected:
@@ -36,8 +39,7 @@ protected:
      * @param data - is list of commands from controller
      * Default inplementation send message abount error.
      */
-    void handleReceive(const QList<Feature> &data) {
-        Q_UNUSED(data)
+    void handleReceive(const QList<Feature> &data) override {
 
         auto list = supportedFeatures();
 
@@ -49,7 +51,12 @@ protected:
 
         QVariantMap result;
 
-        result["Error"] = "Wrong command!";
+        QString commandList;
+        for (const auto&i : data ) {
+            commandList += i.toString() + " ";
+        }
+
+        result["Error"] = "Wrong command! The commands : " + commandList  + " is notsupported";
         result["Available commands"] = stringList;
 
         sendResuylt(result);
@@ -60,7 +67,7 @@ protected:
      * @brief supportedFeatures
      * @return list of supported features of this service. override this method for correctly work of your pair (service and controller)
      */
-    QList<Feature> supportedFeatures() {
+    QList<Feature> supportedFeatures() override {
         QList<Feature> result;
         return result;
     }
@@ -75,11 +82,20 @@ protected:
     }
 
     /**
+     * @brief sendResuylt this method send text responce to controller
+     * @param result - message
+     * @return true if data sendet is seccusseful
+     */
+    bool sendResuylt(const QString &result) {
+        return d_ptr->sendCmdResult({{"Result", result}});
+    }
+
+    /**
      * @brief createApplication default implementation create a Application object and parse argumnts.
      * @param argc argumnts count
      * @param argv list of argumnts
      */
-    void createApplication(int argc, char **argv) {
+    void createApplication(int &argc, char **argv) override {
         QuasarAppUtils::Params::parseParams(argc, argv);
         QtService<Application>::createApplication(argc, argv);
     }
