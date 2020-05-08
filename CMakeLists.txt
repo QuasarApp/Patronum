@@ -18,7 +18,7 @@ add_subdirectory(Patronum)
 add_subdirectory(Tests)
 
 include(Patronum/QuasarAppLib/CMake/QuasarAppCITargets.cmake)
+initAll()
 
 addDoc("Patronum" ${CMAKE_CURRENT_SOURCE_DIR}/doxygen.conf)
 
-initAll()

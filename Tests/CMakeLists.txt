@@ -28,6 +28,5 @@ target_link_libraries(${CURRENT_PROJECT} PRIVATE Qt5::Test Patronum)
 target_include_directories(${CURRENT_PROJECT} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 include(../Patronum/QuasarAppLib/CMake/QuasarAppCITargets.cmake)
-
-addTests("Patronum" ${CURRENT_PROJECT})
 initTests()
+addTests("Patronum" ${CURRENT_PROJECT})
