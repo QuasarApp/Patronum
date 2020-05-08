@@ -29,6 +29,9 @@ public:
         d_ptr = new ServicePrivate(name, this);
 
     }
+    ~Service() override {
+        delete d_ptr;
+    }
 // IService interface
 protected:
     /**

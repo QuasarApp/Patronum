@@ -23,6 +23,7 @@ public:
      * @param name - name of you service
      */
     Controller(const QString& name);
+    ~Controller() override;
 
     /**
      * @brief send - this method send request to service
@@ -47,14 +48,14 @@ protected:
      * default inplenebtation prin help of available command of your service
      * @param features - list of features
      */
-    void handleFeatures(const QList<Feature> &features);
+    void handleFeatures(const QList<Feature> &features) override;
 
     /**
      * @brief handleResponce - override this method if you want create a custom reaction of get responce from service
      * Default inplementation print responce to console.
      * @param responce - responce from service
      */
-    void handleResponce(const QVariantMap &responce);
+    void handleResponce(const QVariantMap &responce) override;
 
     /**
      * @brief defaultInstallLocation - this method must be return a path for service executable or wrapper

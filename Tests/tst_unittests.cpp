@@ -8,7 +8,7 @@
 #define TEST_LOCAL_HOST "127.0.0.1"
 #define TEST_PORT 27777
 
-class testProtockol : public QObject
+class testPatronum : public QObject
 {
     Q_OBJECT
 
@@ -16,10 +16,11 @@ private:
 
 
 public:
-    testProtockol();
+    testPatronum();
 
+    void testPing();
 
-    ~testProtockol();
+    ~testPatronum();
 
 private slots:
     void initTestCase();
@@ -29,38 +30,42 @@ private slots:
 
 };
 
-testProtockol::testProtockol() {
+testPatronum::testPatronum() {
     QuasarAppUtils::Params::setArg("verbose", 3);
 
 }
 
-void testProtockol::connectTest() {
+void testPatronum::testPing() {
+    const char* arg[] = {
+        "/",
+        "fd"
+    };
+    DefaultController cli;
+
+    QVERIFY(cli.send(2 , arg));
+    QVERIFY(cli.waitForResponce(1000));
+    QVERIFY(cli.getResponce().value("Result") == "pong");
+}
+
+void testPatronum::connectTest() {
     DefaultService serv;
 
-    QTimer::singleShot(0, [](){
-        const char* arg[] = {
-            "/",
-            "fd"
-        };
-        DefaultController cli;
-
-        QVERIFY(cli.send(2 , arg));
-        QVERIFY(cli.waitForResponce(1000));
-        QVERIFY(cli.getResponce().value("Result") == "pong");
+    QTimer::singleShot(0, [this](){
+        testPing();
+        QCoreApplication::exit(0);
     });
-
 
     QVERIFY(serv.exec() == 0);
 
 }
 
-testProtockol::~testProtockol() {
+testPatronum::~testPatronum() {
 
 }
 
-void testProtockol::initTestCase() {
+void testPatronum::initTestCase() {
 }
 
-QTEST_APPLESS_MAIN(testProtockol)
+QTEST_APPLESS_MAIN(testPatronum)
 
 #include "tst_unittests.moc"

@@ -10,7 +10,7 @@ namespace Patronum {
 
 ControllerPrivate::ControllerPrivate(const QString &name, IController *controller, QObject *parent):
     QObject(parent) {
-    _socket = new LocalSocket(name);
+    _socket = new LocalSocket(name, this);
 
     if (!_socket->connectToTarget()) {
         QuasarAppUtils::Params::log("Connect to service fail !");
@@ -48,7 +48,7 @@ bool ControllerPrivate::sendCmd(const QList<Feature> &result) {
     QByteArray request;
     QDataStream stream(&request, QIODevice::WriteOnly);
 
-    stream << Command::Feature << result;
+    stream << static_cast<char>(Command::Feature) << result;
 
     if (_socket->send(request)){
         _responce = false;

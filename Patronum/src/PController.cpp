@@ -11,6 +11,10 @@ Controller::Controller(const QString &name):
     d_ptr = new ControllerPrivate(name, this);
 }
 
+Controller::~Controller() {
+    delete d_ptr;
+}
+
 bool Controller::send(int argc, const char **argv) {
     if (!QuasarAppUtils::Params::parseParams(argc, argv)) {
         return false;

@@ -6,12 +6,20 @@
 
 namespace Patronum {
 
-LocalSocket::LocalSocket(const QString &target) {
+LocalSocket::LocalSocket(const QString &target, QObject *ptr):
+    QObject(ptr) {
     m_target = "P" + target;
+}
+
+LocalSocket::~LocalSocket() {
+
 }
 
 bool LocalSocket::registerSokcet(QLocalSocket *socket) {
     m_socket = socket;
+
+    if (m_socket->parent() != this)
+        m_socket->setParent(this);
 
     connect(m_socket, &QLocalSocket::stateChanged,
             this, &LocalSocket::handleStateChanged);

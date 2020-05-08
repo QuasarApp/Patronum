@@ -10,7 +10,7 @@ namespace Patronum {
 
 Patronum::ServicePrivate::ServicePrivate(const QString &name, IService *service, QObject *parent):
     QObject(parent) {
-    _socket = new LocalSocket(name);
+    _socket = new LocalSocket(name, this);
 
     if (!_socket->listen()) {
         QuasarAppUtils::Params::log("Fail to create a terminal socket!");
@@ -35,7 +35,7 @@ bool ServicePrivate::sendCmdResult(const QVariantMap &result) {
     QByteArray responce;
     QDataStream stream(&responce, QIODevice::WriteOnly);
 
-    stream << Command::FeatureResponce << result;
+    stream << static_cast<char>(Command::FeatureResponce) << result;
 
     return _socket->send(responce);
 }
@@ -68,7 +68,7 @@ void ServicePrivate::handleReceve(QByteArray data) {
         QByteArray sendData;
         QDataStream stream(&sendData, QIODevice::WriteOnly);
 
-        stream << Command::Features << features;
+        stream << static_cast<char>(Command::Features) << features;
         if (!_socket->send(sendData)) {
             QuasarAppUtils::Params::log("scoket is closed!",
                                         QuasarAppUtils::Error);
