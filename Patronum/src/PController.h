@@ -31,7 +31,7 @@ public:
      * @param argv - arguments list
      * @return true if all sendet seccussful
      */
-    bool send(int argc, const char **argv);
+    bool send(int argc, char **argv);
 
     /**
      * @brief waitForResponce - waut for get a responce from servece

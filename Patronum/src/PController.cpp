@@ -15,7 +15,7 @@ Controller::~Controller() {
     delete d_ptr;
 }
 
-bool Controller::send(int argc, const char **argv) {
+bool Controller::send(int argc, char **argv) {
     if (!QuasarAppUtils::Params::parseParams(argc, argv)) {
         return false;
     }
@@ -93,6 +93,7 @@ void Controller::handleFeatures(const QList<Feature> &features) {
     }
 
     QuasarAppUtils::Help::print(options);
+    QCoreApplication::exit(0);
 }
 
 void Controller::handleResponce(const QVariantMap &responce) {
@@ -103,7 +104,7 @@ void Controller::handleResponce(const QVariantMap &responce) {
     }
 
     QuasarAppUtils::Help::print(options);
-
+    QCoreApplication::exit(0);
 }
 
 QString Controller::defaultInstallLocation() {

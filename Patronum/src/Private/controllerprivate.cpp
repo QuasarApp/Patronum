@@ -60,7 +60,12 @@ bool ControllerPrivate::sendCmd(const QList<Feature> &result) {
 }
 
 bool Patronum::ControllerPrivate::waitForResponce(int msec) {
-    _responce = false;
+    if (!dynamic_cast<QCoreApplication*>(QCoreApplication::instance())) {
+        QuasarAppUtils::Params::log("Before run the waitForResponce method you need run a exec method of your QApplication class.",
+                                    QuasarAppUtils::Warning);
+
+        return false;
+    }
 
     qint64 waitFor = QDateTime::currentMSecsSinceEpoch() + msec;
 

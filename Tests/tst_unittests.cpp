@@ -43,7 +43,7 @@ void testPatronum::testPing() {
     };
     DefaultController cli;
 
-    QVERIFY(cli.send(2 , arg));
+    QVERIFY(cli.send(2 , const_cast<char**>(arg)));
     QVERIFY(cli.waitForResponce(1000));
     QVERIFY(cli.getResponce().value("Result") == "pong");
 }
@@ -55,7 +55,7 @@ void testPatronum::testRandomCommad() {
     };
     DefaultController cli;
 
-    QVERIFY(cli.send(2 , arg));
+    QVERIFY(cli.send(2 , const_cast<char**>(arg)));
     QVERIFY(cli.waitForResponce(1000));
     QVERIFY(cli.getResponce().contains("Error"));
 }
