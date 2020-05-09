@@ -56,7 +56,7 @@ protected:
             commandList += i.toString() + " ";
         }
 
-        result["Error"] = "Wrong command! The commands : " + commandList  + " is notsupported";
+        result["Error"] = "Wrong command! The commands : " + commandList  + " is not supported";
         result["Available commands"] = stringList;
 
         sendResuylt(result);

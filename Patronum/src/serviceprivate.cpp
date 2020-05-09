@@ -40,11 +40,13 @@ bool ServicePrivate::sendCmdResult(const QVariantMap &result) {
 
 void ServicePrivate::handleReceve(QByteArray data) {
 
-    if (data.size() < 2) {
+    const Package package = Package::parsePackage(data);
+
+    if (!package.isValid()) {
+        QuasarAppUtils::Params::log("receive package is not valid!",
+                                    QuasarAppUtils::Warning);
         return;
     }
-
-    const Package package = Package::parsePackage(data);
 
     switch (package.cmd()) {
 
