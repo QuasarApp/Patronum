@@ -71,6 +71,11 @@ bool Controller::waitForResponce(int msec) {
     return d_ptr->waitForResponce(msec);
 }
 
+void Controller::handleError(ControllerError error) {
+    QuasarAppUtils::Params::log(errorToString(error),
+                                QuasarAppUtils::Error);
+}
+
 void Controller::handleFeatures(const QList<Feature> &features) {
 
     QuasarAppUtils::Help::Options options;

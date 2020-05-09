@@ -44,6 +44,13 @@ public:
 protected:
 
     /**
+     * @brief handleError - override this method if you want track errors
+        the default implementation print error message.
+       @param error - error id see ControllerError
+     */
+    void handleError(ControllerError error) override;
+
+    /**
      * @brief handleFeatures - override this method if you want cerate a custom reaction of get service features
      * default inplenebtation prin help of available command of your service
      * @param features - list of features
@@ -75,6 +82,7 @@ private:
     ControllerPrivate *d_ptr = nullptr;
 
     void printDefaultHelp() const;
+
 
 };
 }

@@ -11,12 +11,15 @@ namespace Patronum {
 ControllerPrivate::ControllerPrivate(const QString &name, IController *controller, QObject *parent):
     QObject(parent) {
     _socket = new LocalSocket(name, this);
+    _controller = controller;
 
     if (!_socket->connectToTarget()) {
-        QuasarAppUtils::Params::log("Connect to service fail !");
+        QuasarAppUtils::Params::log("Connect to service fail !",
+                                    QuasarAppUtils::Debug);
+        _controller->handleError(ControllerError::ServiceUnavailable);
+
     };
 
-    _controller = controller;
 
     QObject::connect(_socket, &LocalSocket::sigReceve,
                      this, &ControllerPrivate::handleReceve);
@@ -26,7 +29,8 @@ ControllerPrivate::ControllerPrivate(const QString &name, IController *controlle
 bool ControllerPrivate::sendFeaturesRequest() {
     if (!_socket->isValid()) {
         QuasarAppUtils::Params::log("scoket is closed!",
-                                    QuasarAppUtils::Error);
+                                    QuasarAppUtils::Debug);
+        _controller->handleError(ControllerError::ServiceUnavailable);
         return false;
     }
 
@@ -41,7 +45,9 @@ bool ControllerPrivate::sendFeaturesRequest() {
 bool ControllerPrivate::sendCmd(const QList<Feature> &result) {
     if (!_socket->isValid()) {
         QuasarAppUtils::Params::log("scoket is closed!",
-                                    QuasarAppUtils::Error);
+                                    QuasarAppUtils::Debug);
+        _controller->handleError(ControllerError::ServiceUnavailable);
+
         return false;
     }
 
@@ -90,6 +96,12 @@ void ControllerPrivate::handleReceve(QByteArray data) {
     const Package package = Package::parsePackage(data);
 
     if (!package.isValid()) {
+
+        QuasarAppUtils::Params::log("Received invalid package!",
+                                    QuasarAppUtils::Debug);
+
+        _controller->handleError(ControllerError::InvalidPackage);
+
         return;
     }
 
@@ -99,7 +111,9 @@ void ControllerPrivate::handleReceve(QByteArray data) {
 
         if (!_controller) {
             QuasarAppUtils::Params::log("System error, controller is not inited!",
-                                        QuasarAppUtils::Error);
+                                        QuasarAppUtils::Debug);
+            _controller->handleError(ControllerError::SystemError);
+
             break;
         }
 
@@ -121,6 +135,8 @@ void ControllerPrivate::handleReceve(QByteArray data) {
         if (!_controller) {
             QuasarAppUtils::Params::log("System error, controller is not inited!",
                                         QuasarAppUtils::Error);
+            _controller->handleError(ControllerError::SystemError);
+
             break;
         }
 
@@ -137,7 +153,9 @@ void ControllerPrivate::handleReceve(QByteArray data) {
     }
     default: {
         QuasarAppUtils::Params::log("Wrong command!",
-                                    QuasarAppUtils::Error);
+                                    QuasarAppUtils::Debug);
+        _controller->handleError(ControllerError::WrongCommand);
+
         break;
     }
 

@@ -86,8 +86,9 @@ public:
 };
 
 int main(int argc, char **argv) {
-    MyControllerApp app;
-    app.send(argc, argv);
-    return app.waitForResponce();
+    QCoreApplcication app
+    MyControllerApp controller;
+    controller.send(argc, argv);
+    return app.exec();
 }
 ```
