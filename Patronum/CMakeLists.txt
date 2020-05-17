@@ -35,4 +35,4 @@ target_link_libraries(${CURRENT_PROJECT} PUBLIC Qt5::Core Qt5::Network QuasarApp
 target_include_directories(${CURRENT_PROJECT} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")
 target_include_directories(${CURRENT_PROJECT} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src/Private")
 
-setVersion(0 1 0)
+setVersion(0 2 0)
