@@ -2,7 +2,7 @@
 
 char* arg[] = {
     const_cast<char*>("/"),
-    const_cast<char*>("-e")
+    const_cast<char*>("exec")
 };
 
 DefaultService::DefaultService():
@@ -10,7 +10,7 @@ DefaultService::DefaultService():
 
 }
 
-void DefaultService::start() {
+void DefaultService::onStart() {
     QuasarAppUtils::Params::log("Server started!", QuasarAppUtils::Info);
 }
 

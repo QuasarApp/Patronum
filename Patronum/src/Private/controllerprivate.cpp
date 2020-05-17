@@ -3,14 +3,18 @@
 #include "localsocket.h"
 #include <QCoreApplication>
 #include <QDateTime>
+#include <QProcess>
 #include <quasarapp.h>
 #include "package.h"
+#include "installersystemd.h"
 
 namespace Patronum {
 
-ControllerPrivate::ControllerPrivate(const QString &name, IController *controller, QObject *parent):
+ControllerPrivate::ControllerPrivate(const QString &name, const QString &servicePath,
+                                     IController *controller, QObject *parent):
     QObject(parent) {
     _socket = new LocalSocket(name, this);
+    _serviceExe = servicePath;
     _controller = controller;
 
     if (!_socket->connectToTarget()) {
@@ -21,9 +25,19 @@ ControllerPrivate::ControllerPrivate(const QString &name, IController *controlle
     };
 
 
+#ifdef Q_OS_LINUX
+    _installer = new InstallerSystemD(name);
+#endif
+
     QObject::connect(_socket, &LocalSocket::sigReceve,
                      this, &ControllerPrivate::handleReceve);
 
+}
+
+ControllerPrivate::~ControllerPrivate() {
+    if (_installer) {
+        delete _installer;
+    }
 }
 
 bool ControllerPrivate::sendFeaturesRequest() {
@@ -63,6 +77,48 @@ bool ControllerPrivate::sendCmd(const QList<Feature> &result) {
     }
 
     return false;
+}
+
+bool ControllerPrivate::start() const {
+
+    QProcess proc;
+    proc.setProgram(_serviceExe);
+    proc.setArguments({"exec"});
+    proc.setProcessEnvironment(QProcessEnvironment::systemEnvironment());
+
+    return proc.startDetached();
+}
+
+bool ControllerPrivate::stop() {
+    return sendCmd({Feature("stop")});
+}
+
+bool ControllerPrivate::install() const {
+    if (!_installer) {
+        QuasarAppUtils::Params::log("Unsupported platform",
+                                    QuasarAppUtils::Error);
+        return false;
+    }
+
+    return _installer->install(_serviceExe);
+}
+
+bool ControllerPrivate::uninstall() const {
+    if (!_installer) {
+        QuasarAppUtils::Params::log("Unsupported platform",
+                                    QuasarAppUtils::Error);
+        return false;
+    }
+
+    return _installer->uninstall();
+}
+
+bool ControllerPrivate::pause() {
+    return sendCmd({Feature("pause")});
+}
+
+bool ControllerPrivate::resume() {
+    return sendCmd({Feature("resume")});
 }
 
 bool Patronum::ControllerPrivate::waitForResponce(int msec) {

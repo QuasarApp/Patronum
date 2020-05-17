@@ -1,14 +1,15 @@
 #include "PController.h"
 #include "controllerprivate.h"
 #include <QDateTime>
+#include <QFileInfo>
 #include <QVariantMap>
 #include <quasarapp.h>
+#include <QCoreApplication>
 
 namespace Patronum {
 
-Controller::Controller(const QString &name):
-    QtServiceController(name) {
-    d_ptr = new ControllerPrivate(name, this);
+Controller::Controller(const QString &name, const QString& servicePath) {
+    d_ptr = new ControllerPrivate(name, servicePath, this);
 }
 
 Controller::~Controller() {
@@ -16,10 +17,14 @@ Controller::~Controller() {
 }
 
 bool Controller::send(int argc, char **argv) {
-    if (!QuasarAppUtils::Params::parseParams(argc, argv)) {
+    if (!QuasarAppUtils::Params::size() && !QuasarAppUtils::Params::parseParams(argc, argv)) {
         return false;
     }
 
+    return send();
+}
+
+bool Controller::send() {
     if (!QuasarAppUtils::Params::customParamasSize() ||
             QuasarAppUtils::Params::isEndable("h") ||
             QuasarAppUtils::Params::isEndable("help")) {
@@ -34,27 +39,27 @@ bool Controller::send(int argc, char **argv) {
     }
 
     if (QuasarAppUtils::Params::isEndable("start")) {
-        return start();
+        return d_ptr->start();
     }
 
     if (QuasarAppUtils::Params::isEndable("stop")) {
-        return stop();
+        return d_ptr->stop();
     }
 
     if (QuasarAppUtils::Params::isEndable("resume")) {
-        return resume();
+        return d_ptr->resume();
     }
 
     if (QuasarAppUtils::Params::isEndable("pause")) {
-        return pause();
+        return d_ptr->pause();
     }
 
     if (QuasarAppUtils::Params::isEndable("install")) {
-        return install(defaultInstallLocation());
+        return d_ptr->install();
     }
 
     if (QuasarAppUtils::Params::isEndable("uninstall")) {
-        return uninstall();
+        return d_ptr->uninstall();
     }
 
     QList<Feature> sendData = {};
@@ -64,6 +69,10 @@ bool Controller::send(int argc, char **argv) {
     }
 
     return d_ptr->sendCmd(sendData);
+}
+
+bool Controller::startDetached() const {
+    return d_ptr->start();
 }
 
 bool Controller::waitForResponce(int msec) {
@@ -110,10 +119,6 @@ void Controller::handleResponce(const QVariantMap &responce) {
 
     QuasarAppUtils::Help::print(options);
     QCoreApplication::exit(0);
-}
-
-QString Controller::defaultInstallLocation() {
-    return "";
 }
 
 QList<Feature> Controller::features() {

@@ -1,7 +1,7 @@
 #ifndef DEFAULTSERVICE_H
 #define DEFAULTSERVICE_H
 #include <patronum.h>
-
+#include <QCoreApplication>
 
 class DefaultService : public Patronum::Service<QCoreApplication>
 {
@@ -10,7 +10,7 @@ public:
 
     // QtServiceBase interface
 protected:
-    void start();
+    void onStart();
 
     // IService interface
 public:

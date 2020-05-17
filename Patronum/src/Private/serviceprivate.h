@@ -16,10 +16,13 @@ public:
                    IService* service = nullptr, QObject *parent = nullptr);
 
     bool sendCmdResult(const QVariantMap& result);
+    bool parseDefaultCmds();
 
 private:
     LocalSocket *_socket = nullptr;
     IService  *_service = nullptr;
+
+    bool hendleStandartCmd(QList<Feature> *cmds);
 
 private slots:
     void handleReceve(QByteArray data);

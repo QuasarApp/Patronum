@@ -9,18 +9,18 @@ namespace Patronum {
 class Feature;
 
 /**
- * @brief The ControllerError enum
- *  - Undefined - Unknown error
- *  - ServiceUnavailable - Service is unavailable. Try send start comand or restart the service manually.
- *  - InvalidPackage - Invalid package received
- *  - WrongCommand - Library unsupported command received
- *  - SystemError - Internal error of the work of the Patronum library. Contact the developers and provide them with an error report. https://github.com/QuasarApp/Patronum/issues
+ * @brief The ControllerError enum - controller work error codes
  */
 enum class ControllerError {
+    /// Unknown error
     Undefined,
+    /// Service is unavailable. Try send start comand or restart the service manually.
     ServiceUnavailable,
+    /// Invalid package received
     InvalidPackage,
+    /// Library unsupported command received
     WrongCommand,
+    /// Internal error of the work of the Patronum library. Contact the developers and provide them with an error report. https://github.com/QuasarApp/Patronum/issues
     SystemError
 };
 
@@ -31,6 +31,8 @@ class IController
 {
 public:
     IController() = default;
+    virtual ~IController() = default;
+
     /**
      * @brief errorToString this method convert the ControllerError to QString.
      * @param error - error id

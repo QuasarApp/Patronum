@@ -11,10 +11,14 @@ class IService
 {
 public:
     IService();
+    virtual ~IService() = default;
 
     virtual void handleReceive(const QList<Feature>& data) = 0;
     virtual QList<Feature> supportedFeatures() = 0;
-
+    virtual void onStart() = 0;
+    virtual void onStop() = 0;
+    virtual void onResume() = 0;
+    virtual void onPause() = 0;
 };
 }
 #endif // ISERVICE_H

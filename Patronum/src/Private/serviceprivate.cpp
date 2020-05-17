@@ -38,6 +38,34 @@ bool ServicePrivate::sendCmdResult(const QVariantMap &result) {
     return _socket->send(Package::createPackage(Command::FeatureResponce, result));
 }
 
+bool ServicePrivate::hendleStandartCmd(QList<Feature> *cmds) {
+
+    if (!cmds)
+        return false;
+
+    if (!_service)
+        return false;
+
+    for (int i = 0; i < cmds->size(); ++i) {
+        if (cmds->value(i).cmd() == "stop") {
+            _service->onStop();
+            cmds->removeAt(i);
+            i--;
+        } else if (cmds->value(i).cmd() == "pause") {
+            _service->onPause();
+            cmds->removeAt(i);
+            i--;
+        } else if (cmds->value(i).cmd() == "resume") {
+            _service->onResume();
+            cmds->removeAt(i);
+            i--;
+        }
+
+    }
+
+    return true;
+}
+
 void ServicePrivate::handleReceve(QByteArray data) {
 
     const Package package = Package::parsePackage(data);
@@ -91,7 +119,10 @@ void ServicePrivate::handleReceve(QByteArray data) {
 
         QList<Feature> feature;
         stream >> feature;
-        _service->handleReceive(feature);
+        hendleStandartCmd(&feature);
+
+        if (feature.size())
+            _service->handleReceive(feature);
 
         break;
 

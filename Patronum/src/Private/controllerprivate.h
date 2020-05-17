@@ -6,14 +6,24 @@ namespace Patronum {
 
 class IController;
 class LocalSocket;
+class Installer;
 
 class ControllerPrivate: public QObject
 {
     Q_OBJECT
 public:
-    ControllerPrivate(const QString& name, IController* controller = nullptr, QObject *parent = nullptr);
+    ControllerPrivate(const QString& name, const QString& servicePath,
+                      IController* controller = nullptr, QObject *parent = nullptr);
+    ~ControllerPrivate();
     bool sendFeaturesRequest();
     bool sendCmd(const QList<Feature>& result);
+
+    bool start() const;
+    bool stop();
+    bool install() const;
+    bool uninstall() const;
+    bool pause();
+    bool resume();
 
     bool waitForResponce(int msec);
 
@@ -29,7 +39,8 @@ private:
     IController *_controller = nullptr;
     bool _responce = false;
     QList<Feature> _features;
-
+    QString _serviceExe = "";
+    Installer *_installer = nullptr;
 
 private slots:
     void handleReceve(QByteArray data);

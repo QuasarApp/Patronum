@@ -42,7 +42,7 @@ void testPatronum::testPing() {
         "ping"
     };
     DefaultController cli;
-
+    QuasarAppUtils::Params::clearParsedData();
     QVERIFY(cli.send(2 , const_cast<char**>(arg)));
     QVERIFY(cli.waitForResponce(1000));
     QVERIFY(cli.getResponce().value("Result") == "pong");
@@ -54,6 +54,7 @@ void testPatronum::testRandomCommad() {
         "fd"
     };
     DefaultController cli;
+    QuasarAppUtils::Params::clearParsedData();
 
     QVERIFY(cli.send(2 , const_cast<char**>(arg)));
     QVERIFY(cli.waitForResponce(1000));
