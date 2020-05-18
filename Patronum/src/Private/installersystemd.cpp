@@ -43,7 +43,7 @@ bool InstallerSystemD::install(const QString &executable) {
                 systemDPath + serviceName() + ".service");
 
     QSettings::Status ret = settings->status();
-    if (ret == QSettings::AccessError && renamed) {
+    if (ret == QSettings::AccessError || !renamed) {
 
         QuasarAppUtils::Params::log(QString{"Cannot install %0. Cannot write to: %1. Check permissions.\n"}.
                                     arg(serviceName(), systemDPath + serviceName() + ".service"),
@@ -87,19 +87,17 @@ bool InstallerSystemD::disable() {
     return proc.waitForFinished();
 }
 
-void InstallerSystemD::initService() {
+QSettings *InstallerSystemD::getSettings(const QString& serviceName) {
+
+    static QSettings* res = new QSettings(QSettings::SystemScope, serviceName);
 
     if (!isServiceInited) {
-        QSettings::setPath(QSettings::NativeFormat,
+        res->setPath(QSettings::NativeFormat,
                            QSettings::SystemScope,
                            systemDPath);
         isServiceInited = true;
     }
-}
 
-QSettings *InstallerSystemD::getSettings(const QString& serviceName) {
-    initService();
-    static QSettings* res = new QSettings(QSettings::SystemScope, serviceName);
     return res;
 }
 

@@ -28,7 +28,6 @@ public:
     bool enable() override;
     bool disable() override;
 protected:
-    void initService();
     QSettings * getSettings(const QString &serviceName);
 
 

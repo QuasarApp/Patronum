@@ -45,7 +45,7 @@ public:
      * @brief startDetached
      * @return true if service started seccessful.
      */
-    bool startDetached() const;
+    int startDetached() const;
 
     /**
      * @brief waitForResponce - waut for get a responce from servece
