@@ -17,14 +17,6 @@ ControllerPrivate::ControllerPrivate(const QString &name, const QString &service
     _serviceExe = servicePath;
     _controller = controller;
 
-    if (!_socket->connectToTarget()) {
-        QuasarAppUtils::Params::log("Connect to service fail !",
-                                    QuasarAppUtils::Debug);
-        _controller->handleError(ControllerError::ServiceUnavailable);
-
-    };
-
-
 #ifdef Q_OS_LINUX
     _installer = new InstallerSystemD(name);
 #endif
@@ -92,6 +84,8 @@ int ControllerPrivate::start() const {
         return  static_cast<int>(ControllerError::SystemError);
     }
 
+    _controller->handleResponce({{"Result", "start service successful"}});
+
     return 0;
 }
 
@@ -106,7 +100,13 @@ bool ControllerPrivate::install() const {
         return false;
     }
 
-    return _installer->install(_serviceExe);
+    if (!_installer->install(_serviceExe)) {
+        return false;
+    }
+
+    _controller->handleResponce({{"Result", "Install service successful"}});
+
+    return true;
 }
 
 bool ControllerPrivate::uninstall() const {
@@ -115,6 +115,12 @@ bool ControllerPrivate::uninstall() const {
                                     QuasarAppUtils::Error);
         return false;
     }
+
+    if (!_installer->uninstall()) {
+        return false;
+    }
+
+    _controller->handleResponce({{"Result", "Uninstall service successful"}});
 
     return _installer->uninstall();
 }
@@ -150,7 +156,24 @@ QList<Feature> ControllerPrivate::features() const {
 }
 
 bool ControllerPrivate::isConnected() const {
-    return _responce;
+    return _socket->isValid();
+}
+
+bool ControllerPrivate::connectToHost() const {
+    if (isConnected()) {
+        return true;
+    }
+
+    if (!_socket->connectToTarget()) {
+        QuasarAppUtils::Params::log("Connect to service fail !",
+                                    QuasarAppUtils::Debug);
+        _controller->handleError(ControllerError::ServiceUnavailable);
+
+        return false;
+
+    };
+
+    return true;
 }
 
 void ControllerPrivate::handleReceve(QByteArray data) {

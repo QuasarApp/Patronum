@@ -31,6 +31,8 @@ public:
 
     bool isConnected() const;
 
+    bool connectToHost() const;
+
 signals:
     void sigListFeatures(QList<Feature>);
 

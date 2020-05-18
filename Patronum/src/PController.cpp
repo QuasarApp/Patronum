@@ -25,6 +25,11 @@ bool Controller::send(int argc, char **argv) {
 }
 
 bool Controller::send() {
+
+    if (!d_ptr->connectToHost()) {
+        return false;
+    }
+
     if (!QuasarAppUtils::Params::customParamasSize() ||
             QuasarAppUtils::Params::isEndable("h") ||
             QuasarAppUtils::Params::isEndable("help")) {
