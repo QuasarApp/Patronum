@@ -65,7 +65,7 @@ void testPatronum::testRandomCommad() {
 void testPatronum::connectTest() {
     DefaultService serv;
 
-    QTimer::singleShot(0, [this]() {
+    QTimer::singleShot(10, [this]() {
         testRandomCommad();
         testPing();
 

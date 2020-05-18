@@ -1,13 +1,15 @@
 #include "defaultservice.h"
+#include <QCoreApplication>
 
 char* arg[] = {
     const_cast<char*>("/"),
     const_cast<char*>("exec")
 };
+int argc = 2;
 
 DefaultService::DefaultService():
     Patronum::Service<QCoreApplication>(2, arg, "TestPatronum") {
-
+    _core = new QCoreApplication(argc, arg);
 }
 
 void DefaultService::onStart() {

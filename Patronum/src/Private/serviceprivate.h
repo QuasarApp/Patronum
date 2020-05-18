@@ -18,6 +18,8 @@ public:
     bool sendCmdResult(const QVariantMap& result);
     bool parseDefaultCmds();
 
+    void listen() const;
+
 private:
     LocalSocket *_socket = nullptr;
     IService  *_service = nullptr;

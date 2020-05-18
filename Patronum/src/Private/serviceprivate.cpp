@@ -13,13 +13,6 @@ Patronum::ServicePrivate::ServicePrivate(const QString &name, IService *service,
     QObject(parent) {
     _socket = new LocalSocket(name, this);
 
-    QTimer::singleShot(0, [this](){
-        if (!_socket->listen()) {
-            QuasarAppUtils::Params::log("Fail to create a terminal socket!");
-            QCoreApplication::exit(1);
-        };
-    });
-
     _service = service;
 
     QObject::connect(_socket, &LocalSocket::sigReceve,
@@ -36,6 +29,15 @@ bool ServicePrivate::sendCmdResult(const QVariantMap &result) {
     }
 
     return _socket->send(Package::createPackage(Command::FeatureResponce, result));
+}
+
+void ServicePrivate::listen() const {
+    QTimer::singleShot(0, [this](){
+        if (!_socket->listen()) {
+            QuasarAppUtils::Params::log("Fail to create a terminal socket!");
+            QCoreApplication::exit(1);
+        };
+    });
 }
 
 bool ServicePrivate::hendleStandartCmd(QList<Feature> *cmds) {

@@ -9,6 +9,7 @@ ServiceBase::ServiceBase(int argc, char *argv[], const QString &name) {
     QuasarAppUtils::Params::parseParams(argc, argv);
     d_ptr = new ServicePrivate(name, this);
     _serviceName = name;
+
 }
 
 ServiceBase::~ServiceBase() {
@@ -85,8 +86,9 @@ int ServiceBase::exec() {
         return static_cast<int>(ControllerError::ServiceUnavailable);
     }
 
+    d_ptr->listen();
+
     if (!_core) {
-        createApplication();
         return _core->exec();
     }
 
