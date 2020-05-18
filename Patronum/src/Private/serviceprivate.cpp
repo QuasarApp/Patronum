@@ -32,12 +32,10 @@ bool ServicePrivate::sendCmdResult(const QVariantMap &result) {
 }
 
 void ServicePrivate::listen() const {
-    QTimer::singleShot(0, [this](){
-        if (!_socket->listen()) {
-            QuasarAppUtils::Params::log("Fail to create a terminal socket!");
-            QCoreApplication::exit(1);
-        };
-    });
+    if (!_socket->listen()) {
+        QuasarAppUtils::Params::log("Fail to create a terminal socket!");
+        QCoreApplication::exit(1);
+    };
 }
 
 bool ServicePrivate::hendleStandartCmd(QList<Feature> *cmds) {

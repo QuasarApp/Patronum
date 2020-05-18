@@ -75,6 +75,9 @@ Controller *ServiceBase::controller() const {
 }
 
 int ServiceBase::exec() {
+    if (!_core) {
+        createApplication();
+    }
 
     if (!QuasarAppUtils::Params::customParamasSize()) {
         return controller()->startDetached();
@@ -87,10 +90,6 @@ int ServiceBase::exec() {
     }
 
     d_ptr->listen();
-
-    if (!_core) {
-        return _core->exec();
-    }
 
     return _core->exec();
 }
