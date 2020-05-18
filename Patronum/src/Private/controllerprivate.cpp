@@ -79,14 +79,20 @@ bool ControllerPrivate::sendCmd(const QList<Feature> &result) {
     return false;
 }
 
-bool ControllerPrivate::start() const {
+int ControllerPrivate::start() const {
 
     QProcess proc;
     proc.setProgram(_serviceExe);
     proc.setArguments({"exec"});
     proc.setProcessEnvironment(QProcessEnvironment::systemEnvironment());
 
-    return proc.startDetached();
+    if (!proc.startDetached()) {
+        QuasarAppUtils::Params::log("fail to start detached process: " + proc.errorString(),
+                                    QuasarAppUtils::Error);
+        return  static_cast<int>(ControllerError::SystemError);
+    }
+
+    return 0;
 }
 
 bool ControllerPrivate::stop() {

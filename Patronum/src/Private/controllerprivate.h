@@ -18,7 +18,7 @@ public:
     bool sendFeaturesRequest();
     bool sendCmd(const QList<Feature>& result);
 
-    bool start() const;
+    int start() const;
     bool stop();
     bool install() const;
     bool uninstall() const;

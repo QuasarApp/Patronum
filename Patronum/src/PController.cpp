@@ -39,7 +39,7 @@ bool Controller::send() {
     }
 
     if (QuasarAppUtils::Params::isEndable("start")) {
-        return d_ptr->start();
+        return !d_ptr->start();
     }
 
     if (QuasarAppUtils::Params::isEndable("stop")) {
@@ -71,7 +71,7 @@ bool Controller::send() {
     return d_ptr->sendCmd(sendData);
 }
 
-bool Controller::startDetached() const {
+int Controller::startDetached() const {
     return d_ptr->start();
 }
 

@@ -1,5 +1,6 @@
 #include "PServiceBase.h"
 #include <QCoreApplication>
+#include <QTimer>
 #include "PController.h"
 #include "serviceprivate.h"
 
@@ -56,6 +57,7 @@ bool ServiceBase::sendResuylt(const QString &result) {
 void ServiceBase::onStop() {
     sendResuylt("Success! Use default stop function");
     QCoreApplication::quit();
+
 }
 
 void ServiceBase::onResume() {
@@ -84,12 +86,14 @@ int ServiceBase::exec() {
     }
 
     if (QuasarAppUtils::Params::isEndable("exec")) {
-        onStart();
+        QTimer::singleShot(0, [this](){
+            onStart();
+            d_ptr->listen();
+
+        });
     } else if (!controller()->send()) {
         return static_cast<int>(ControllerError::ServiceUnavailable);
     }
-
-    d_ptr->listen();
 
     return _core->exec();
 }
