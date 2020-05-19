@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/systemd">
+        <file>SystemD/service.service</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,12 @@
+[Unit]
+Description=Automatet generated service of %0
+
+[Service]
+Type=forking
+User=root
+Group=root
+ExecStart=%0
+ExecStop=%0 stop
+
+[Install]
+WantedBy=multi-user.target

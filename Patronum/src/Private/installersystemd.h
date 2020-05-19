@@ -29,8 +29,6 @@ public:
     bool disable() override;
     bool isInstalled() const override;
 
-protected:
-    QSettings *getSettings(const QString &serviceName) override;
 private:
     QString absaluteServicePath() const;
 

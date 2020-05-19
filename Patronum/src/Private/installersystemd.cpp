@@ -23,46 +23,30 @@ bool InstallerSystemD::install(const QString &executable) {
         return true;
     }
 
-    auto settings = getSettings(serviceName());
+    QString service;
 
-    settings->beginGroup("Unit");
-    settings->setValue("Description", "Automatet generated service of " + executable);
-    settings->endGroup();
+    QFile templ(":/systemd/SystemD/service.service");
 
-    settings->beginGroup("Service");
-    settings->setValue("Type", "forking");
-    settings->setValue("User", "root");
-    settings->setValue("Group", "root");
-    settings->setValue("ExecStart", executable);
-    settings->setValue("ExecStop", executable + " stop");
-    settings->endGroup();
+    if (!templ.open(QIODevice::ReadOnly)) {
+        QuasarAppUtils::Params::log(QString{"Cannot install %0. System error.\n"}.
+                                    arg(executable),
+                                    QuasarAppUtils::Error);
+    }
 
-    settings->beginGroup("Install");
-    settings->setValue("WantedBy", "multi-user.target");
-    settings->endGroup();
+    service = templ.readAll();
+    templ.close();
 
-    settings->sync();
+    service = service.arg(executable);
+    templ.setFileName(absaluteServicePath());
 
-    QSettings::Status ret = settings->status();
-
-    if (ret == QSettings::AccessError) {
-
+    if (!templ.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
         QuasarAppUtils::Params::log(QString{"Cannot install %0. Cannot write to: %1. Check permissions.\n"}.
-                                    arg(serviceName(), systemDPath + serviceName() + ".conf"),
-                                    QuasarAppUtils::Error);
-
-        return false;
-    }
-
-    bool renamed = QFile(systemDPath + serviceName() + ".conf").rename(
-                absaluteServicePath());
-
-    if (!renamed) {
-        QuasarAppUtils::Params::log(QString{"Cannot install %0. Cannot rename service file to: %1. Check permissions.\n"}.
-                                    arg(serviceName(), absaluteServicePath()),
+                                    arg(executable, absaluteServicePath()),
                                     QuasarAppUtils::Error);
 
     }
+
+    templ.write(service.toLatin1());
 
     return enable();
 }
@@ -113,20 +97,6 @@ bool InstallerSystemD::disable() {
 
 bool InstallerSystemD::isInstalled() const {
     return QFile::exists(absaluteServicePath());
-}
-
-QSettings *InstallerSystemD::getSettings(const QString& serviceName) {
-
-    static QSettings* res = new QSettings(QSettings::SystemScope, serviceName);
-
-    if (!isServiceInited) {
-        res->setPath(QSettings::NativeFormat,
-                           QSettings::SystemScope,
-                           systemDPath);
-        isServiceInited = true;
-    }
-
-    return res;
 }
 
 QString InstallerSystemD::absaluteServicePath() const {

@@ -42,7 +42,6 @@ public:
     bool disable() override;
 
 protected:
-    virtual QSettings * getSettings(const QString &serviceName);
     void savePath() const;
     QString getPath() const;
 

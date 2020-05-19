@@ -27,6 +27,8 @@ find_package(Qt5 COMPONENTS Core Network REQUIRED)
 file(GLOB SOURCE_CPP
     "src/*.cpp"
     "src/Private/*.cpp"
+    "src/Private/*.qrc"
+
 
 )
 

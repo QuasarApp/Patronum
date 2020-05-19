@@ -55,12 +55,6 @@ bool BaseInstaller::disable() {
     return true;
 }
 
-QSettings *BaseInstaller::getSettings(const QString &serviceName) {
-
-    static QSettings* res = new QSettings(QSettings::SystemScope, serviceName);
-    return res;
-}
-
 QString BaseInstaller::getPath() const {
     QSettings settings;
 
