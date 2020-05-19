@@ -26,6 +26,18 @@ bool Controller::send(int argc, char **argv) {
 
 bool Controller::send() {
 
+    if (QuasarAppUtils::Params::isEndable("start")) {
+        return !d_ptr->start();
+    }
+
+    if (QuasarAppUtils::Params::isEndable("install")) {
+        return d_ptr->install();
+    }
+
+    if (QuasarAppUtils::Params::isEndable("uninstall")) {
+        return d_ptr->uninstall();
+    }
+
     if (!d_ptr->connectToHost()) {
         return false;
     }
@@ -34,17 +46,14 @@ bool Controller::send() {
             QuasarAppUtils::Params::isEndable("h") ||
             QuasarAppUtils::Params::isEndable("help")) {
 
+        printDefaultHelp();
+
         if (!d_ptr->sendFeaturesRequest()) {
             return false;
         }
 
-        printDefaultHelp();
 
         return true;
-    }
-
-    if (QuasarAppUtils::Params::isEndable("start")) {
-        return !d_ptr->start();
     }
 
     if (QuasarAppUtils::Params::isEndable("stop")) {
@@ -57,14 +66,6 @@ bool Controller::send() {
 
     if (QuasarAppUtils::Params::isEndable("pause")) {
         return d_ptr->pause();
-    }
-
-    if (QuasarAppUtils::Params::isEndable("install")) {
-        return d_ptr->install();
-    }
-
-    if (QuasarAppUtils::Params::isEndable("uninstall")) {
-        return d_ptr->uninstall();
     }
 
     QList<Feature> sendData = {};

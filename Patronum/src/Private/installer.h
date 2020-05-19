@@ -21,6 +21,9 @@ public:
     virtual bool enable() = 0;
     virtual bool disable() = 0;
 
+    virtual bool isInstalled() const = 0;
+    virtual QString getExecutable() const = 0;
+
 protected:
     QString serviceName() const;
 

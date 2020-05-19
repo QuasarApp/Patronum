@@ -75,6 +75,10 @@ int ControllerPrivate::start() const {
 
     QProcess proc;
     proc.setProgram(_serviceExe);
+    if (_installer && _installer->isInstalled() && _installer->getExecutable().size()) {
+        proc.setProgram(_installer->getExecutable());
+    }
+
     proc.setArguments({"exec"});
     proc.setProcessEnvironment(QProcessEnvironment::systemEnvironment());
 

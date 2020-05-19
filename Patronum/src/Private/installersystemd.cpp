@@ -9,7 +9,7 @@ const QString systemDPath = "/etc/systemd/system/";
 static bool isServiceInited = false;
 
 InstallerSystemD::InstallerSystemD(const QString& name):
-    Installer(name) {
+    BaseInstaller(name) {
 
 }
 
@@ -18,6 +18,10 @@ Patronum::InstallerSystemD::~InstallerSystemD() {
 }
 
 bool InstallerSystemD::install(const QString &executable) {
+
+    if (BaseInstaller::install(executable)) {
+        return true;
+    }
 
     auto settings = getSettings(serviceName());
 
@@ -39,26 +43,38 @@ bool InstallerSystemD::install(const QString &executable) {
 
     settings->sync();
 
-    bool renamed = QFile(systemDPath + serviceName() + ".conf").rename(
-                systemDPath + serviceName() + ".service");
-
     QSettings::Status ret = settings->status();
-    if (ret == QSettings::AccessError || !renamed) {
+
+    if (ret == QSettings::AccessError) {
 
         QuasarAppUtils::Params::log(QString{"Cannot install %0. Cannot write to: %1. Check permissions.\n"}.
-                                    arg(serviceName(), systemDPath + serviceName() + ".service"),
+                                    arg(serviceName(), systemDPath + serviceName() + ".conf"),
                                     QuasarAppUtils::Error);
 
         return false;
+    }
+
+    bool renamed = QFile(systemDPath + serviceName() + ".conf").rename(
+                absaluteServicePath());
+
+    if (!renamed) {
+        QuasarAppUtils::Params::log(QString{"Cannot install %0. Cannot rename service file to: %1. Check permissions.\n"}.
+                                    arg(serviceName(), absaluteServicePath()),
+                                    QuasarAppUtils::Error);
+
     }
 
     return enable();
 }
 
 bool InstallerSystemD::uninstall() {
-    if (!(disable() && QFile::remove(systemDPath + serviceName() + ".service"))) {
+    if (BaseInstaller::uninstall()) {
+        return true;
+    }
+
+    if (!(disable() && QFile::remove(absaluteServicePath()))) {
         QuasarAppUtils::Params::log(QString("Cannot uninstall %0. Cannot remove %1. Check permissions.\n").
-                                    arg(serviceName(), systemDPath + serviceName() + ".service"),
+                                    arg(serviceName(), absaluteServicePath()),
                                     QuasarAppUtils::Error);
         return false;
     }
@@ -66,6 +82,10 @@ bool InstallerSystemD::uninstall() {
 }
 
 bool InstallerSystemD::enable() {
+    if (!BaseInstaller::enable()) {
+        return false;
+    }
+
     QProcess proc;
     proc.setProgram("systemctl");
     proc.setProcessEnvironment(QProcessEnvironment::systemEnvironment());
@@ -77,6 +97,10 @@ bool InstallerSystemD::enable() {
 }
 
 bool InstallerSystemD::disable() {
+    if (!BaseInstaller::disable()) {
+        return false;
+    }
+
     QProcess proc;
     proc.setProgram("systemctl");
     proc.setProcessEnvironment(QProcessEnvironment::systemEnvironment());
@@ -85,6 +109,10 @@ bool InstallerSystemD::disable() {
     proc.start();
 
     return proc.waitForFinished();
+}
+
+bool InstallerSystemD::isInstalled() const {
+    return QFile::exists(absaluteServicePath());
 }
 
 QSettings *InstallerSystemD::getSettings(const QString& serviceName) {
@@ -99,6 +127,10 @@ QSettings *InstallerSystemD::getSettings(const QString& serviceName) {
     }
 
     return res;
+}
+
+QString InstallerSystemD::absaluteServicePath() const {
+    return systemDPath + serviceName() + ".service";
 }
 
 }

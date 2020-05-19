@@ -1,7 +1,7 @@
 #ifndef INSTALLERSYSTEMD_H
 #define INSTALLERSYSTEMD_H
 
-#include "installer.h"
+#include "baseinstaller.h"
 
 class QSettings;
 
@@ -11,7 +11,7 @@ namespace Patronum {
  * @brief The InstallerSystemD class
  * this implementation install service on linux systems (systemD)
  */
-class InstallerSystemD: public Installer
+class InstallerSystemD: public BaseInstaller
 {
 public:
     /**
@@ -27,9 +27,12 @@ public:
     bool uninstall() override;
     bool enable() override;
     bool disable() override;
-protected:
-    QSettings * getSettings(const QString &serviceName);
+    bool isInstalled() const override;
 
+protected:
+    QSettings *getSettings(const QString &serviceName) override;
+private:
+    QString absaluteServicePath() const;
 
 };
 
