@@ -6,7 +6,6 @@
 namespace Patronum {
 
 const QString systemDPath = "/etc/systemd/system/";
-static bool isServiceInited = false;
 
 InstallerSystemD::InstallerSystemD(const QString& name):
     BaseInstaller(name) {

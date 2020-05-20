@@ -91,9 +91,13 @@ int ServiceBase::exec() {
             d_ptr->listen();
 
         });
-    } else if (!controller()->send()) {
-        return static_cast<int>(ControllerError::ServiceUnavailable);
     }
+
+    QTimer::singleShot(0, [this](){
+        if (!controller()->send()) {
+            _core->exit(static_cast<int>(ControllerError::ServiceUnavailable));
+        }
+    });
 
     return _core->exec();
 }

@@ -132,16 +132,19 @@ QList<Feature> Controller::features() {
 }
 
 void Controller::printDefaultHelp() const {
-    QuasarAppUtils::Help::Charters help{{"General options of this controller",{
-        {"start",    QObject::tr("Start a service")},
-        {"stop",     QObject::tr("Stop a service")},
-        {"pause",    QObject::tr("Pause a service")},
-        {"resume",   QObject::tr("Resume a service")},
-        {"install",  QObject::tr("Install a service")},
-        {"uninstall", QObject::tr("Uninstall a service")}
-    }}};
 
-    QuasarAppUtils::Help::print(help);
+    auto quasarappHelp = QuasarAppUtils::Params::getparamsHelp();
+
+    QuasarAppUtils::Help::Charters help{{"General options of this controller",{
+                {"start",    QObject::tr("Start a service")},
+                {"stop",     QObject::tr("Stop a service")},
+                {"pause",    QObject::tr("Pause a service")},
+                {"resume",   QObject::tr("Resume a service")},
+                {"install",  QObject::tr("Install a service")},
+                {"uninstall", QObject::tr("Uninstall a service")}
+            }}};
+
+    QuasarAppUtils::Help::print(quasarappHelp.unite(help));
 }
 
 }
