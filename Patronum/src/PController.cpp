@@ -38,21 +38,22 @@ bool Controller::send() {
         return d_ptr->uninstall();
     }
 
+    bool printHelp = !QuasarAppUtils::Params::customParamasSize() ||
+            QuasarAppUtils::Params::isEndable("h") ||
+            QuasarAppUtils::Params::isEndable("help");
+
+    if (printHelp) {
+        printDefaultHelp();
+    }
+
     if (!d_ptr->connectToHost()) {
         return false;
     }
 
-    if (!QuasarAppUtils::Params::customParamasSize() ||
-            QuasarAppUtils::Params::isEndable("h") ||
-            QuasarAppUtils::Params::isEndable("help")) {
-
-        printDefaultHelp();
-
+    if (printHelp) {
         if (!d_ptr->sendFeaturesRequest()) {
             return false;
         }
-
-
         return true;
     }
 
@@ -71,6 +72,10 @@ bool Controller::send() {
     QList<Feature> sendData = {};
     auto userParams = QuasarAppUtils::Params::getUserParamsMap();
     for (auto val = userParams.begin(); val != userParams.end(); ++val) {
+        if (val.key() == "verbose" || val.key() == "fileLog") {
+            continue;
+        }
+
         sendData += {val.key(), val.value()};
     }
 

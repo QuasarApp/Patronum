@@ -81,6 +81,7 @@ int ControllerPrivate::start() const {
 
     proc.setArguments({"exec"});
     proc.setProcessEnvironment(QProcessEnvironment::systemEnvironment());
+    proc.setProcessChannelMode(QProcess::SeparateChannels);
 
     if (!proc.startDetached()) {
         QuasarAppUtils::Params::log("fail to start detached process: " + proc.errorString(),
