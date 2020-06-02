@@ -20,7 +20,7 @@ Becouse This library offers easy interface to control your demons likewise the m
  * git submodule update --init --recursive
  * Include in your CMakeLists.txt file the main CMakeLists.txt file of Patronum library
   ``` cmake
-    include(Patronum)
+    add_subdirectory(Patronum)
   ```
  * Rebuild yuor project
 
