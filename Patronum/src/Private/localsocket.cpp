@@ -34,7 +34,7 @@ bool LocalSocket::registerSokcet(QLocalSocket *socket) {
     connect(m_socket, &QLocalSocket::readyRead,
             this, &LocalSocket::handleReadyRead);
 
-    connect(m_socket, qOverload<QLocalSocket::LocalSocketError>(&QLocalSocket::error),
+    connect(m_socket, qOverload<QLocalSocket::LocalSocketError>(&QLocalSocket::errorOccurred),
             this, &LocalSocket::handleSocketError);
 
     handleStateChanged(m_socket->state());
