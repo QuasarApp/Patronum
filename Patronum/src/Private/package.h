@@ -37,7 +37,7 @@ public:
     template<class DATA>
     static QByteArray createPackage(Command cmd, const DATA &data) {
         QByteArray result;
-        QDataStream stream(&result, QIODevice::WriteOnly);
+        QDataStream stream(&result, QDataStream::WriteOnly);
 
         stream << cmd;
         stream << data;
