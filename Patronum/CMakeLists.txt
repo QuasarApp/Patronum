@@ -22,7 +22,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_definitions(-DPATRONUM_LIBRARY)
 
-find_package(Qt5 COMPONENTS Core Network REQUIRED)
+find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Network REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Network REQUIRED)
 
 file(GLOB SOURCE_CPP
     "src/*.cpp"
@@ -33,7 +34,7 @@ file(GLOB SOURCE_CPP
 )
 
 add_library(${CURRENT_PROJECT} SHARED ${SOURCE_CPP})
-target_link_libraries(${CURRENT_PROJECT} PUBLIC Qt5::Core Qt5::Network QuasarApp)
+target_link_libraries(${CURRENT_PROJECT} PUBLIC Qt::Core Qt::Network QuasarApp)
 target_include_directories(${CURRENT_PROJECT} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")
 target_include_directories(${CURRENT_PROJECT} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src/Private")
 
