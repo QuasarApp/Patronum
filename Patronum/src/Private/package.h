@@ -11,6 +11,7 @@
 #include <QDataStream>
 #include <PFeature.h>
 #include <QVariantMap>
+#include <QIODevice>
 
 namespace Patronum {
 
@@ -37,7 +38,7 @@ public:
     template<class DATA>
     static QByteArray createPackage(Command cmd, const DATA &data) {
         QByteArray result;
-        QDataStream stream(&result, QDataStream::WriteOnly);
+        QDataStream stream(&result, QIODevice::WriteOnly);
 
         stream << cmd;
         stream << data;
