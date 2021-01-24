@@ -19,7 +19,15 @@ LocalSocket::LocalSocket(const QString &target, QObject *ptr):
 }
 
 LocalSocket::~LocalSocket() {
+    if (m_server) {
+        m_server->close();
+        delete m_server;
+    }
 
+    if (m_socket) {
+        m_socket->close();
+        delete  m_socket;
+    }
 }
 
 bool LocalSocket::registerSokcet(QLocalSocket *socket) {
@@ -105,10 +113,11 @@ void LocalSocket::handleReadyRead() {
 
 void LocalSocket::handleIncomming() {
     if (m_socket) {
-        m_socket->disconnect();
+        m_socket->close();
         m_socket->deleteLater();
         m_socket = nullptr;
     }
+
     registerSokcet(m_server->nextPendingConnection());
 }
 

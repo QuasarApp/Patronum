@@ -97,7 +97,7 @@ protected:
      * @brief controller
      * @return own controller instance;
      */
-    Controller *controller() const;
+    Controller *controller();
 
     QCoreApplication *_core = nullptr;
 private:

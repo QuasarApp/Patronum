@@ -7,6 +7,7 @@
 
 #include "PServiceBase.h"
 #include <QCoreApplication>
+#include <QLibraryInfo>
 #include <QTimer>
 #include "PController.h"
 #include "serviceprivate.h"
@@ -75,12 +76,14 @@ void ServiceBase::onPause() {
     sendResuylt("This function not supported");
 }
 
-Controller *ServiceBase::controller() const {
+Controller *ServiceBase::controller() {
     if (_controller)
         return _controller;
 
-    return new Controller(_serviceName,
-                          QuasarAppUtils::Params::getCurrentExecutable());
+    _controller = new Controller(_serviceName,
+                               QuasarAppUtils::Params::getCurrentExecutable());
+
+    return _controller;
 }
 
 int ServiceBase::exec() {
@@ -88,23 +91,25 @@ int ServiceBase::exec() {
         createApplication();
     }
 
-    if (!QuasarAppUtils::Params::customParamasSize()) {
+    bool fExec = QuasarAppUtils::Params::isEndable("exec") || QuasarAppUtils::Params::isDebugBuild();
+
+    if (!(QuasarAppUtils::Params::customParamasSize() || fExec)) {
         return controller()->startDetached();
     }
 
-    if (QuasarAppUtils::Params::isEndable("exec")) {
+    if (fExec) {
         QTimer::singleShot(0, [this](){
             onStart();
             d_ptr->listen();
 
         });
+    } else {
+        QTimer::singleShot(0, [this](){
+            if (!controller()->send()) {
+                _core->exit(static_cast<int>(ControllerError::ServiceUnavailable));
+            }
+        });
     }
-
-    QTimer::singleShot(0, [this](){
-        if (!controller()->send()) {
-            _core->exit(static_cast<int>(ControllerError::ServiceUnavailable));
-        }
-    });
 
     return _core->exec();
 }
