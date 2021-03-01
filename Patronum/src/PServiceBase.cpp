@@ -98,13 +98,13 @@ int ServiceBase::exec() {
     }
 
     if (fExec) {
-        QTimer::singleShot(0, [this](){
+        QTimer::singleShot(0, nullptr, [this](){
             onStart();
             d_ptr->listen();
 
         });
     } else {
-        QTimer::singleShot(0, [this](){
+        QTimer::singleShot(0, nullptr, [this](){
             if (!controller()->send()) {
                 _core->exit(static_cast<int>(ControllerError::ServiceUnavailable));
             }
