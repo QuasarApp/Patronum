@@ -31,7 +31,7 @@ private:
     LocalSocket *_socket = nullptr;
     IService  *_service = nullptr;
 
-    bool hendleStandartCmd(QList<Feature> *cmds);
+    bool handleStandartCmd(QList<Feature> *cmds);
 
 private slots:
     void handleReceve(QByteArray data);

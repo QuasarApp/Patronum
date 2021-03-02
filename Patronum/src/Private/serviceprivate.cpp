@@ -45,7 +45,7 @@ void ServicePrivate::listen() const {
     };
 }
 
-bool ServicePrivate::hendleStandartCmd(QList<Feature> *cmds) {
+bool ServicePrivate::handleStandartCmd(QList<Feature> *cmds) {
 
     if (!cmds)
         return false;
@@ -126,7 +126,7 @@ void ServicePrivate::handleReceve(QByteArray data) {
 
         QList<Feature> feature;
         stream >> feature;
-        hendleStandartCmd(&feature);
+        handleStandartCmd(&feature);
 
         if (feature.size())
             _service->handleReceive(feature);
