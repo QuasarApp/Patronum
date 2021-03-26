@@ -14,6 +14,7 @@ namespace Patronum {
 class IController;
 class LocalSocket;
 class Installer;
+class Parser;
 
 class ControllerPrivate: public QObject
 {
@@ -50,6 +51,7 @@ private:
     QList<Feature> _features;
     QString _serviceExe = "";
     Installer *_installer = nullptr;
+    Parser * _parser;
 
 private slots:
     void handleReceve(QByteArray data);

@@ -34,6 +34,8 @@ private slots:
 testPatronum::testPatronum() {
     QuasarAppUtils::Params::setArg("verbose", "3");
 
+    QFile::remove("/tmp/PTestPatronum");
+
 }
 
 void testPatronum::testPing() {

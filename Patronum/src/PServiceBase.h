@@ -46,7 +46,7 @@ protected:
      * @param data - is list of commands from controller
      * Default inplementation send message abount error, and invoke the .
      */
-    void handleReceiveData(const QList<Feature> &data) override final;
+    void handleReceiveData(const QSet<Feature> &data) override final;
 
     /**
      * @brief supportedFeatures

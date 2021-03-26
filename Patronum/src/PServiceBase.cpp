@@ -25,7 +25,7 @@ ServiceBase::~ServiceBase() {
     delete d_ptr;
 }
 
-void ServiceBase::handleReceiveData(const QList<Feature> &data) {
+void ServiceBase::handleReceiveData(const QSet<Feature> &data) {
     auto list = supportedFeatures();
 
     QString commandList;

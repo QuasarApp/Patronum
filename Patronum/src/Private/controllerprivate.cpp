@@ -14,6 +14,7 @@
 #include <quasarapp.h>
 #include "package.h"
 #include "installersystemd.h"
+#include "parser.h"
 
 namespace Patronum {
 
@@ -23,6 +24,7 @@ ControllerPrivate::ControllerPrivate(const QString &name, const QString &service
     _socket = new LocalSocket(name, this);
     _serviceExe = servicePath;
     _controller = controller;
+    _parser = new Parser();
 
 #ifdef Q_OS_LINUX
     _installer = new InstallerSystemD(name);
@@ -37,6 +39,7 @@ ControllerPrivate::~ControllerPrivate() {
     if (_installer) {
         delete _installer;
     }
+    delete _parser;
 }
 
 bool ControllerPrivate::sendFeaturesRequest() {
@@ -196,57 +199,62 @@ void ControllerPrivate::handleReceve(QByteArray data) {
         return;
     }
 
-    const Package package = Package::parsePackage(data);
-
-    if (!package.isValid()) {
-
-        QuasarAppUtils::Params::log("Received invalid package!",
-                                    QuasarAppUtils::Debug);
-
-        _controller->handleError(ControllerError::InvalidPackage);
-
+    QList<Package> packages;
+    if (!_parser->parse(data, packages)) {
         return;
     }
 
-    switch (package.cmd()) {
+    for (const auto& pkg: qAsConst(packages)) {
+        if (!pkg.isValid()) {
 
-    case Command::Features: {
+            QuasarAppUtils::Params::log("Received invalid package!",
+                                        QuasarAppUtils::Debug);
 
-        QDataStream stream(package.data());
+            _controller->handleError(ControllerError::InvalidPackage);
 
-        QList<Feature> features;
-        stream >> features;
-        _features = features;
+            continue;;
+        }
 
-        _controller->handleFeatures(features);
+        switch (pkg.cmd()) {
 
-        break;
+        case Command::Features: {
 
-    }
+            QDataStream stream(pkg.data());
 
-    case Command::CloseConnection: {
-        _responce = true;
-        break;
-    }
+            QList<Feature> features;
+            stream >> features;
+            _features = features;
 
-    case Command::FeatureResponce: {
+            _controller->handleFeatures(features);
 
-        QDataStream stream(package.data());
+            break;
+
+        }
+
+        case Command::CloseConnection: {
+            _responce = true;
+            break;
+        }
+
+        case Command::FeatureResponce: {
+
+            QDataStream stream(pkg.data());
 
 
-        QVariantMap responce;
-        stream >> responce;
-        _controller->handleResponce(responce);
+            QVariantMap responce;
+            stream >> responce;
+            _controller->handleResponce(responce);
 
-        break;
+            break;
 
-    }
-    default: {
-        QuasarAppUtils::Params::log("Wrong command!",
-                                    QuasarAppUtils::Debug);
-        _controller->handleError(ControllerError::WrongCommand);
+        }
+        default: {
+            QuasarAppUtils::Params::log("Wrong command!",
+                                        QuasarAppUtils::Debug);
+            _controller->handleError(ControllerError::WrongCommand);
 
-        break;
+            break;
+        }
     }
 
     }

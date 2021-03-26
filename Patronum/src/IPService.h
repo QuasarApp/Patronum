@@ -28,7 +28,7 @@ public:
      * For each command will invoke the handleReceive method.
      * @param data
      */
-    virtual void handleReceiveData(const QList<Feature>& data) = 0;
+    virtual void handleReceiveData(const QSet<Feature>& data) = 0;
 
     /**
      * @brief handleReceive This method invoked when service receive a request from terminal.

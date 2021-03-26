@@ -14,6 +14,7 @@ namespace Patronum {
 
 class LocalSocket;
 class IService;
+class Parser;
 
 class ServicePrivate: public QObject
 {
@@ -21,6 +22,7 @@ class ServicePrivate: public QObject
 public:
     ServicePrivate(const QString& name,
                    IService* service = nullptr, QObject *parent = nullptr);
+    ~ServicePrivate();
 
     bool sendCmdResult(const QVariantMap& result);
     bool sendCloseConnection();
@@ -32,8 +34,9 @@ public:
 private:
     LocalSocket *_socket = nullptr;
     IService  *_service = nullptr;
+    Parser *_parser = nullptr;
 
-    bool handleStandartCmd(QList<Feature> *cmds);
+    bool handleStandartCmd(QSet<Feature> *cmds);
 
 private slots:
     void handleReceve(QByteArray data);

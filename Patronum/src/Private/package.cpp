@@ -10,29 +10,27 @@
 namespace Patronum {
 
 Command Package::cmd() const {
-    return static_cast<Command>(m_cmd);
+    return static_cast<Command>(m_hdr.cmd);
 }
 
-QByteArray Package::data() const {
+const QByteArray &Package::data() const {
     return m_data;
 }
 
 bool Package::isValid() const {
-    return m_cmd <= static_cast<int>(Command::FeatureResponce);
+    return m_hdr.isValid() && m_hdr.size == m_data.size();
+}
+
+void Package::reset() {
+
 }
 
 Package::Package() {
 }
 
-Package Package::parsePackage(const QByteArray &data) {
-    if (!data.size()) {
-        return {};
-    }
-
-    Package pkg;
-    pkg.m_cmd = static_cast<unsigned char>(data.at(0));
-    pkg.m_data = data.right(data.size() - sizeof (pkg.m_cmd));
-    return pkg;
+bool Header::isValid() const {
+    return cmd && cmd <= static_cast<int>(Command::CloseConnection);
 }
+
 
 }
