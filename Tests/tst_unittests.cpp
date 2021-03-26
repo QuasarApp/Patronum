@@ -32,7 +32,7 @@ private slots:
 };
 
 testPatronum::testPatronum() {
-    QuasarAppUtils::Params::setArg("verbose", 3);
+    QuasarAppUtils::Params::setArg("verbose", "3");
 
 }
 
@@ -65,7 +65,7 @@ void testPatronum::testRandomCommad() {
 void testPatronum::connectTest() {
     DefaultService serv;
 
-    QTimer::singleShot(10, [this]() {
+    QTimer::singleShot(10, this, [this]() {
         testRandomCommad();
         testPing();
 

@@ -55,7 +55,7 @@ bool ControllerPrivate::sendFeaturesRequest() {
     return _socket->send(responce);
 }
 
-bool ControllerPrivate::sendCmd(const QList<Feature> &result) {
+bool ControllerPrivate::sendCmd(const QSet<Feature> &result) {
     if (!_socket->isValid()) {
         QuasarAppUtils::Params::log("scoket is closed!",
                                     QuasarAppUtils::Debug);
@@ -190,6 +190,12 @@ bool ControllerPrivate::connectToHost() const {
 
 void ControllerPrivate::handleReceve(QByteArray data) {
 
+    if (!_controller) {
+        QuasarAppUtils::Params::log("System error, controller is not inited!",
+                                    QuasarAppUtils::Error);
+        return;
+    }
+
     const Package package = Package::parsePackage(data);
 
     if (!package.isValid()) {
@@ -206,21 +212,11 @@ void ControllerPrivate::handleReceve(QByteArray data) {
 
     case Command::Features: {
 
-        if (!_controller) {
-            QuasarAppUtils::Params::log("System error, controller is not inited!",
-                                        QuasarAppUtils::Debug);
-            _controller->handleError(ControllerError::SystemError);
-
-            break;
-        }
-
         QDataStream stream(package.data());
 
         QList<Feature> features;
         stream >> features;
         _features = features;
-
-        _responce = true;
 
         _controller->handleFeatures(features);
 
@@ -228,18 +224,15 @@ void ControllerPrivate::handleReceve(QByteArray data) {
 
     }
 
-    case Command::FeatureResponce: {
-        if (!_controller) {
-            QuasarAppUtils::Params::log("System error, controller is not inited!",
-                                        QuasarAppUtils::Error);
-            _controller->handleError(ControllerError::SystemError);
+    case Command::CloseConnection: {
+        _responce = true;
+        break;
+    }
 
-            break;
-        }
+    case Command::FeatureResponce: {
 
         QDataStream stream(package.data());
 
-        _responce = true;
 
         QVariantMap responce;
         stream >> responce;

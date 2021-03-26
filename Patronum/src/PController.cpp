@@ -76,14 +76,14 @@ bool Controller::send() {
         return d_ptr->pause();
     }
 
-    QList<Feature> sendData = {};
+    QSet<Feature> sendData = {};
     auto userParams = QuasarAppUtils::Params::getUserParamsMap();
     for (auto val = userParams.begin(); val != userParams.end(); ++val) {
         if (val.key() == "verbose" || val.key() == "fileLog" || val.key() == "exec") {
             continue;
         }
 
-        sendData += {val.key(), val.value()};
+        sendData.insert(Feature{val.key(), val.value()});
     }
 
     return d_ptr->sendCmd(sendData);
@@ -148,12 +148,12 @@ void Controller::printDefaultHelp() const {
     auto quasarappHelp = QuasarAppUtils::Params::getparamsHelp();
 
     QuasarAppUtils::Help::Charters help{{"General options of this controller",{
-                {"start",    QObject::tr("Start a service")},
-                {"stop",     QObject::tr("Stop a service")},
-                {"pause",    QObject::tr("Pause a service")},
-                {"resume",   QObject::tr("Resume a service")},
-                {"install",  QObject::tr("Install a service")},
-                {"uninstall", QObject::tr("Uninstall a service")}
+                {"start",       QObject::tr("Start a service")},
+                {"stop",        QObject::tr("Stop a service")},
+                {"pause",       QObject::tr("Pause a service")},
+                {"resume",      QObject::tr("Resume a service")},
+                {"install",     QObject::tr("Install a service")},
+                {"uninstall",   QObject::tr("Uninstall a service")}
             }}};
 
     QuasarAppUtils::Help::print(quasarappHelp.unite(help));

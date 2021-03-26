@@ -23,6 +23,8 @@ public:
                    IService* service = nullptr, QObject *parent = nullptr);
 
     bool sendCmdResult(const QVariantMap& result);
+    bool sendCloseConnection();
+
     bool parseDefaultCmds();
 
     void listen() const;

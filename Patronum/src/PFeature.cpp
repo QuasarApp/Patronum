@@ -11,12 +11,12 @@
 
 namespace Patronum {
 
-Feature::Feature(const QString &cmd, const QVariant &arg,
+Feature::Feature(const QString &cmd, const QString &arg,
                  const QString &description, const QString &example) {
-    _cmd = cmd;
-    _arg = arg;
-    _description = description;
-    _example = example;
+    setCmd(cmd);
+    setArg(arg);
+    setDescription(description);
+    setExample(example);
 }
 
 QString Feature::cmd() const {
@@ -25,13 +25,14 @@ QString Feature::cmd() const {
 
 void Feature::setCmd(const QString &cmd) {
     _cmd = cmd;
+    _id = qHash(_cmd);
 }
 
-QVariant Feature::arg() const {
+QString Feature::arg() const {
     return _arg;
 }
 
-void Feature::setArg(const QVariantList &arg) {
+void Feature::setArg(const QString &arg) {
     _arg = arg;
 }
 
@@ -58,6 +59,10 @@ QString Feature::toString() const {
     return _cmd;
 }
 
+unsigned int Feature::id() const {
+    return _id;
+}
+
 QDataStream &operator<<(QDataStream &stream, const Feature &obj) {
     stream << obj._cmd << obj._arg;
 
@@ -69,4 +74,15 @@ QDataStream &operator>>(QDataStream &stream, Feature &obj) {
     return stream;
 }
 
+bool operator==(const Feature &left, const Feature &right) {
+    return left.id() == right.id();
 }
+
+
+uint qHash(const Feature &feature) {
+    return feature.id();
+}
+
+}
+
+

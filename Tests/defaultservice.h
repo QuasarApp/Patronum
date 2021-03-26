@@ -10,12 +10,12 @@ public:
 
     // QtServiceBase interface
 protected:
-    void onStart();
+    void onStart() override;
 
     // IService interface
 public:
-    void handleReceive(const QList<Patronum::Feature> &data);
-    QList<Patronum::Feature> supportedFeatures();
+    bool handleReceive(const Patronum::Feature &data) override;
+    QSet<Patronum::Feature> supportedFeatures() override;
 };
 
 #endif // DEFAULTSERVICE_H

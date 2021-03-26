@@ -21,7 +21,8 @@ enum class Command: quint8 {
     FeaturesRequest,
     Features,
     Feature,
-    FeatureResponce
+    FeatureResponce,
+    CloseConnection
 };
 
 /**

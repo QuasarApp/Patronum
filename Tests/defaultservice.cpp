@@ -16,22 +16,19 @@ void DefaultService::onStart() {
     QuasarAppUtils::Params::log("Server started!", QuasarAppUtils::Info);
 }
 
-void DefaultService::handleReceive(const QList<Patronum::Feature> &data) {
+bool DefaultService::handleReceive(const Patronum::Feature &data) {
 
-    QList<Patronum::Feature> notSupportedList;
-    for (const auto& i : data) {
-        if (i.cmd() == "ping") {
-            sendResuylt("pong");
-        } else {
-            notSupportedList += i;
-        }
+    if (data.cmd() == "ping") {
+        sendResuylt("pong");
+
+        return true;
     }
 
-    Patronum::Service<QCoreApplication>::handleReceive(notSupportedList);
+    return false;
 }
 
-QList<Patronum::Feature> DefaultService::supportedFeatures() {
-    QList<Patronum::Feature> res;
+QSet<Patronum::Feature> DefaultService::supportedFeatures() {
+    QSet<Patronum::Feature> res;
     res += Patronum::Feature("ping", {}, "test ping", "ping");
 
     return res;

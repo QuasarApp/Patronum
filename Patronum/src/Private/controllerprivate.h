@@ -23,7 +23,7 @@ public:
                       IController* controller = nullptr, QObject *parent = nullptr);
     ~ControllerPrivate();
     bool sendFeaturesRequest();
-    bool sendCmd(const QList<Feature>& result);
+    bool sendCmd(const QSet<Feature> &result);
 
     int start() const;
     bool stop();

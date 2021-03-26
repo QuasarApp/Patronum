@@ -38,6 +38,21 @@ bool ServicePrivate::sendCmdResult(const QVariantMap &result) {
     return _socket->send(Package::createPackage(Command::FeatureResponce, result));
 }
 
+bool ServicePrivate::sendCloseConnection() {
+    if (!_socket->isValid()) {
+        QuasarAppUtils::Params::log("scoket is closed!",
+                                    QuasarAppUtils::Error);
+        return false;
+    }
+
+    QByteArray responce;
+    QDataStream stream(&responce, QIODevice::WriteOnly);
+
+    stream << static_cast<quint8>(Command::CloseConnection);
+
+    return _socket->send(responce);
+}
+
 void ServicePrivate::listen() const {
     if (!_socket->listen()) {
         QuasarAppUtils::Params::log("Fail to create a terminal socket!");
@@ -83,23 +98,23 @@ void ServicePrivate::handleReceve(QByteArray data) {
         return;
     }
 
+    if (!_service) {
+        QuasarAppUtils::Params::log("System error, service is not inited!",
+                                    QuasarAppUtils::Error);
+        return;;
+    }
+
+    if (!_socket->isValid()) {
+        QuasarAppUtils::Params::log("scoket is closed!",
+                                    QuasarAppUtils::Error);
+        return;
+    }
+
     switch (package.cmd()) {
 
     case Command::FeaturesRequest: {
 
-        if (!_service) {
-            QuasarAppUtils::Params::log("System error, service is not inited!",
-                                        QuasarAppUtils::Error);
-            break;
-        }
-
-        if (!_socket->isValid()) {
-            QuasarAppUtils::Params::log("scoket is closed!",
-                                        QuasarAppUtils::Error);
-            break;
-        }
-
-        QList<Feature> features = _service->supportedFeatures();
+        QSet<Feature> features = _service->supportedFeatures();
         QByteArray sendData;
         QDataStream stream(&sendData, QIODevice::WriteOnly);
 
@@ -107,7 +122,7 @@ void ServicePrivate::handleReceve(QByteArray data) {
         stream << features;
 
         if (!_socket->send(sendData)) {
-            QuasarAppUtils::Params::log("scoket is closed!",
+            QuasarAppUtils::Params::log("Fail to send ",
                                         QuasarAppUtils::Error);
         }
 
@@ -116,11 +131,6 @@ void ServicePrivate::handleReceve(QByteArray data) {
     }
 
     case Command::Feature: {
-        if (!_service) {
-            QuasarAppUtils::Params::log("System error, service is not inited!",
-                                        QuasarAppUtils::Error);
-            break;
-        }
 
         QDataStream stream(package.data());
 
@@ -129,7 +139,7 @@ void ServicePrivate::handleReceve(QByteArray data) {
         handleStandartCmd(&feature);
 
         if (feature.size())
-            _service->handleReceive(feature);
+            _service->handleReceiveData(feature);
 
         break;
 
@@ -142,6 +152,8 @@ void ServicePrivate::handleReceve(QByteArray data) {
     }
 
     }
+
+    sendCloseConnection();
 
 }
 

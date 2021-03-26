@@ -25,33 +25,42 @@ ServiceBase::~ServiceBase() {
     delete d_ptr;
 }
 
-void ServiceBase::handleReceive(const QList<Feature> &data) {
-
+void ServiceBase::handleReceiveData(const QList<Feature> &data) {
     auto list = supportedFeatures();
 
-    QStringList stringList;
-
-    for (const auto&i : list) {
-        stringList += i.toString();
-    }
-
-    QVariantMap result;
-
     QString commandList;
-    for (const auto&i : data ) {
-        commandList += i.toString() + " ";
+
+    for (const auto& i: data) {
+        if (list.contains(i)) {
+            if (!handleReceive(i)) {
+                sendResuylt(QString("The process of a command %0 with argumets: %1 is failed")
+                            .arg(i.cmd()).arg(i.arg()));
+            }
+        } else {
+            commandList += i.toString() + " ";
+        }
     }
 
-    result["Error"] = "Wrong command! The commands : " + commandList  + " is not supported";
-    result["Available commands"] = stringList;
+    if (commandList.size()) {
+        QStringList stringList;
 
-    sendResuylt(result);
+        for (const auto&i : list) {
+            stringList += i.toString();
+        }
+
+        QVariantMap result;
+
+        result["Error"] = "Wrong command! The commands : " + commandList  + " is not supported";
+        result["Available commands"] = stringList;
+
+        sendResuylt(result);
+    }
+
 
 }
 
-QList<Feature> ServiceBase::supportedFeatures() {
-    QList<Feature> result;
-    return result;
+QSet<Feature> ServiceBase::supportedFeatures() {
+    return {};
 }
 
 bool ServiceBase::sendResuylt(const QVariantMap &result) {
@@ -60,6 +69,10 @@ bool ServiceBase::sendResuylt(const QVariantMap &result) {
 
 bool ServiceBase::sendResuylt(const QString &result) {
     return d_ptr->sendCmdResult({{"Result", result}});
+}
+
+bool ServiceBase::sendCloseeConnetion() {
+    return d_ptr->sendCloseConnection();
 }
 
 void ServiceBase::onStop() {
