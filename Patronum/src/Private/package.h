@@ -32,6 +32,7 @@ enum class Command: quint8 {
     /// This is response of the execute of command
     FeatureResponce,
     /// This command is finished command for the terminal. after receive this command terminal will closse connection.
+    /// @note For Devs This commnad should be last in the enum. This commnad uses in te validation of header.
     CloseConnection
 };
 

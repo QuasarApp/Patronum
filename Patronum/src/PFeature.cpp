@@ -70,7 +70,10 @@ QDataStream &operator<<(QDataStream &stream, const Feature &obj) {
 }
 
 QDataStream &operator>>(QDataStream &stream, Feature &obj) {
-    stream >> obj._cmd >> obj._arg;
+    decltype (obj._cmd) cmd;
+    stream >> cmd >> obj._arg;
+    obj.setCmd(cmd);
+
     return stream;
 }
 

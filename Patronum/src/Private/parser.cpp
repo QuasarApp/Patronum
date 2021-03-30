@@ -2,10 +2,7 @@
 #include <quasarapp.h>
 namespace Patronum {
 
-Parser::Parser()
-{
-
-}
+Parser::Parser() { }
 
 bool Parser::parse(const QByteArray &array,
                    QList<Package> &result) {

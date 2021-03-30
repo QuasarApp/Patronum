@@ -22,14 +22,14 @@ public:
      */
     bool parse(const QByteArray& array, QList<Package>& result);
 
-    template<class DATA>
+    template<class DATA = QByteArray>
     /**
      * @brief createPackage This method create a custom package with @a cmd and @a data
      * @param cmd This is package command.
      * @param data This is data object.
      * @return bytes arra of the package.
      */
-    QByteArray createPackage(Command cmd, const DATA &data) {
+    QByteArray createPackage(Command cmd, const DATA &data = {}) {
         QByteArray result;
         QDataStream stream(&result, QIODevice::WriteOnly);
 

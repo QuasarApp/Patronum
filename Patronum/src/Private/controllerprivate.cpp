@@ -50,12 +50,7 @@ bool ControllerPrivate::sendFeaturesRequest() {
         return false;
     }
 
-    QByteArray responce;
-    QDataStream stream(&responce, QIODevice::WriteOnly);
-
-    stream << static_cast<quint8>(Command::FeaturesRequest);
-
-    return _socket->send(responce);
+    return _socket->send(_parser->createPackage(Command::FeaturesRequest));
 }
 
 bool ControllerPrivate::sendCmd(const QSet<Feature> &result) {
@@ -67,13 +62,7 @@ bool ControllerPrivate::sendCmd(const QSet<Feature> &result) {
         return false;
     }
 
-    QByteArray request;
-    QDataStream stream(&request, QIODevice::WriteOnly);
-
-    stream << static_cast<quint8>(Command::Feature);
-    stream << result;
-
-    if (_socket->send(request)) {
+    if (_socket->send(_parser->createPackage(Command::Feature, result))) {
         _responce = false;
         return true;
     }

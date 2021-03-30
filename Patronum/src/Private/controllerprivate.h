@@ -45,6 +45,7 @@ signals:
     void sigListFeatures(QList<Feature>);
 
 private:
+
     LocalSocket *_socket = nullptr;
     IController *_controller = nullptr;
     bool _responce = false;

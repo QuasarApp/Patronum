@@ -22,10 +22,12 @@ bool Package::isValid() const {
 }
 
 void Package::reset() {
-
+    m_hdr = {0, 0};
+    m_data.clear();
 }
 
 Package::Package() {
+    reset();
 }
 
 bool Header::isValid() const {

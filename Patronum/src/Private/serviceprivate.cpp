@@ -51,12 +51,7 @@ bool ServicePrivate::sendCloseConnection() {
         return false;
     }
 
-    QByteArray responce;
-    QDataStream stream(&responce, QIODevice::WriteOnly);
-
-    stream << static_cast<quint8>(Command::CloseConnection);
-
-    return _socket->send(responce);
+    return _socket->send(_parser->createPackage(Command::CloseConnection));
 }
 
 void ServicePrivate::listen() const {
@@ -121,14 +116,8 @@ void ServicePrivate::handleReceve(QByteArray data) {
 
         case Command::FeaturesRequest: {
 
-            QSet<Feature> features = _service->supportedFeatures();
-            QByteArray sendData;
-            QDataStream stream(&sendData, QIODevice::WriteOnly);
-
-            stream << static_cast<quint8>(Command::Features);
-            stream << features;
-
-            if (!_socket->send(sendData)) {
+            if (!_socket->send(_parser->createPackage(Command::Features,
+                                                      _service->supportedFeatures()))) {
                 QuasarAppUtils::Params::log("Fail to send ",
                                             QuasarAppUtils::Error);
             }
