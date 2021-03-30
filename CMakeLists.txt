@@ -18,15 +18,13 @@ if(ANDROID)
 
 endif()
 
-
 include(Patronum/QuasarAppLib/CMake/ccache.cmake)
 # Add sub directories
 add_subdirectory(Patronum)
 
-if (${TARGET_PLATFORM_TOOLCHAIN} NOT STREQUAL "wasm32")
+if (NOT ${TARGET_PLATFORM_TOOLCHAIN} STREQUAL "wasm32")
     add_subdirectory(Tests)
 endif()
-
 
 include(Patronum/QuasarAppLib/CMake/QuasarAppCITargets.cmake)
 initAll()
