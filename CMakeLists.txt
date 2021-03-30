@@ -15,7 +15,6 @@ endif()
 if(ANDROID)
     message("The ${PROJECT_NAME} is still not supports Android builds  :(")
     return()
-
 endif()
 
 include(Patronum/QuasarAppLib/CMake/ccache.cmake)
