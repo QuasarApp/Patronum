@@ -12,19 +12,15 @@ if(TARGET ${PROJECT_NAME})
   return()
 endif()
 
-if(ANDROID)
-    message("The ${PROJECT_NAME} is still not supports Android builds  :(")
-    initAll()
-
-    return()
-endif()
 
 include(Patronum/QuasarAppLib/CMake/ccache.cmake)
 # Add sub directories
 add_subdirectory(Patronum)
 
-if (NOT ${TARGET_PLATFORM_TOOLCHAIN} STREQUAL "wasm32")
+if (NOT ${TARGET_PLATFORM_TOOLCHAIN} STREQUAL "wasm32" AND NOT ANDROID)
     add_subdirectory(Tests)
+else()
+    message("The ${PROJECT_NAME} tests is disable because you use the android or wasm32 build.")
 endif()
 
 include(Patronum/QuasarAppLib/CMake/QuasarAppCITargets.cmake)
