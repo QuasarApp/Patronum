@@ -18,7 +18,6 @@ if(ANDROID)
 
 endif()
 
-
 include(Patronum/QuasarAppLib/CMake/ccache.cmake)
 # Add sub directories
 add_subdirectory(Patronum)
