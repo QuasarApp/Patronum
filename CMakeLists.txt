@@ -14,6 +14,8 @@ endif()
 
 if(ANDROID)
     message("The ${PROJECT_NAME} is still not supports Android builds  :(")
+    initAll()
+
     return()
 endif()
 
