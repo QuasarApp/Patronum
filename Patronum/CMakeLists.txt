@@ -33,7 +33,7 @@ file(GLOB SOURCE_CPP
 
 )
 
-add_library(${CURRENT_PROJECT} SHARED ${SOURCE_CPP})
+add_library(${CURRENT_PROJECT} ${SOURCE_CPP})
 target_link_libraries(${CURRENT_PROJECT} PUBLIC Qt::Core Qt::Network QuasarApp)
 target_include_directories(${CURRENT_PROJECT} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")
 target_include_directories(${CURRENT_PROJECT} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src/Private")
