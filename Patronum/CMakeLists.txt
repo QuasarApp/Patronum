@@ -8,7 +8,6 @@
 cmake_minimum_required(VERSION 3.10)
 set(CURRENT_PROJECT ${PROJECT_NAME})
 
-add_subdirectory(QuasarAppLib)
 
 include(QuasarAppLib/CMake/ProjectOut.cmake)
 include(QuasarAppLib/CMake/Version.cmake)
@@ -20,13 +19,16 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_definitions(-DPATRONUM_LIBRARY)
 
 if (NOT QT_VERSION_MAJOR)
 
     find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Network REQUIRED)
     find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Network REQUIRED)
 endif ()
+
+add_subdirectory(QuasarAppLib)
+
+add_definitions(-DPATRONUM_LIBRARY)
 
 file(GLOB SOURCE_CPP
     "src/*.cpp"
