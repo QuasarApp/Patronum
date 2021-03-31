@@ -13,6 +13,7 @@ add_subdirectory(QuasarAppLib)
 include(QuasarAppLib/CMake/ProjectOut.cmake)
 include(QuasarAppLib/CMake/Version.cmake)
 
+
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
