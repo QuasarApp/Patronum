@@ -22,7 +22,7 @@ template<class Application>
  * ###How to use :
  * - just inherit from the Service class and override the methods you need.
  */
-class PATRONUM_LIBRARYSHARED_EXPORT Service : public ServiceBase
+class Service : public ServiceBase
 {
 public:
     /**

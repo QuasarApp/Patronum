@@ -45,9 +45,9 @@ public:
     QString arg() const;
     void setArg(const QString &arg);
 
-    friend QDataStream& operator<<(QDataStream& stream, const Feature& obj);
-    friend QDataStream& operator>>(QDataStream& stream, Feature& obj);
-    friend bool operator==(const Feature& left, const Feature& right);
+    PATRONUM_LIBRARYSHARED_EXPORT friend QDataStream& operator<<(QDataStream& stream, const Feature& obj);
+    PATRONUM_LIBRARYSHARED_EXPORT friend QDataStream& operator>>(QDataStream& stream, Feature& obj);
+    PATRONUM_LIBRARYSHARED_EXPORT friend bool operator==(const Feature& left, const Feature& right);
 
     /**
      * @brief description This method return description message of the command.
@@ -95,7 +95,7 @@ private:
     QString _arg;
 };
 
-uint qHash(const Feature& feature);
+uint PATRONUM_LIBRARYSHARED_EXPORT qHash(const Feature& feature);
 
 
 }
