@@ -25,7 +25,7 @@ file(GLOB SOURCE_CPP
 )
 
 add_executable(${CURRENT_PROJECT} ${SOURCE_CPP})
-target_link_libraries(${CURRENT_PROJECT} PRIVATE Qt::Test Patronum)
+target_link_libraries(${CURRENT_PROJECT} PUBLIC Qt::Test Patronum)
 target_include_directories(${CURRENT_PROJECT} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 include(../Patronum/QuasarAppLib/CMake/QuasarAppCITargets.cmake)
