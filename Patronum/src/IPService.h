@@ -9,6 +9,7 @@
 #define ISERVICE_H
 
 #include <QList>
+#include "Patronum_global.h"
 
 namespace Patronum {
 
@@ -17,7 +18,7 @@ class Feature;
 /**
  * @brief The IService class is base interface of the service.
  */
-class IService
+class PATRONUM_LIBRARYSHARED_EXPORT IService
 {
 public:
     IService();

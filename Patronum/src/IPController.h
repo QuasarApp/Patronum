@@ -10,6 +10,7 @@
 
 #include <QList>
 #include <QVariantMap>
+#include "Patronum_global.h"
 
 namespace Patronum {
 
@@ -34,7 +35,7 @@ enum class ControllerError {
 /**
  * @brief The IController class
  */
-class IController
+class PATRONUM_LIBRARYSHARED_EXPORT IController
 {
 public:
     IController() = default;
