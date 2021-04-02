@@ -17,18 +17,22 @@ include(Patronum/QuasarAppLib/CMake/ccache.cmake)
 # Add sub directories
 add_subdirectory(Patronum)
 
-set(BuildTests ON)
-if (DEFINED TARGET_PLATFORM_TOOLCHAIN)
-    if (${TARGET_PLATFORM_TOOLCHAIN} STREQUAL "wasm32")
-        set(BuildTests OFF)
+if (NOT DEFINED PATRONUM_TESTS)
+    set(PATRONUM_TESTS ON)
+
+    if (DEFINED TARGET_PLATFORM_TOOLCHAIN)
+        if (${TARGET_PLATFORM_TOOLCHAIN} STREQUAL "wasm32")
+            set(PATRONUM_TESTS OFF)
+        endif()
+    endif()
+
+    if (ANDROID)
+        set(PATRONUM_TESTS OFF)
     endif()
 endif()
 
-if (ANDROID)
-    set(BuildTests OFF)
-endif()
 
-if (BuildTests)
+if (PATRONUM_TESTS)
     add_subdirectory(Tests)
 else()
     message("The ${PROJECT_NAME} tests is disabled.")
