@@ -25,9 +25,9 @@ class PATRONUM_LIBRARYSHARED_EXPORT ServiceBase : protected IService
 public:
     /**
      * @brief Service
-     * @param argc - count params
-     * @param argv - test of arguments
-     * @param name - name of your service
+     * @param argc - Count params.
+     * @param argv - Test of arguments.
+     * @param name - Name of your service.
      */
     ServiceBase(int argc, char *argv[], const QString &name);
 
@@ -36,72 +36,72 @@ public:
 
     /**
      * @brief exec
-     * @return result of work application
+     * @return Result of work application.
      */
     virtual int exec();
 
 protected:
     /**
-     * @brief handleReceiveData - this method invoce when service receive new command from terminal of controller of this service.
-     * @param data - is list of commands from controller
-     * Default inplementation send message abount error, and invoke the .
+     * @brief handleReceiveData - This method invoice when service receive new command from terminal of controller of this service.
+     * @param data - Is list of commands from controller.
+     * Default implementation send message about error, and invoke the.
      */
     void handleReceiveData(const QSet<Feature> &data) override final;
 
     /**
      * @brief supportedFeatures
-     * @return a set supported features of this service. Override this method for correctly work of your pair (service and controller)
+     * @return A set supported features of this service. Override this method for correctly work of your pair (service and controller).
      */
     QSet<Feature> supportedFeatures() override;
 
     /**
-     * @brief sendResuylt - call this method for send responce from service to tour controller
-     * @param result
-     * @return true if data sendet is seccusseful
+     * @brief sendResuylt - Call this method for send responce from service to tour controller.
+     * @param result Message.
+     * @return True if data sendet is seccusseful.
      */
     bool sendResuylt(const QVariantMap &result);
 
     /**
-     * @brief sendResuylt this method send text responce to controller
-     * @param result - message
-     * @return true if data sendet is seccusseful
+     * @brief sendResuylt This method send text responce to controller.
+     * @param result - Message.
+     * @return True if data sendet is seccusseful.
      */
     bool sendResuylt(const QString &result);
 
     /**
      * @brief sendCloseeConnetion This method send signal that all request command processed.
-     * @return return true if the message sent successul.
+     * @return Return true if the message sent successul.
      */
     bool sendCloseeConnetion();
 
     /**
-     * @brief createApplication default implementation create a Application object and parse argumnts.
+     * @brief createApplication Default implementation create a Application object and parse arguments.
      */
     virtual void createApplication() = 0;
 
     /**
-     * @brief onStart called when get start command from terminal. Override this method work correctly work of service.
+     * @brief onStart Called when get start command from terminal. Override this method work correctly work of service.
      */
     void onStart() override = 0;
 
     /**
-     * @brief onStop called when get stop command from terminal. The default implementation of this method invoke a quit method of QCoreApplication.
+     * @brief onStop Called when get stop command from terminal. The default implementation of this method invoke a quit method of QCoreApplication.
      */
     void onStop() override;
 
     /**
-     * @brief onStop called when get resume command from terminal. The Default implementation do nothing.
+     * @brief onResume Called when get resume command from terminal. The Default implementation do nothing.
      */
     void onResume() override;
 
     /**
-     * @brief onStop called when get pause command from terminal.  The Default implementation do nothing.
+     * @brief onPause Called when get pause command from terminal. The Default implementation do nothing.
      */
     void onPause() override;
 
     /**
      * @brief controller
-     * @return own controller instance;
+     * @return Own controller instance.
      */
     Controller *controller();
 
