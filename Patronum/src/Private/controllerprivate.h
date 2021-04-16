@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2020 QuasarApp.
+ * Copyright (C) 2018-2021 QuasarApp.
  * Distributed under the lgplv3 software license, see the accompanying
  * Everyone is permitted to copy and distribute verbatim copies
  * of this license document, but changing it is not allowed.
@@ -14,6 +14,7 @@ namespace Patronum {
 class IController;
 class LocalSocket;
 class Installer;
+class Parser;
 
 class ControllerPrivate: public QObject
 {
@@ -23,7 +24,7 @@ public:
                       IController* controller = nullptr, QObject *parent = nullptr);
     ~ControllerPrivate();
     bool sendFeaturesRequest();
-    bool sendCmd(const QList<Feature>& result);
+    bool sendCmd(const QSet<Feature> &result);
 
     int start() const;
     bool stop();
@@ -44,12 +45,14 @@ signals:
     void sigListFeatures(QList<Feature>);
 
 private:
+
     LocalSocket *_socket = nullptr;
     IController *_controller = nullptr;
     bool _responce = false;
     QList<Feature> _features;
     QString _serviceExe = "";
     Installer *_installer = nullptr;
+    Parser * _parser;
 
 private slots:
     void handleReceve(QByteArray data);

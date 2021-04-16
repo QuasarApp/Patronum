@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2020 QuasarApp.
+ * Copyright (C) 2018-2021 QuasarApp.
  * Distributed under the lgplv3 software license, see the accompanying
  * Everyone is permitted to copy and distribute verbatim copies
  * of this license document, but changing it is not allowed.
@@ -11,12 +11,12 @@
 
 namespace Patronum {
 
-Feature::Feature(const QString &cmd, const QVariant &arg,
+Feature::Feature(const QString &cmd, const QString &arg,
                  const QString &description, const QString &example) {
-    _cmd = cmd;
-    _arg = arg;
-    _description = description;
-    _example = example;
+    setCmd(cmd);
+    setArg(arg);
+    setDescription(description);
+    setExample(example);
 }
 
 QString Feature::cmd() const {
@@ -25,13 +25,14 @@ QString Feature::cmd() const {
 
 void Feature::setCmd(const QString &cmd) {
     _cmd = cmd;
+    _id = qHash(_cmd);
 }
 
-QVariant Feature::arg() const {
+QString Feature::arg() const {
     return _arg;
 }
 
-void Feature::setArg(const QVariantList &arg) {
+void Feature::setArg(const QString &arg) {
     _arg = arg;
 }
 
@@ -58,6 +59,10 @@ QString Feature::toString() const {
     return _cmd;
 }
 
+unsigned int Feature::id() const {
+    return _id;
+}
+
 QDataStream &operator<<(QDataStream &stream, const Feature &obj) {
     stream << obj._cmd << obj._arg;
 
@@ -65,8 +70,22 @@ QDataStream &operator<<(QDataStream &stream, const Feature &obj) {
 }
 
 QDataStream &operator>>(QDataStream &stream, Feature &obj) {
-    stream >> obj._cmd >> obj._arg;
+    decltype (obj._cmd) cmd;
+    stream >> cmd >> obj._arg;
+    obj.setCmd(cmd);
+
     return stream;
 }
 
+bool operator==(const Feature &left, const Feature &right) {
+    return left.id() == right.id();
 }
+
+
+uint qHash(const Feature &feature) {
+    return feature.id();
+}
+
+}
+
+

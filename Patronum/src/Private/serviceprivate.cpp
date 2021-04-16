@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2020 QuasarApp.
+ * Copyright (C) 2018-2021 QuasarApp.
  * Distributed under the lgplv3 software license, see the accompanying
  * Everyone is permitted to copy and distribute verbatim copies
  * of this license document, but changing it is not allowed.
@@ -13,6 +13,7 @@
 #include <QCoreApplication>
 #include <QTimer>
 #include <quasarapp.h>
+#include "parser.h"
 
 namespace Patronum {
 
@@ -22,9 +23,14 @@ Patronum::ServicePrivate::ServicePrivate(const QString &name, IService *service,
 
     _service = service;
 
+    _parser = new Parser();
     QObject::connect(_socket, &LocalSocket::sigReceve,
                      this, &ServicePrivate::handleReceve);
 
+}
+
+ServicePrivate::~ServicePrivate() {
+    delete _parser;
 }
 
 bool ServicePrivate::sendCmdResult(const QVariantMap &result) {
@@ -35,7 +41,17 @@ bool ServicePrivate::sendCmdResult(const QVariantMap &result) {
         return false;
     }
 
-    return _socket->send(Package::createPackage(Command::FeatureResponce, result));
+    return _socket->send(_parser->createPackage(Command::FeatureResponce, result));
+}
+
+bool ServicePrivate::sendCloseConnection() {
+    if (!_socket->isValid()) {
+        QuasarAppUtils::Params::log("scoket is closed!",
+                                    QuasarAppUtils::Error);
+        return false;
+    }
+
+    return _socket->send(_parser->createPackage(Command::CloseConnection));
 }
 
 void ServicePrivate::listen() const {
@@ -45,7 +61,7 @@ void ServicePrivate::listen() const {
     };
 }
 
-bool ServicePrivate::hendleStandartCmd(QList<Feature> *cmds) {
+bool ServicePrivate::handleStandartCmd(QSet<Feature> *cmds) {
 
     if (!cmds)
         return false;
@@ -53,20 +69,17 @@ bool ServicePrivate::hendleStandartCmd(QList<Feature> *cmds) {
     if (!_service)
         return false;
 
-    for (int i = 0; i < cmds->size(); ++i) {
-        if (cmds->value(i).cmd() == "stop") {
-            _service->onStop();
-            cmds->removeAt(i);
-            i--;
-        } else if (cmds->value(i).cmd() == "pause") {
-            _service->onPause();
-            cmds->removeAt(i);
-            i--;
-        } else if (cmds->value(i).cmd() == "resume") {
-            _service->onResume();
-            cmds->removeAt(i);
-            i--;
-        }
+    if (cmds->contains(Feature{"stop"})) {
+        _service->onStop();
+        cmds->remove(Feature{"stop"});
+
+    } else if (cmds->contains(Feature{"pause"})) {
+        _service->onPause();
+        cmds->remove(Feature{"pause"});
+
+    } else if (cmds->contains(Feature{"resume"})) {
+        _service->onResume();
+        cmds->remove(Feature{"resume"});
 
     }
 
@@ -75,73 +88,69 @@ bool ServicePrivate::hendleStandartCmd(QList<Feature> *cmds) {
 
 void ServicePrivate::handleReceve(QByteArray data) {
 
-    const Package package = Package::parsePackage(data);
-
-    if (!package.isValid()) {
-        QuasarAppUtils::Params::log("receive package is not valid!",
-                                    QuasarAppUtils::Warning);
+    QList<Package> packages;
+    if (!_parser->parse(data, packages)) {
         return;
     }
 
-    switch (package.cmd()) {
-
-    case Command::FeaturesRequest: {
+    for (const auto &pkg: qAsConst(packages)) {
+        if (!pkg.isValid()) {
+            QuasarAppUtils::Params::log("receive package is not valid!",
+                                        QuasarAppUtils::Warning);
+            return;
+        }
 
         if (!_service) {
             QuasarAppUtils::Params::log("System error, service is not inited!",
                                         QuasarAppUtils::Error);
-            break;
+            return;;
         }
 
         if (!_socket->isValid()) {
             QuasarAppUtils::Params::log("scoket is closed!",
                                         QuasarAppUtils::Error);
+            return;
+        }
+
+        switch (pkg.cmd()) {
+
+        case Command::FeaturesRequest: {
+
+            if (!_socket->send(_parser->createPackage(Command::Features,
+                                                      _service->supportedFeatures()))) {
+                QuasarAppUtils::Params::log("Fail to send ",
+                                            QuasarAppUtils::Error);
+            }
+
+            break;
+
+        }
+
+        case Command::Feature: {
+
+            QDataStream stream(pkg.data());
+
+            QSet<Feature> feature;
+            stream >> feature;
+            handleStandartCmd(&feature);
+
+            if (feature.size())
+                _service->handleReceiveData(feature);
+
+            break;
+
+        }
+
+        default: {
+            QuasarAppUtils::Params::log("Wrong command!",
+                                        QuasarAppUtils::Error);
             break;
         }
-
-        QList<Feature> features = _service->supportedFeatures();
-        QByteArray sendData;
-        QDataStream stream(&sendData, QIODevice::WriteOnly);
-
-        stream << static_cast<quint8>(Command::Features);
-        stream << features;
-
-        if (!_socket->send(sendData)) {
-            QuasarAppUtils::Params::log("scoket is closed!",
-                                        QuasarAppUtils::Error);
         }
 
-        break;
-
     }
 
-    case Command::Feature: {
-        if (!_service) {
-            QuasarAppUtils::Params::log("System error, service is not inited!",
-                                        QuasarAppUtils::Error);
-            break;
-        }
-
-        QDataStream stream(package.data());
-
-        QList<Feature> feature;
-        stream >> feature;
-        hendleStandartCmd(&feature);
-
-        if (feature.size())
-            _service->handleReceive(feature);
-
-        break;
-
-    }
-
-    default: {
-        QuasarAppUtils::Params::log("Wrong command!",
-                                    QuasarAppUtils::Error);
-        break;
-    }
-
-    }
+    sendCloseConnection();
 
 }
 

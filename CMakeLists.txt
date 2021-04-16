@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2018-2020 QuasarApp.
+# Copyright (C) 2018-2021 QuasarApp.
 # Distributed under the lgplv3 software license, see the accompanying
 # Everyone is permitted to copy and distribute verbatim copies
 # of this license document, but changing it is not allowed.
@@ -12,10 +12,31 @@ if(TARGET ${PROJECT_NAME})
   return()
 endif()
 
+
 include(Patronum/QuasarAppLib/CMake/ccache.cmake)
 # Add sub directories
 add_subdirectory(Patronum)
-add_subdirectory(Tests)
+
+if (NOT DEFINED PATRONUM_TESTS)
+    set(PATRONUM_TESTS ON)
+
+    if (DEFINED TARGET_PLATFORM_TOOLCHAIN)
+        if (${TARGET_PLATFORM_TOOLCHAIN} STREQUAL "wasm32")
+            set(PATRONUM_TESTS OFF)
+        endif()
+    endif()
+
+    if (ANDROID)
+        set(PATRONUM_TESTS OFF)
+    endif()
+endif()
+
+
+if (PATRONUM_TESTS)
+    add_subdirectory(Tests)
+else()
+    message("The ${PROJECT_NAME} tests is disabled.")
+endif()
 
 include(Patronum/QuasarAppLib/CMake/QuasarAppCITargets.cmake)
 initAll()

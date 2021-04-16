@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2020 QuasarApp.
+ * Copyright (C) 2018-2021 QuasarApp.
  * Distributed under the lgplv3 software license, see the accompanying
  * Everyone is permitted to copy and distribute verbatim copies
  * of this license document, but changing it is not allowed.
@@ -7,6 +7,7 @@
 
 #include "PServiceBase.h"
 #include <QCoreApplication>
+#include <QLibraryInfo>
 #include <QTimer>
 #include "PController.h"
 #include "serviceprivate.h"
@@ -24,33 +25,42 @@ ServiceBase::~ServiceBase() {
     delete d_ptr;
 }
 
-void ServiceBase::handleReceive(const QList<Feature> &data) {
-
+void ServiceBase::handleReceiveData(const QSet<Feature> &data) {
     auto list = supportedFeatures();
 
-    QStringList stringList;
-
-    for (const auto&i : list) {
-        stringList += i.toString();
-    }
-
-    QVariantMap result;
-
     QString commandList;
-    for (const auto&i : data ) {
-        commandList += i.toString() + " ";
+
+    for (const auto& i: data) {
+        if (list.contains(i)) {
+            if (!handleReceive(i)) {
+                sendResuylt(QString("The process of a command %0 with argumets: %1 is failed")
+                            .arg(i.cmd()).arg(i.arg()));
+            }
+        } else {
+            commandList += i.toString() + " ";
+        }
     }
 
-    result["Error"] = "Wrong command! The commands : " + commandList  + " is not supported";
-    result["Available commands"] = stringList;
+    if (commandList.size()) {
+        QStringList stringList;
 
-    sendResuylt(result);
+        for (const auto&i : list) {
+            stringList += i.toString();
+        }
+
+        QVariantMap result;
+
+        result["Error"] = "Wrong command! The commands : " + commandList  + " is not supported";
+        result["Available commands"] = stringList;
+
+        sendResuylt(result);
+    }
+
 
 }
 
-QList<Feature> ServiceBase::supportedFeatures() {
-    QList<Feature> result;
-    return result;
+QSet<Feature> ServiceBase::supportedFeatures() {
+    return {};
 }
 
 bool ServiceBase::sendResuylt(const QVariantMap &result) {
@@ -59,6 +69,10 @@ bool ServiceBase::sendResuylt(const QVariantMap &result) {
 
 bool ServiceBase::sendResuylt(const QString &result) {
     return d_ptr->sendCmdResult({{"Result", result}});
+}
+
+bool ServiceBase::sendCloseeConnetion() {
+    return d_ptr->sendCloseConnection();
 }
 
 void ServiceBase::onStop() {
@@ -75,12 +89,14 @@ void ServiceBase::onPause() {
     sendResuylt("This function not supported");
 }
 
-Controller *ServiceBase::controller() const {
+Controller *ServiceBase::controller() {
     if (_controller)
         return _controller;
 
-    return new Controller(_serviceName,
-                          QuasarAppUtils::Params::getCurrentExecutable());
+    _controller = new Controller(_serviceName,
+                               QuasarAppUtils::Params::getCurrentExecutable());
+
+    return _controller;
 }
 
 int ServiceBase::exec() {
@@ -88,23 +104,25 @@ int ServiceBase::exec() {
         createApplication();
     }
 
-    if (!QuasarAppUtils::Params::customParamasSize()) {
+    bool fExec = QuasarAppUtils::Params::isEndable("exec") || QuasarAppUtils::Params::isDebugBuild();
+
+    if (!(QuasarAppUtils::Params::customParamasSize() || fExec)) {
         return controller()->startDetached();
     }
 
-    if (QuasarAppUtils::Params::isEndable("exec")) {
-        QTimer::singleShot(0, [this](){
+    if (fExec) {
+        QTimer::singleShot(0, nullptr, [this](){
             onStart();
             d_ptr->listen();
 
         });
+    } else {
+        QTimer::singleShot(0, nullptr, [this](){
+            if (!controller()->send()) {
+                _core->exit(static_cast<int>(ControllerError::ServiceUnavailable));
+            }
+        });
     }
-
-    QTimer::singleShot(0, [this](){
-        if (!controller()->send()) {
-            _core->exit(static_cast<int>(ControllerError::ServiceUnavailable));
-        }
-    });
 
     return _core->exec();
 }

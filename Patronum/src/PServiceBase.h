@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2020 QuasarApp.
+ * Copyright (C) 2018-2021 QuasarApp.
  * Distributed under the lgplv3 software license, see the accompanying
  * Everyone is permitted to copy and distribute verbatim copies
  * of this license document, but changing it is not allowed.
@@ -42,17 +42,17 @@ public:
 
 protected:
     /**
-     * @brief handleReceive - this method invoce when service receive new command from terminal of controller of this service
+     * @brief handleReceiveData - this method invoce when service receive new command from terminal of controller of this service.
      * @param data - is list of commands from controller
-     * Default inplementation send message abount error.
+     * Default inplementation send message abount error, and invoke the .
      */
-    void handleReceive(const QList<Feature> &data) override;
+    void handleReceiveData(const QSet<Feature> &data) override final;
 
     /**
      * @brief supportedFeatures
-     * @return list of supported features of this service. override this method for correctly work of your pair (service and controller)
+     * @return a set supported features of this service. Override this method for correctly work of your pair (service and controller)
      */
-    QList<Feature> supportedFeatures() override;
+    QSet<Feature> supportedFeatures() override;
 
     /**
      * @brief sendResuylt - call this method for send responce from service to tour controller
@@ -67,6 +67,12 @@ protected:
      * @return true if data sendet is seccusseful
      */
     bool sendResuylt(const QString &result);
+
+    /**
+     * @brief sendCloseeConnetion This method send signal that all request command processed.
+     * @return return true if the message sent successul.
+     */
+    bool sendCloseeConnetion();
 
     /**
      * @brief createApplication default implementation create a Application object and parse argumnts.
@@ -97,10 +103,11 @@ protected:
      * @brief controller
      * @return own controller instance;
      */
-    Controller *controller() const;
+    Controller *controller();
 
     QCoreApplication *_core = nullptr;
 private:
+
 
     ServicePrivate *d_ptr = nullptr;
     Controller *_controller = nullptr;

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2020 QuasarApp.
+ * Copyright (C) 2018-2021 QuasarApp.
  * Distributed under the lgplv3 software license, see the accompanying
  * Everyone is permitted to copy and distribute verbatim copies
  * of this license document, but changing it is not allowed.
@@ -19,7 +19,15 @@ LocalSocket::LocalSocket(const QString &target, QObject *ptr):
 }
 
 LocalSocket::~LocalSocket() {
+    if (m_server) {
+        m_server->close();
+        delete m_server;
+    }
 
+    if (m_socket) {
+        m_socket->close();
+        delete  m_socket;
+    }
 }
 
 bool LocalSocket::registerSokcet(QLocalSocket *socket) {
@@ -34,7 +42,7 @@ bool LocalSocket::registerSokcet(QLocalSocket *socket) {
     connect(m_socket, &QLocalSocket::readyRead,
             this, &LocalSocket::handleReadyRead);
 
-    connect(m_socket, qOverload<QLocalSocket::LocalSocketError>(&QLocalSocket::error),
+    connect(m_socket, qOverload<QLocalSocket::LocalSocketError>(&QLocalSocket::errorOccurred),
             this, &LocalSocket::handleSocketError);
 
     handleStateChanged(m_socket->state());
@@ -105,10 +113,11 @@ void LocalSocket::handleReadyRead() {
 
 void LocalSocket::handleIncomming() {
     if (m_socket) {
-        m_socket->disconnect();
+        m_socket->close();
         m_socket->deleteLater();
         m_socket = nullptr;
     }
+
     registerSokcet(m_server->nextPendingConnection());
 }
 

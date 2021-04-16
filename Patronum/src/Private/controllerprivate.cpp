@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2020 QuasarApp.
+ * Copyright (C) 2018-2021 QuasarApp.
  * Distributed under the lgplv3 software license, see the accompanying
  * Everyone is permitted to copy and distribute verbatim copies
  * of this license document, but changing it is not allowed.
@@ -14,6 +14,7 @@
 #include <quasarapp.h>
 #include "package.h"
 #include "installersystemd.h"
+#include "parser.h"
 
 namespace Patronum {
 
@@ -23,6 +24,7 @@ ControllerPrivate::ControllerPrivate(const QString &name, const QString &service
     _socket = new LocalSocket(name, this);
     _serviceExe = servicePath;
     _controller = controller;
+    _parser = new Parser();
 
 #ifdef Q_OS_LINUX
     _installer = new InstallerSystemD(name);
@@ -37,6 +39,7 @@ ControllerPrivate::~ControllerPrivate() {
     if (_installer) {
         delete _installer;
     }
+    delete _parser;
 }
 
 bool ControllerPrivate::sendFeaturesRequest() {
@@ -47,15 +50,10 @@ bool ControllerPrivate::sendFeaturesRequest() {
         return false;
     }
 
-    QByteArray responce;
-    QDataStream stream(&responce, QIODevice::WriteOnly);
-
-    stream << static_cast<quint8>(Command::FeaturesRequest);
-
-    return _socket->send(responce);
+    return _socket->send(_parser->createPackage(Command::FeaturesRequest));
 }
 
-bool ControllerPrivate::sendCmd(const QList<Feature> &result) {
+bool ControllerPrivate::sendCmd(const QSet<Feature> &result) {
     if (!_socket->isValid()) {
         QuasarAppUtils::Params::log("scoket is closed!",
                                     QuasarAppUtils::Debug);
@@ -64,13 +62,7 @@ bool ControllerPrivate::sendCmd(const QList<Feature> &result) {
         return false;
     }
 
-    QByteArray request;
-    QDataStream stream(&request, QIODevice::WriteOnly);
-
-    stream << static_cast<quint8>(Command::Feature);
-    stream << result;
-
-    if (_socket->send(request)) {
+    if (_socket->send(_parser->createPackage(Command::Feature, result))) {
         _responce = false;
         return true;
     }
@@ -190,70 +182,68 @@ bool ControllerPrivate::connectToHost() const {
 
 void ControllerPrivate::handleReceve(QByteArray data) {
 
-    const Package package = Package::parsePackage(data);
-
-    if (!package.isValid()) {
-
-        QuasarAppUtils::Params::log("Received invalid package!",
-                                    QuasarAppUtils::Debug);
-
-        _controller->handleError(ControllerError::InvalidPackage);
-
+    if (!_controller) {
+        QuasarAppUtils::Params::log("System error, controller is not inited!",
+                                    QuasarAppUtils::Error);
         return;
     }
 
-    switch (package.cmd()) {
+    QList<Package> packages;
+    if (!_parser->parse(data, packages)) {
+        return;
+    }
 
-    case Command::Features: {
+    for (const auto& pkg: qAsConst(packages)) {
+        if (!pkg.isValid()) {
 
-        if (!_controller) {
-            QuasarAppUtils::Params::log("System error, controller is not inited!",
+            QuasarAppUtils::Params::log("Received invalid package!",
                                         QuasarAppUtils::Debug);
-            _controller->handleError(ControllerError::SystemError);
 
+            _controller->handleError(ControllerError::InvalidPackage);
+
+            continue;;
+        }
+
+        switch (pkg.cmd()) {
+
+        case Command::Features: {
+
+            QDataStream stream(pkg.data());
+
+            QList<Feature> features;
+            stream >> features;
+            _features = features;
+
+            _controller->handleFeatures(features);
+
+            break;
+
+        }
+
+        case Command::CloseConnection: {
+            _responce = true;
             break;
         }
 
-        QDataStream stream(package.data());
+        case Command::FeatureResponce: {
 
-        QList<Feature> features;
-        stream >> features;
-        _features = features;
+            QDataStream stream(pkg.data());
 
-        _responce = true;
 
-        _controller->handleFeatures(features);
+            QVariantMap responce;
+            stream >> responce;
+            _controller->handleResponce(responce);
 
-        break;
+            break;
 
-    }
-
-    case Command::FeatureResponce: {
-        if (!_controller) {
-            QuasarAppUtils::Params::log("System error, controller is not inited!",
-                                        QuasarAppUtils::Error);
-            _controller->handleError(ControllerError::SystemError);
+        }
+        default: {
+            QuasarAppUtils::Params::log("Wrong command!",
+                                        QuasarAppUtils::Debug);
+            _controller->handleError(ControllerError::WrongCommand);
 
             break;
         }
-
-        QDataStream stream(package.data());
-
-        _responce = true;
-
-        QVariantMap responce;
-        stream >> responce;
-        _controller->handleResponce(responce);
-
-        break;
-
-    }
-    default: {
-        QuasarAppUtils::Params::log("Wrong command!",
-                                    QuasarAppUtils::Debug);
-        _controller->handleError(ControllerError::WrongCommand);
-
-        break;
     }
 
     }

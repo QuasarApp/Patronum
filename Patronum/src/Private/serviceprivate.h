@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2020 QuasarApp.
+ * Copyright (C) 2018-2021 QuasarApp.
  * Distributed under the lgplv3 software license, see the accompanying
  * Everyone is permitted to copy and distribute verbatim copies
  * of this license document, but changing it is not allowed.
@@ -14,6 +14,7 @@ namespace Patronum {
 
 class LocalSocket;
 class IService;
+class Parser;
 
 class ServicePrivate: public QObject
 {
@@ -21,8 +22,11 @@ class ServicePrivate: public QObject
 public:
     ServicePrivate(const QString& name,
                    IService* service = nullptr, QObject *parent = nullptr);
+    ~ServicePrivate();
 
     bool sendCmdResult(const QVariantMap& result);
+    bool sendCloseConnection();
+
     bool parseDefaultCmds();
 
     void listen() const;
@@ -30,8 +34,9 @@ public:
 private:
     LocalSocket *_socket = nullptr;
     IService  *_service = nullptr;
+    Parser *_parser = nullptr;
 
-    bool hendleStandartCmd(QList<Feature> *cmds);
+    bool handleStandartCmd(QSet<Feature> *cmds);
 
 private slots:
     void handleReceve(QByteArray data);
