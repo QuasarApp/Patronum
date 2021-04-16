@@ -22,11 +22,11 @@ class Feature;
 enum class ControllerError {
     /// Unknown error
     Undefined,
-    /// Service is unavailable. Try send start comand or restart the service manually.
+    /// Service is unavailable. Try send start command or restart the service manually.
     ServiceUnavailable,
-    /// Invalid package received
+    /// Invalid package received.
     InvalidPackage,
-    /// Library unsupported command received
+    /// Library unsupported command received.
     WrongCommand,
     /// Internal error of the work of the Patronum library. Contact the developers and provide them with an error report. https://github.com/QuasarApp/Patronum/issues
     SystemError
@@ -42,9 +42,9 @@ public:
     virtual ~IController() = default;
 
     /**
-     * @brief errorToString this method convert the ControllerError to QString.
-     * @param error - error id
-     * @return return text of error
+     * @brief errorToString This method convert the ControllerError to QString.
+     * @param error - Error id.
+     * @return return text of error.
      */
     QString errorToString(ControllerError error) const;
 

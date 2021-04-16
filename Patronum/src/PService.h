@@ -27,9 +27,9 @@ class Service : public ServiceBase
 public:
     /**
      * @brief Service
-     * @param argc - count params
-     * @param argv - test of arguments
-     * @param name - name of your service
+     * @param argc - Count params.
+     * @param argv - Test of arguments.
+     * @param name - Name of your service.
      */
     Service(int argc, char *argv[], const QString &name)
         : ServiceBase(argc, argv, name) {
