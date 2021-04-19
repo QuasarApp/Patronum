@@ -20,44 +20,44 @@ class ControllerPrivate;
  * ###How to use :
  * - create QCoreApplication object
  * - just inherit from the Service Controller and override the methods you need.
- * - So, invoke the send methon, and if you need to get a responce from your service then invoke a waitForResponce method.
+ * - So, invoke the send method, and if you need to get a response from your service then invoke a waitForResponce method.
  * - or run application exec method.
  */
 class PATRONUM_LIBRARYSHARED_EXPORT Controller : protected IController
 {
 public:
     /**
-     * @brief Controller - base constructor
-     * @param name - name of you service
-     * @param servicePath - path to service executable. @note If servicePath argument well be empty then 'start' commnad not working
+     * @brief Controller - Base constructor.
+     * @param name - Name of you service.
+     * @param servicePath - Path to service executable. @note If servicePath argument well be empty then 'start' commnad not working
      */
     Controller(const QString& name, const QString& servicePath = "");
     ~Controller() override;
 
     /**
-     * @brief send - this method send request to service
-     * @param argc - count of arguments
-     * @param argv - arguments list
-     * @return true if all sendet seccussful
+     * @brief send - This method send request to service.
+     * @param argc - Count of arguments.
+     * @param argv - Arguments list.
+     * @return true if all sendet successful.
      */
     bool send(int argc, char **argv);
 
     /**
-     * @brief send - this method send request to service. @warning Invoke this method if you invoked QuasarAppUtils::Params::parse() befor invoke this method else use send(int argc, char **argv).
-     * @return true if all sendet seccussful
+     * @brief send - This method send request to service. @warning Invoke this method if you invoked QuasarAppUtils::Params::parse() before invoke this method else use send(int argc, char **argv).
+     * @return true if all sendet successful.
      */
     bool send();
 
     /**
      * @brief startDetached
-     * @return true if service started seccessful.
+     * @return true if service started successful.
      */
     int startDetached() const;
 
     /**
-     * @brief waitForResponce - waut for get a responce from servece
-     * @param msec timeout
-     * @return true if all seccussful
+     * @brief waitForResponce - Wait for get a responce from servece.
+     * @param msec Timeout in msec.
+     * @return true if all seccussful.
      */
     bool waitForResponce(int msec = 10000);
 
@@ -72,23 +72,23 @@ protected:
     void handleError(ControllerError error) override;
 
     /**
-     * @brief handleFeatures - override this method if you want cerate a custom reaction of get service features
-     * default inplenebtation prin help of available command of your service
-     * @param features - list of features
+     * @brief handleFeatures - Override this method if you want create a custom reaction of get service features.
+     * default implementation print help of available command of your service.
+     * @param features - List of features.
      */
     void handleFeatures(const QList<Feature> &features) override;
 
     /**
-     * @brief handleResponce - override this method if you want create a custom reaction of get responce from service
+     * @brief handleResponce - Override this method if you want create a custom reaction of get responce from service.
      * Default inplementation print responce to console.
-     * @param responce - responce from service
+     * @param responce - Responce from service.
      */
     void handleResponce(const QVariantMap &responce) override;
 
     /**
-     * @brief features - this metho return current features of connected service.
-     * @note If Responed from service not received then return empty list.
-     * @return features list
+     * @brief features - This method return current features of connected service.
+     * @note If Respond from service not received then return empty list.
+     * @return Features list.
      */
     QList<Feature> features();
 

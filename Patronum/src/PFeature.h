@@ -16,7 +16,7 @@
 namespace Patronum {
 
 /**
- * @brief The Feature class it is atomic type for describe service command
+ * @brief The Feature class it is atomic type for describe service command.
  */
 class PATRONUM_LIBRARYSHARED_EXPORT Feature
 {
@@ -26,8 +26,8 @@ public:
             const QString& description = "", const QString& example = "");
 
     /**
-     * @brief cmd This method return command of the feature
-     * @return command of the feature
+     * @brief cmd This method return command of the feature.
+     * @return Command of the feature.
      */
     QString cmd() const;
 
@@ -40,7 +40,7 @@ public:
     /**
      * @brief arg This method return argument value.
      *  The argument value has a qvariant type, so this object maybe have a list or array type.
-     * @return argument value.
+     * @return Argument value.
      */
     QString arg() const;
     void setArg(const QString &arg);
@@ -51,32 +51,32 @@ public:
 
     /**
      * @brief description This method return description message of the command.
-     * This string display in a teminal application in the help section.
-     * @return description message of the command
+     * This string display in a terminal application in the help section.
+     * @return Description message of the command.
      */
     QString description() const;
 
     /**
      * @brief setDescription This method sets description for command.
-     * @param description tihs is new value of the description command.
+     * @param description This is new value of the description command.
      */
     void setDescription(const QString &description);
 
     /**
      * @brief example This is exmaple of using this command.
-     * @return example of use.
+     * @return Example of use.
      */
     QString example() const;
 
     /**
-     * @brief setExample This method sets a new example
+     * @brief setExample This method sets a new example.
      * @param example This is a new example value.
      */
     void setExample(const QString &example);
 
     /**
      * @brief toString This is general method of the converting command to string.
-     * @return string of all command.
+     * @return String of all command.
      */
     QString toString() const;
 
