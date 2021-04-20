@@ -13,7 +13,7 @@ if(TARGET ${PROJECT_NAME})
 endif()
 
 
-include(Patronum/QuasarAppLib/CMake/ccache.cmake)
+include(Patronum/QuasarAppLib/CMake/QuasarApp.cmake)
 # Add sub directories
 add_subdirectory(Patronum)
 
