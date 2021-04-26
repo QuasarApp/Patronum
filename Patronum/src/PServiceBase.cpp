@@ -106,7 +106,7 @@ int ServiceBase::exec() {
 
     bool fExec = QuasarAppUtils::Params::isEndable("exec") || QuasarAppUtils::Params::isDebugBuild();
 
-    if (!(QuasarAppUtils::Params::customParamasSize() || fExec)) {
+    if (!(QuasarAppUtils::Params::size() || fExec)) {
         return controller()->startDetached();
     }
 

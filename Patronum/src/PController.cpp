@@ -45,7 +45,7 @@ bool Controller::send() {
         return d_ptr->uninstall();
     }
 
-    bool printHelp = !QuasarAppUtils::Params::customParamasSize() ||
+    bool printHelp = !QuasarAppUtils::Params::size() ||
             QuasarAppUtils::Params::isEndable("h") ||
             QuasarAppUtils::Params::isEndable("help");
 
@@ -145,7 +145,7 @@ QList<Feature> Controller::features() {
 
 void Controller::printDefaultHelp() const {
 
-    auto quasarappHelp = QuasarAppUtils::Params::getparamsHelp();
+    auto quasarappHelp = QuasarAppUtils::Params::getParamsHelp();
 
     QuasarAppUtils::Help::Charters help{{"General options of this controller",{
                 {"start",       QObject::tr("Start a service")},
