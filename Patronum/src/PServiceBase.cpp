@@ -34,7 +34,7 @@ void ServiceBase::handleReceiveData(const QSet<Feature> &data) {
         if (list.contains(i)) {
             if (!handleReceive(i)) {
                 sendResuylt(QString("The process of a command %0 with argumets: %1 is failed")
-                            .arg(i.cmd()).arg(i.arg()));
+                            .arg(i.cmd(), i.arg()));
             }
         } else {
             commandList += i.toString() + " ";
