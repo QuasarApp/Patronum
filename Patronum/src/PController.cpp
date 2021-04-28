@@ -100,11 +100,6 @@ int Controller::startDetached() const {
     return d_ptr->start();
 }
 
-bool Controller::waitForResponce(int msec) {
-
-    return d_ptr->waitForResponce(msec);
-}
-
 QuasarAppUtils::Help::Section Controller::help() const {
     QuasarAppUtils::Help::Section help {
         {QObject::tr("Options that available after start"), {
@@ -154,7 +149,6 @@ void Controller::handleFeatures(const QList<Feature> &features) {
     }
 
     QuasarAppUtils::Help::print(options);
-    QCoreApplication::exit(0);
 }
 
 void Controller::handleResponce(const QVariantMap &responce) {
@@ -165,6 +159,9 @@ void Controller::handleResponce(const QVariantMap &responce) {
     }
 
     QuasarAppUtils::Help::print(options);
+}
+
+void Controller::finished() {
     QCoreApplication::exit(0);
 }
 

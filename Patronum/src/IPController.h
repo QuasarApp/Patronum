@@ -73,6 +73,11 @@ public:
      */
     virtual void handleError(ControllerError errorCode) = 0;
 
+    /**
+     * @brief finished This method ivoked when controler received Command::CloseConnection from the server.
+     */
+    virtual void finished() = 0;
+
 };
 }
 

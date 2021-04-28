@@ -58,13 +58,6 @@ public:
     int startDetached() const;
 
     /**
-     * @brief waitForResponce - Wait for get a responce from servece.
-     * @param msec Timeout in msec.
-     * @return true if all seccussful.
-     */
-    bool waitForResponce(int msec = 10000);
-
-    /**
      * @brief help This method return help of the Controller.
      * @return Available otions list.
      */
@@ -95,6 +88,13 @@ protected:
     void handleResponce(const QVariantMap &responce) override;
 
     /**
+     * @brief finished This method invoked when controler receive from service the Command::CloseConnection command
+     * This implementation invoke he exit method of the QCoreApplication and finished application.
+     *  If do not want to stop application after receive Command::CloseConnection then override this method.
+     */
+    void finished() override;
+
+    /**
      * @brief features - This method return current features of connected service.
      * @note If Respond from service not received then return empty list.
      * @return Features list.
@@ -106,8 +106,6 @@ private:
     ControllerPrivate *d_ptr = nullptr;
 
     void printDefaultHelp() const;
-
-
 };
 }
 #endif // CONTROLLER_H

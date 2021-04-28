@@ -64,7 +64,6 @@ bool ControllerPrivate::sendCmd(const QSet<Feature> &result) {
     }
 
     if (_socket->send(_parser->createPackage(Command::Feature, result))) {
-        _responce = false;
         return true;
     }
 
@@ -135,24 +134,6 @@ bool ControllerPrivate::resume() {
     return sendCmd({Feature("resume")});
 }
 
-bool Patronum::ControllerPrivate::waitForResponce(int msec) {
-    if (!dynamic_cast<QCoreApplication*>(QCoreApplication::instance())) {
-        QuasarAppUtils::Params::log("Before run the waitForResponce method you need run a exec method of your QApplication class.",
-                                    QuasarAppUtils::Warning);
-
-        return false;
-    }
-
-    qint64 waitFor = QDateTime::currentMSecsSinceEpoch() + msec;
-
-    while (!_responce && QDateTime::currentMSecsSinceEpoch() < waitFor) {
-        QCoreApplication::processEvents();
-    }
-    QCoreApplication::processEvents();
-
-    return _responce;
-}
-
 QList<Feature> ControllerPrivate::features() const {
     return _features;
 }
@@ -219,7 +200,7 @@ void ControllerPrivate::handleReceve(QByteArray data) {
         }
 
         case Command::CloseConnection: {
-            _responce = true;
+            _controller->finished();
             break;
         }
 
