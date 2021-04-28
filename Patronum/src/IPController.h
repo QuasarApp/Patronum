@@ -28,8 +28,11 @@ enum class ControllerError {
     InvalidPackage,
     /// Library unsupported command received.
     WrongCommand,
+    /// Timeout error. service unavailable or not started.
+    TimeOutError,
     /// Internal error of the work of the Patronum library. Contact the developers and provide them with an error report. https://github.com/QuasarApp/Patronum/issues
     SystemError
+
 };
 
 /**

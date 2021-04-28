@@ -12,6 +12,7 @@
 #include <QVariantMap>
 #include <quasarapp.h>
 #include <QCoreApplication>
+#include <QTimer>
 
 namespace Patronum {
 
@@ -82,7 +83,17 @@ bool Controller::send() {
         sendData.insert(Feature{val.key(), val.value()});
     }
 
-    return d_ptr->sendCmd(sendData);
+
+    if (!d_ptr->sendCmd(sendData)) {
+        return false;
+    }
+
+    QTimer::singleShot(1000, nullptr, [this]() {
+        QuasarAppUtils::Params::log(errorToString(ControllerError::TimeOutError), QuasarAppUtils::Error);
+        QCoreApplication::exit(static_cast<int>(ControllerError::TimeOutError));
+    });
+
+    return true;
 }
 
 int Controller::startDetached() const {
