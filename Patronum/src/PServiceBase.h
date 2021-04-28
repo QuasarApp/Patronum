@@ -35,7 +35,7 @@ public:
     // IService interface
 
     /**
-     * @brief exec
+     * @brief exec This is main method of the service. Use this like a QCoreApplication::exec.
      * @return Result of work application.
      */
     virtual int exec();
@@ -108,6 +108,7 @@ protected:
     QCoreApplication *_core = nullptr;
 private:
 
+    void printDefaultHelp();
 
     ServicePrivate *d_ptr = nullptr;
     Controller *_controller = nullptr;

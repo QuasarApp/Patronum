@@ -12,6 +12,7 @@
 #include <QVariantMap>
 #include <quasarapp.h>
 #include <QCoreApplication>
+#include <QTimer>
 
 namespace Patronum {
 
@@ -33,15 +34,11 @@ bool Controller::send(int argc, char **argv) {
 
 bool Controller::send() {
 
-    if (QuasarAppUtils::Params::isEndable("start")) {
-        return !d_ptr->start();
-    }
-
-    if (QuasarAppUtils::Params::isEndable("install")) {
+    if (QuasarAppUtils::Params::isEndable("install") || QuasarAppUtils::Params::isEndable("i")) {
         return d_ptr->install();
     }
 
-    if (QuasarAppUtils::Params::isEndable("uninstall")) {
+    if (QuasarAppUtils::Params::isEndable("uninstall") || QuasarAppUtils::Params::isEndable("u")) {
         return d_ptr->uninstall();
     }
 
@@ -86,16 +83,43 @@ bool Controller::send() {
         sendData.insert(Feature{val.key(), val.value()});
     }
 
-    return d_ptr->sendCmd(sendData);
+
+    if (!d_ptr->sendCmd(sendData)) {
+        return false;
+    }
+
+    QTimer::singleShot(1000, nullptr, [this]() {
+        QuasarAppUtils::Params::log(errorToString(ControllerError::TimeOutError), QuasarAppUtils::Error);
+        QCoreApplication::exit(static_cast<int>(ControllerError::TimeOutError));
+    });
+
+    return true;
 }
 
 int Controller::startDetached() const {
     return d_ptr->start();
 }
 
-bool Controller::waitForResponce(int msec) {
+QuasarAppUtils::Help::Section Controller::help() const {
+    QuasarAppUtils::Help::Section help {
+        {QObject::tr("Options that available after start"), {
+                {"stop",            QObject::tr("Stop a service")},
+                {"pause",           QObject::tr("Pause a service")},
+                {"resume",          QObject::tr("Resume a service")},
+                {"uninstall / u",   QObject::tr("Uninstall a service")}
 
-    return d_ptr->waitForResponce(msec);
+            }
+        },
+        {QObject::tr("Options that available after instalation"),
+            {
+                {"uninstall / u",   QObject::tr("Uninstall a service")},
+                {"start / s",       QObject::tr("Start a service as a daemon")},
+
+            }
+        }
+    };
+
+    return help;
 }
 
 void Controller::handleError(ControllerError error) {
@@ -125,7 +149,6 @@ void Controller::handleFeatures(const QList<Feature> &features) {
     }
 
     QuasarAppUtils::Help::print(options);
-    QCoreApplication::exit(0);
 }
 
 void Controller::handleResponce(const QVariantMap &responce) {
@@ -136,6 +159,9 @@ void Controller::handleResponce(const QVariantMap &responce) {
     }
 
     QuasarAppUtils::Help::print(options);
+}
+
+void Controller::finished() {
     QCoreApplication::exit(0);
 }
 
@@ -146,17 +172,7 @@ QList<Feature> Controller::features() {
 void Controller::printDefaultHelp() const {
 
     auto quasarappHelp = QuasarAppUtils::Params::getParamsHelp();
-
-    QuasarAppUtils::Help::Charters help{{"General options of this controller",{
-                {"start",       QObject::tr("Start a service")},
-                {"stop",        QObject::tr("Stop a service")},
-                {"pause",       QObject::tr("Pause a service")},
-                {"resume",      QObject::tr("Resume a service")},
-                {"install",     QObject::tr("Install a service")},
-                {"uninstall",   QObject::tr("Uninstall a service")}
-            }}};
-
-    QuasarAppUtils::Help::print(quasarappHelp.unite(help));
+    QuasarAppUtils::Help::print(quasarappHelp.unite(help()));
 }
 
 }

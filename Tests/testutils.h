@@ -8,6 +8,7 @@ class TestUtils
 public:
     TestUtils();
     static bool wait(const bool &forWait, int msec);
+    static bool wait(std::function<bool ()> forWait, int msec);
 
 };
 

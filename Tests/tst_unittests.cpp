@@ -39,6 +39,8 @@ testPatronum::testPatronum() {
 }
 
 void testPatronum::testPing() {
+    TestUtils utils;
+
     const char* arg[] = {
         "/",
         "ping"
@@ -46,11 +48,13 @@ void testPatronum::testPing() {
     DefaultController cli;
     QuasarAppUtils::Params::clearParsedData();
     QVERIFY(cli.send(2 , const_cast<char**>(arg)));
-    QVERIFY(cli.waitForResponce(1000));
+    QVERIFY(utils.wait([&cli](){return cli.isFinished();}, 1000));
     QVERIFY(cli.getResponce().value("Result") == "pong");
 }
 
 void testPatronum::testRandomCommad() {
+    TestUtils utils;
+
     const char* arg[] = {
         "/",
         "fd"
@@ -59,7 +63,7 @@ void testPatronum::testRandomCommad() {
     QuasarAppUtils::Params::clearParsedData();
 
     QVERIFY(cli.send(2 , const_cast<char**>(arg)));
-    QVERIFY(cli.waitForResponce(1000));
+    QVERIFY(utils.wait([&cli](){return cli.isFinished();}, 1000));
     QVERIFY(cli.getResponce().contains("Error"));
 }
 
@@ -73,6 +77,8 @@ void testPatronum::connectTest() {
 
         QCoreApplication::exit(0);
     });
+
+    QuasarAppUtils::Params::parseParams({"s"});
 
     QVERIFY(serv.exec() == 0);
 

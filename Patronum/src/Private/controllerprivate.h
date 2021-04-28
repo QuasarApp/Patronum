@@ -33,8 +33,6 @@ public:
     bool pause();
     bool resume();
 
-    bool waitForResponce(int msec);
-
     QList<Feature> features() const;
 
     bool isConnected() const;
@@ -44,18 +42,21 @@ public:
 signals:
     void sigListFeatures(QList<Feature>);
 
+private slots:
+    void handleReceve(QByteArray data);
+
+
 private:
+
+    QString getExecutable() const;
 
     LocalSocket *_socket = nullptr;
     IController *_controller = nullptr;
-    bool _responce = false;
     QList<Feature> _features;
     QString _serviceExe = "";
     Installer *_installer = nullptr;
     Parser * _parser;
 
-private slots:
-    void handleReceve(QByteArray data);
 };
 
 }

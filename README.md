@@ -61,7 +61,7 @@ public:
     QList<Feature> supportedFeatures() {
 
         QList<Feature> res;
-        Feature Ping = {"Ping", ""}
+        Feature Ping = {"Ping", "This is description of the ping command"}
         return res << Ping;
     }
 };
@@ -87,6 +87,8 @@ public:
 };
 
 int main(int argc, char **argv) {
+    QCoreApplication::setApplicationName("MyServiceName"); // <--
+    QCoreApplication::setOrganizationName("MyCompany"); // <--
     QCoreApplcication app
     MyControllerApp controller;
     controller.send(argc, argv);

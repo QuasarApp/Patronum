@@ -10,6 +10,7 @@
 #include "Patronum_global.h"
 #include <IPController.h>
 #include "PFeature.h"
+#include <quasarapp.h>
 
 namespace Patronum {
 
@@ -29,21 +30,23 @@ public:
     /**
      * @brief Controller - Base constructor.
      * @param name - Name of you service.
-     * @param servicePath - Path to service executable. @note If servicePath argument well be empty then 'start' commnad not working
+     * @param servicePath - Path to service executable.
+     * @note If servicePath argument will set to empty then 'start' and install commands will not working
      */
     Controller(const QString& name, const QString& servicePath = "");
     ~Controller() override;
 
     /**
-     * @brief send - This method send request to service.
-     * @param argc - Count of arguments.
-     * @param argv - Arguments list.
+     * @brief send This method send request to service.
+     * @param argc This is count of arguments.
+     * @param argv This is arguments list.
      * @return true if all sendet successful.
      */
     bool send(int argc, char **argv);
 
     /**
-     * @brief send - This method send request to service. @warning Invoke this method if you invoked QuasarAppUtils::Params::parse() before invoke this method else use send(int argc, char **argv).
+     * @brief send - This method send request to service.
+     * @warning Invoke this method if you invoked QuasarAppUtils::Params::parse() before invoke this method else use send(int argc, char **argv).
      * @return true if all sendet successful.
      */
     bool send();
@@ -55,11 +58,10 @@ public:
     int startDetached() const;
 
     /**
-     * @brief waitForResponce - Wait for get a responce from servece.
-     * @param msec Timeout in msec.
-     * @return true if all seccussful.
+     * @brief help This method return help of the Controller.
+     * @return Available otions list.
      */
-    bool waitForResponce(int msec = 10000);
+    QuasarAppUtils::Help::Section help() const;
 
     // IControler interface
 protected:
@@ -86,6 +88,13 @@ protected:
     void handleResponce(const QVariantMap &responce) override;
 
     /**
+     * @brief finished This method invoked when controler receive from service the Command::CloseConnection command
+     * This implementation invoke he exit method of the QCoreApplication and finished application.
+     *  If do not want to stop application after receive Command::CloseConnection then override this method.
+     */
+    void finished() override;
+
+    /**
      * @brief features - This method return current features of connected service.
      * @note If Respond from service not received then return empty list.
      * @return Features list.
@@ -97,8 +106,6 @@ private:
     ControllerPrivate *d_ptr = nullptr;
 
     void printDefaultHelp() const;
-
-
 };
 }
 #endif // CONTROLLER_H

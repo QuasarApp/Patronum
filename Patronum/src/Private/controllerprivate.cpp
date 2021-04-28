@@ -10,6 +10,7 @@
 #include "localsocket.h"
 #include <QCoreApplication>
 #include <QDateTime>
+#include <QFile>
 #include <QProcess>
 #include <quasarapp.h>
 #include "package.h"
@@ -63,7 +64,6 @@ bool ControllerPrivate::sendCmd(const QSet<Feature> &result) {
     }
 
     if (_socket->send(_parser->createPackage(Command::Feature, result))) {
-        _responce = false;
         return true;
     }
 
@@ -73,12 +73,9 @@ bool ControllerPrivate::sendCmd(const QSet<Feature> &result) {
 int ControllerPrivate::start() const {
 
     QProcess proc;
-    proc.setProgram(_serviceExe);
-    if (_installer && _installer->isInstalled() && _installer->getExecutable().size()) {
-        proc.setProgram(_installer->getExecutable());
-    }
+    proc.setProgram(getExecutable());
 
-    proc.setArguments({"exec"});
+    proc.setArguments({"d"});
     proc.setProcessEnvironment(QProcessEnvironment::systemEnvironment());
     proc.setProcessChannelMode(QProcess::SeparateChannels);
 
@@ -104,7 +101,7 @@ bool ControllerPrivate::install() const {
         return false;
     }
 
-    if (!_installer->install(_serviceExe)) {
+    if (!_installer->install(getExecutable())) {
         return false;
     }
 
@@ -126,7 +123,7 @@ bool ControllerPrivate::uninstall() const {
 
     _controller->handleResponce({{"Result", "Uninstall service successful"}});
 
-    return _installer->uninstall();
+    return true;
 }
 
 bool ControllerPrivate::pause() {
@@ -135,24 +132,6 @@ bool ControllerPrivate::pause() {
 
 bool ControllerPrivate::resume() {
     return sendCmd({Feature("resume")});
-}
-
-bool Patronum::ControllerPrivate::waitForResponce(int msec) {
-    if (!dynamic_cast<QCoreApplication*>(QCoreApplication::instance())) {
-        QuasarAppUtils::Params::log("Before run the waitForResponce method you need run a exec method of your QApplication class.",
-                                    QuasarAppUtils::Warning);
-
-        return false;
-    }
-
-    qint64 waitFor = QDateTime::currentMSecsSinceEpoch() + msec;
-
-    while (!_responce && QDateTime::currentMSecsSinceEpoch() < waitFor) {
-        QCoreApplication::processEvents();
-    }
-    QCoreApplication::processEvents();
-
-    return _responce;
 }
 
 QList<Feature> ControllerPrivate::features() const {
@@ -221,7 +200,7 @@ void ControllerPrivate::handleReceve(QByteArray data) {
         }
 
         case Command::CloseConnection: {
-            _responce = true;
+            _controller->finished();
             break;
         }
 
@@ -248,5 +227,17 @@ void ControllerPrivate::handleReceve(QByteArray data) {
 
     }
 
+}
+
+QString ControllerPrivate::getExecutable() const {
+    if (QFile::exists(_serviceExe)) {
+        return _serviceExe;
+    }
+
+    if (!_installer) {
+        return "";
+    }
+
+    return _installer->getExecutable();
 }
 }
