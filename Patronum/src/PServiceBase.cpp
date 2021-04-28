@@ -7,17 +7,20 @@
 
 #include "PServiceBase.h"
 #include <QCoreApplication>
+#include <QFile>
 #include <QLibraryInfo>
+#include <QProcess>
+#include <QStandardPaths>
 #include <QTimer>
+#include <pcommon.h>
 #include "PController.h"
 #include "serviceprivate.h"
 
 namespace Patronum {
 
-ServiceBase::ServiceBase(int argc, char *argv[], const QString &name) {
+ServiceBase::ServiceBase(int argc, char *argv[]) {
     QuasarAppUtils::Params::parseParams(argc, argv);
-    d_ptr = new ServicePrivate(name, this);
-    _serviceName = name;
+    d_ptr = new ServicePrivate(this);
 
 }
 
@@ -93,8 +96,7 @@ Controller *ServiceBase::controller() {
     if (_controller)
         return _controller;
 
-    _controller = new Controller(_serviceName,
-                                 QuasarAppUtils::Params::getCurrentExecutable());
+    _controller = new Controller(QuasarAppUtils::Params::getCurrentExecutable());
 
     return _controller;
 }
@@ -121,12 +123,28 @@ void ServiceBase::printDefaultHelp() {
 
 }
 
+void ServiceBase::startThisService() {
+    onStart();
+    if (d_ptr->listen()) {
+        QFile pidFile(PCommon::instance()->getPidfile());
+        if (pidFile.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+            pidFile.write(QByteArray::number(QCoreApplication::applicationPid()));
+            pidFile.close();
+        }
+    }
+}
+
 int ServiceBase::exec() {
     if (!_core) {
         createApplication();
     }
 
-    if (!QuasarAppUtils::Params::size()) {
+
+    bool printHelp = !QuasarAppUtils::Params::size() ||
+            QuasarAppUtils::Params::isEndable("h") ||
+            QuasarAppUtils::Params::isEndable("help");
+
+    if (printHelp) {
         printDefaultHelp();
         return 0;
     }
@@ -140,13 +158,11 @@ int ServiceBase::exec() {
             return controller()->startDetached();
         }
 
-        QTimer::singleShot(0, nullptr, [this](){
-            onStart();
-            d_ptr->listen();
-
+        QTimer::singleShot(0, nullptr, [this]() {
+            startThisService();
         });
     } else {
-        QTimer::singleShot(0, nullptr, [this](){
+        QTimer::singleShot(0, nullptr, [this]() {
             if (!controller()->send()) {
                 _core->exit(static_cast<int>(ControllerError::ServiceUnavailable));
             }

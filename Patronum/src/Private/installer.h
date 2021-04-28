@@ -19,7 +19,7 @@ namespace Patronum {
 class Installer
 {
 public:
-    Installer(const QString& name);
+    Installer();
     virtual ~Installer() = default;
 
     virtual bool install(const QString& executable) = 0;
@@ -31,11 +31,6 @@ public:
     virtual bool isInstalled() const = 0;
     virtual QString getExecutable() const = 0;
 
-protected:
-    QString serviceName() const;
-
-private:
-    QString _serviceName = "";
 
 };
 

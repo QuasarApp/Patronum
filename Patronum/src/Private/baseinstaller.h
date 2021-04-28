@@ -19,10 +19,15 @@ namespace Patronum {
 class BaseInstaller: public Installer
 {
 public:
-    BaseInstaller(const QString &name);
+    BaseInstaller();
 
-    // Installer interface
-public:
+
+    /**
+     * @brief getExecutable This method return saved path to installed executable.
+     * @return path to executable.
+     */
+    QString getExecutable() const override;
+
     /**
      * @brief install
      * @param executable
@@ -54,9 +59,7 @@ protected:
 
     QString _executable = "";
 
-    // Installer interface
-public:
-    QString getExecutable() const override;
+
 };
 }
 #endif // BASEINSTALLER_H

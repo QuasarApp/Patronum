@@ -6,6 +6,7 @@
 */
 
 #include "installersystemd.h"
+#include "pcommon.h"
 #include <QFile>
 #include <quasarapp.h>
 #include <QSettings>
@@ -14,8 +15,8 @@ namespace Patronum {
 
 #define SYSTEMD_PATH "/etc/systemd/system/"
 
-InstallerSystemD::InstallerSystemD(const QString& name):
-    BaseInstaller(name) {
+InstallerSystemD::InstallerSystemD():
+    BaseInstaller() {
 
 }
 
@@ -43,6 +44,9 @@ bool InstallerSystemD::install(const QString &executable) {
     templ.close();
 
     service = service.arg(executable);
+    service = service.arg(PCommon::instance()->getPidfile());
+    service = service.arg(PCommon::instance()->getPWD());
+
     templ.setFileName(absaluteServicePath());
 
     if (!templ.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
@@ -64,7 +68,8 @@ bool InstallerSystemD::uninstall() {
 
     if (!(disable() && QFile::remove(absaluteServicePath()))) {
         QuasarAppUtils::Params::log(QString("Cannot uninstall %0. Cannot remove %1. Check permissions.\n").
-                                    arg(serviceName(), absaluteServicePath()),
+                                    arg(PCommon::instance()->getServiceName(),
+                                        absaluteServicePath()),
                                     QuasarAppUtils::Error);
         return false;
     }
@@ -79,7 +84,7 @@ bool InstallerSystemD::enable() {
     QProcess proc;
     proc.setProgram("systemctl");
     proc.setProcessEnvironment(QProcessEnvironment::systemEnvironment());
-    proc.setArguments({"enable", serviceName() + ".service"});
+    proc.setArguments({"enable", PCommon::instance()->getServiceName() + ".service"});
 
     proc.start();
 
@@ -94,7 +99,7 @@ bool InstallerSystemD::disable() {
     QProcess proc;
     proc.setProgram("systemctl");
     proc.setProcessEnvironment(QProcessEnvironment::systemEnvironment());
-    proc.setArguments({"disable", serviceName() + ".service"});
+    proc.setArguments({"disable", PCommon::instance()->getServiceName() + ".service"});
 
     proc.start();
 
@@ -106,7 +111,7 @@ bool InstallerSystemD::isInstalled() const {
 }
 
 QString InstallerSystemD::absaluteServicePath() const {
-    return SYSTEMD_PATH + serviceName() + ".service";
+    return SYSTEMD_PATH + PCommon::instance()->getServiceName() + ".service";
 }
 
 }

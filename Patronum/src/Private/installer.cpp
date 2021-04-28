@@ -6,15 +6,14 @@
 */
 
 #include "installer.h"
+
+#include <QStandardPaths>
 namespace Patronum {
 
-Installer::Installer(const QString &name) {
-    _serviceName = name;
+Installer::Installer() {
 }
 
-QString Installer::serviceName() const {
-    return _serviceName;
-}
+
 
 }
 

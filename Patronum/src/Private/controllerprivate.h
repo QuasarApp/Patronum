@@ -20,7 +20,7 @@ class ControllerPrivate: public QObject
 {
     Q_OBJECT
 public:
-    ControllerPrivate(const QString& name, const QString& servicePath,
+    ControllerPrivate(const QString& servicePath,
                       IController* controller = nullptr, QObject *parent = nullptr);
     ~ControllerPrivate();
     bool sendFeaturesRequest();

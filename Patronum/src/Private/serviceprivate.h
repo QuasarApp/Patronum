@@ -16,30 +16,51 @@ class LocalSocket;
 class IService;
 class Parser;
 
+/**
+ * @brief The ServicePrivate class
+ */
 class ServicePrivate: public QObject
 {
     Q_OBJECT
 public:
-    ServicePrivate(const QString& name,
-                   IService* service = nullptr, QObject *parent = nullptr);
+    ServicePrivate(IService* service = nullptr, QObject *parent = nullptr);
     ~ServicePrivate();
 
+    /**
+     * @brief sendCmdResult
+     * @param result
+     * @return
+     */
     bool sendCmdResult(const QVariantMap& result);
+
+    /**
+     * @brief sendCloseConnection
+     * @return
+     */
     bool sendCloseConnection();
 
+    /**
+     * @brief parseDefaultCmds
+     * @return
+     */
     bool parseDefaultCmds();
 
-    void listen() const;
+    /**
+     * @brief listen This method run service and enable service sockets for listning clients.
+     * @return true if dpeloy service finished successful else false.
+     */
+    bool listen() const;
+
+private slots:
+    void handleReceve(QByteArray data);
 
 private:
+    bool handleStandartCmd(QSet<Feature> *cmds);
+
     LocalSocket *_socket = nullptr;
     IService  *_service = nullptr;
     Parser *_parser = nullptr;
 
-    bool handleStandartCmd(QSet<Feature> *cmds);
-
-private slots:
-    void handleReceve(QByteArray data);
 
 };
 

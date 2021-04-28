@@ -16,8 +16,8 @@
 
 namespace Patronum {
 
-Controller::Controller(const QString &name, const QString& servicePath) {
-    d_ptr = new ControllerPrivate(name, servicePath, this);
+Controller::Controller(const QString& servicePath) {
+    d_ptr = new ControllerPrivate(servicePath, this);
 }
 
 Controller::~Controller() {
@@ -33,14 +33,6 @@ bool Controller::send(int argc, char **argv) {
 }
 
 bool Controller::send() {
-
-    if (QuasarAppUtils::Params::isEndable("install") || QuasarAppUtils::Params::isEndable("i")) {
-        return d_ptr->install();
-    }
-
-    if (QuasarAppUtils::Params::isEndable("uninstall") || QuasarAppUtils::Params::isEndable("u")) {
-        return d_ptr->uninstall();
-    }
 
     bool printHelp = !QuasarAppUtils::Params::size() ||
             QuasarAppUtils::Params::isEndable("h") ||
@@ -61,6 +53,18 @@ bool Controller::send() {
         return true;
     }
 
+    if (QuasarAppUtils::Params::isEndable("start") || QuasarAppUtils::Params::isEndable("s")) {
+        return d_ptr->start();
+    }
+
+    if (QuasarAppUtils::Params::isEndable("install") || QuasarAppUtils::Params::isEndable("i")) {
+        return d_ptr->install();
+    }
+
+    if (QuasarAppUtils::Params::isEndable("uninstall") || QuasarAppUtils::Params::isEndable("u")) {
+        return d_ptr->uninstall();
+    }
+
     if (QuasarAppUtils::Params::isEndable("stop")) {
         return d_ptr->stop();
     }
@@ -76,13 +80,14 @@ bool Controller::send() {
     QSet<Feature> sendData = {};
     auto userParams = QuasarAppUtils::Params::getUserParamsMap();
     for (auto val = userParams.begin(); val != userParams.end(); ++val) {
-        if (val.key() == "verbose" || val.key() == "fileLog" || val.key() == "exec") {
+
+        bool fIgnore = val.key() == "verbose" || val.key() == "fileLog" || val.key() == "daemon" || val.key() == "d";
+        if (fIgnore) {
             continue;
         }
 
         sendData.insert(Feature{val.key(), val.value()});
     }
-
 
     if (!d_ptr->sendCmd(sendData)) {
         return false;

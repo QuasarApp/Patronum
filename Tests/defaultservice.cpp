@@ -3,12 +3,12 @@
 
 char* arg[] = {
     const_cast<char*>("/"),
-    const_cast<char*>("exec")
+    const_cast<char*>("s")
 };
 int argc = 2;
 
 DefaultService::DefaultService():
-    Patronum::Service<QCoreApplication>(2, arg, "TestPatronum") {
+    Patronum::Service<QCoreApplication>(2, arg) {
     _core = new QCoreApplication(argc, arg);
 }
 

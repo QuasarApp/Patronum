@@ -16,19 +16,21 @@
 #include "package.h"
 #include "installersystemd.h"
 #include "parser.h"
+#include "pcommon.h"
 
 namespace Patronum {
 
-ControllerPrivate::ControllerPrivate(const QString &name, const QString &servicePath,
+ControllerPrivate::ControllerPrivate(const QString &servicePath,
                                      IController *controller, QObject *parent):
     QObject(parent) {
+    QString name = PCommon::instance()->getServiceName();
     _socket = new LocalSocket(name, this);
     _serviceExe = servicePath;
     _controller = controller;
     _parser = new Parser();
 
 #ifdef Q_OS_LINUX
-    _installer = new InstallerSystemD(name);
+    _installer = new InstallerSystemD();
 #endif
 
     QObject::connect(_socket, &LocalSocket::sigReceve,
@@ -75,11 +77,12 @@ int ControllerPrivate::start() const {
     QProcess proc;
     proc.setProgram(getExecutable());
 
-    proc.setArguments({"d"});
+    proc.setArguments({"s"});
     proc.setProcessEnvironment(QProcessEnvironment::systemEnvironment());
     proc.setProcessChannelMode(QProcess::SeparateChannels);
 
-    if (!proc.startDetached()) {
+    qint64 pid;
+    if (!proc.startDetached(&pid)) {
         QuasarAppUtils::Params::log("fail to start detached process: " + proc.errorString(),
                                     QuasarAppUtils::Error);
         return  static_cast<int>(ControllerError::SystemError);

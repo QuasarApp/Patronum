@@ -18,18 +18,18 @@ class ServicePrivate;
 class Controller;
 
 /**
- * @brief The ServiceBase class
+ * @brief The ServiceBase class This is Base service class. Please for create your own services use the Patronum::Service class.
  */
 class PATRONUM_LIBRARYSHARED_EXPORT ServiceBase : protected IService
 {
 public:
     /**
-     * @brief Service
-     * @param argc - Count params.
-     * @param argv - Test of arguments.
-     * @param name - Name of your service.
+     * @brief ServiceBase This is main constructor of the service.
+     * @param argc This is count of input arguments.
+     * @param argv This is raw C array of the input arguments.
+     * @note If you create a console client for your service then you need to sets some service name as a this. Fot This use the QCoreApplication::setApplicationName() methid. You need to invoke this method befor invoke the ServiceBase::exec method.
      */
-    ServiceBase(int argc, char *argv[], const QString &name);
+    ServiceBase(int argc, char *argv[]);
 
     ~ServiceBase() override;
     // IService interface
@@ -100,19 +100,22 @@ protected:
     void onPause() override;
 
     /**
-     * @brief controller
+     * @brief controller This method return the local controller object. If the controller object is not inited the this methd create a new object.
      * @return Own controller instance.
      */
     Controller *controller();
 
+    /**
+     * @brief _core This is point to the main application object.
+     */
     QCoreApplication *_core = nullptr;
 private:
 
     void printDefaultHelp();
+    void startThisService();
 
     ServicePrivate *d_ptr = nullptr;
     Controller *_controller = nullptr;
-    QString _serviceName = "";
 
 };
 

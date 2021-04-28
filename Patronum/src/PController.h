@@ -17,23 +17,48 @@ namespace Patronum {
 class ControllerPrivate;
 
 /**
- * @brief The Controller class provide control functionality for your service
- * ###How to use :
+ * @brief The Controller class provide control functionality for your service.
+ *
+ * ### How to use :
  * - create QCoreApplication object
  * - just inherit from the Service Controller and override the methods you need.
  * - So, invoke the send method, and if you need to get a response from your service then invoke a waitForResponce method.
  * - or run application exec method.
+ *
+ * ### Example:
+ *
+ * @code{cpp}
+    #include <patronum.h>
+
+    class MyControllerApp : public Patronum::Controller
+    {
+    public:
+
+        MyControllerApp():
+            Patronum::Controller() {
+
+        }
+    };
+
+    int main(int argc, char **argv) {
+        QCoreApplication::setApplicationName("MyServiceName"); // <--
+        QCoreApplication::setOrganizationName("MyCompany"); // <--
+        QCoreApplcication app
+        MyControllerApp controller;
+        controller.send(argc, argv);
+        return app.exec();
+    }
+ * @endcode
  */
 class PATRONUM_LIBRARYSHARED_EXPORT Controller : protected IController
 {
 public:
     /**
-     * @brief Controller - Base constructor.
-     * @param name - Name of you service.
-     * @param servicePath - Path to service executable.
+     * @brief Controller This is base constructor of the controller.
+     * @param servicePath This is path to service executable.
      * @note If servicePath argument will set to empty then 'start' and install commands will not working
      */
-    Controller(const QString& name, const QString& servicePath = "");
+    Controller(const QString& servicePath = "");
     ~Controller() override;
 
     /**

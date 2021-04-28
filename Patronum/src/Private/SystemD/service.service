@@ -1,12 +1,14 @@
 [Unit]
-Description=Automatet generated service of %0
+Description=Automatet generated service by Patronum
 
 [Service]
 Type=forking
 User=root
 Group=root
-ExecStart=%0 start
+ExecStart=%0 d
 ExecStop=%0 stop
+PIDFile=%1
+WorkingDirectory=%2
 
 [Install]
 WantedBy=multi-user.target

@@ -5,6 +5,7 @@
  * of this license document, but changing it is not allowed.
 */
 
+#include "pcommon.h"
 #include "serviceprivate.h"
 
 #include "IPService.h"
@@ -17,8 +18,10 @@
 
 namespace Patronum {
 
-Patronum::ServicePrivate::ServicePrivate(const QString &name, IService *service, QObject *parent):
+Patronum::ServicePrivate::ServicePrivate(IService *service, QObject *parent):
     QObject(parent) {
+    QString name = PCommon::instance()->getServiceName();
+
     _socket = new LocalSocket(name, this);
 
     _service = service;
@@ -54,11 +57,14 @@ bool ServicePrivate::sendCloseConnection() {
     return _socket->send(_parser->createPackage(Command::CloseConnection));
 }
 
-void ServicePrivate::listen() const {
+bool ServicePrivate::listen() const {
     if (!_socket->listen()) {
         QuasarAppUtils::Params::log("Fail to create a terminal socket!");
         QCoreApplication::exit(1);
+        return false;
     };
+
+    return true;
 }
 
 bool ServicePrivate::handleStandartCmd(QSet<Feature> *cmds) {

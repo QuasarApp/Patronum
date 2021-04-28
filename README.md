@@ -1,7 +1,9 @@
 # Patronum
+
 This is extension libraries for control your daemons.
 
 ### Why is Patronum?
+
 Becouse This library offers easy interface to control your demons likewise the magic of Harry Potter controls dementors
 
 ## Main features
@@ -12,24 +14,23 @@ Becouse This library offers easy interface to control your demons likewise the m
 
 ## Include
 
-
 ### For cmake projects
  
  * cd yourRepo
  * git submodule add https://github.com/QuasarApp/Patronum.git # add the repository of Patronum into your repo like submodule
  * git submodule update --init --recursive
  * Include in your CMakeLists.txt file the main CMakeLists.txt file of Patronum library
-  ``` cmake
+  ```cmake
     add_subdirectory(Patronum)
   ```
  * Rebuild yuor project
 
 
-
 ## Usage
 
-### Service 
-``` cpp
+### Service
+
+```cpp
 #include <patronum.h>
 
 class MyserviceApp : public Patronum::Service<QCoreApplication>
@@ -37,7 +38,7 @@ class MyserviceApp : public Patronum::Service<QCoreApplication>
 
 public:
     MyserviceApp(int argc, char **argv):
-        Patronum::Service<QCoreApplication>(argc, argv, "MyService") {
+        Patronum::Service<QCoreApplication>(argc, argv) {
 
     }
 
@@ -49,31 +50,40 @@ public:
         // call on server stoped 
     }
 
-    void handleReceive(const QList<Feature> &data) {
-        for (auto i : data) {
-            if (i.cmd == "Ping") {
-                sendResuylt(QVariantMap{{"Pong", "From server"}})
-            }
-        }
-    };
+    bool HanoiService::handleReceive(const Patronum::Feature &data) {
+    
+        if (data.cmd() == "ping") {
+            sendResuylt("Pong");
+        } else if (data.cmd() == "state") {
+            sendResuylt("application status");
+        } 
+
+        return true;
+    }
 
 
     QList<Feature> supportedFeatures() {
+        QSet<Patronum::Feature> data;
 
-        QList<Feature> res;
-        Feature Ping = {"Ping", "This is description of the ping command"}
-        return res << Ping;
+        data << Patronum::Feature("ping", "This is description of the ping command");
+        data << Patronum::Feature("state", "return state");
+
+        return data;
     }
 };
 
 
 int main(int argc, char **argv) {
+    QCoreApplication::setApplicationName("MyServiceName"); // <--
+    QCoreApplication::setOrganizationName("MyCompany"); // <--
     MyserviceApp app;
     return app.exec();
 }
 ```
+
 ### Controller
-``` cpp
+
+```cpp
 #include <patronum.h>
 
 class MyControllerApp : public Patronum::Controller
@@ -81,7 +91,7 @@ class MyControllerApp : public Patronum::Controller
 public:
 
     MyControllerApp():
-        Patronum::Controller("MyService") {
+        Patronum::Controller() {
 
     }
 };

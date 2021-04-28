@@ -21,11 +21,7 @@ namespace Patronum {
 class InstallerSystemD: public BaseInstaller
 {
 public:
-    /**
-     * @brief InstallerSystemD
-     * @param name - service name
-     */
-    InstallerSystemD(const QString &name);
+    InstallerSystemD();
     ~InstallerSystemD() override;
 
     // Installer interface

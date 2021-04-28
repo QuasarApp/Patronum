@@ -19,24 +19,80 @@ namespace Patronum {
 template<class Application>
 /**
  * @brief The Service class it is  class for create a services from daemons.
- * ###How to use :
+ *
+ * ### How to use :
  * - just inherit from the Service class and override the methods you need.
+ *
+ * ### Example
+ *
+ * @code{cpp}
+    #include <patronum.h>
+
+    class MyserviceApp : public Patronum::Service<QCoreApplication>
+    {
+
+    public:
+        MyserviceApp(int argc, char **argv):
+            Patronum::Service<QCoreApplication>(argc, argv) {
+
+        }
+
+        void start() {
+            // call on server started
+        }
+
+        void stop() {
+            // call on server stoped
+        }
+
+        bool HanoiService::handleReceive(const Patronum::Feature &data) {
+
+            if (data.cmd() == "ping") {
+                sendResuylt("Pong");
+            } else if (data.cmd() == "state") {
+                sendResuylt("application status");
+            }
+
+            return true;
+        }
+
+
+        QList<Feature> supportedFeatures() {
+            QSet<Patronum::Feature> data;
+
+            data << Patronum::Feature("ping", "This is description of the ping command");
+            data << Patronum::Feature("state", "return state");
+
+            return data;
+        }
+    };
+
+
+    int main(int argc, char **argv) {
+        QCoreApplication::setApplicationName("MyServiceName"); // <--
+        QCoreApplication::setOrganizationName("MyCompany"); // <--
+        MyserviceApp app;
+        return app.exec();
+    }
+ * @endcode
  */
 class Service : public ServiceBase
 {
 public:
     /**
-     * @brief Service
-     * @param argc - Count params.
-     * @param argv - Test of arguments.
-     * @param name - Name of your service.
+     * @brief Service This is main constructor of the service object.
+     * @param argc This is count of input arguments.
+     * @param argv This is raw C array with input arguments.
+     * @param name This is name of your service.
+     * @note If you create a console client for youe service then you need to sets some service name as a this.
      */
-    Service(int argc, char *argv[], const QString &name)
-        : ServiceBase(argc, argv, name) {
+    Service(int argc, char *argv[])
+        : ServiceBase(argc, argv) {
 
         _argc = argc;
         _argv = argv;
     }
+
     ~Service() override {
     }
 // IService interface
@@ -46,7 +102,8 @@ protected:
      * @brief createApplication default implementation create a Application object.
      */
     void createApplication() override {
-        static_assert (std::is_base_of<Application, QCoreApplication>::value, "the Application type must be QCoreApplication");
+        static_assert (std::is_base_of<Application, QCoreApplication>::value,
+                "the Application type must be QCoreApplication");
         _core = new Application(_argc, _argv);
     }
 
