@@ -10,6 +10,7 @@
 #include "localsocket.h"
 #include <QCoreApplication>
 #include <QDateTime>
+#include <QFile>
 #include <QProcess>
 #include <quasarapp.h>
 #include "package.h"
@@ -73,12 +74,9 @@ bool ControllerPrivate::sendCmd(const QSet<Feature> &result) {
 int ControllerPrivate::start() const {
 
     QProcess proc;
-    proc.setProgram(_serviceExe);
-    if (_installer && _installer->isInstalled() && _installer->getExecutable().size()) {
-        proc.setProgram(_installer->getExecutable());
-    }
+    proc.setProgram(getExecutable());
 
-    proc.setArguments({"exec"});
+    proc.setArguments({"d"});
     proc.setProcessEnvironment(QProcessEnvironment::systemEnvironment());
     proc.setProcessChannelMode(QProcess::SeparateChannels);
 
@@ -104,7 +102,7 @@ bool ControllerPrivate::install() const {
         return false;
     }
 
-    if (!_installer->install(_serviceExe)) {
+    if (!_installer->install(getExecutable())) {
         return false;
     }
 
@@ -126,7 +124,7 @@ bool ControllerPrivate::uninstall() const {
 
     _controller->handleResponce({{"Result", "Uninstall service successful"}});
 
-    return _installer->uninstall();
+    return true;
 }
 
 bool ControllerPrivate::pause() {
@@ -248,5 +246,17 @@ void ControllerPrivate::handleReceve(QByteArray data) {
 
     }
 
+}
+
+QString ControllerPrivate::getExecutable() const {
+    if (QFile::exists(_serviceExe)) {
+        return _serviceExe;
+    }
+
+    if (!_installer) {
+        return "";
+    }
+
+    return _installer->getExecutable();
 }
 }

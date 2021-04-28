@@ -33,15 +33,11 @@ bool Controller::send(int argc, char **argv) {
 
 bool Controller::send() {
 
-    if (QuasarAppUtils::Params::isEndable("start")) {
-        return !d_ptr->start();
-    }
-
-    if (QuasarAppUtils::Params::isEndable("install")) {
+    if (QuasarAppUtils::Params::isEndable("install") || QuasarAppUtils::Params::isEndable("i")) {
         return d_ptr->install();
     }
 
-    if (QuasarAppUtils::Params::isEndable("uninstall")) {
+    if (QuasarAppUtils::Params::isEndable("uninstall") || QuasarAppUtils::Params::isEndable("u")) {
         return d_ptr->uninstall();
     }
 
@@ -98,6 +94,28 @@ bool Controller::waitForResponce(int msec) {
     return d_ptr->waitForResponce(msec);
 }
 
+QuasarAppUtils::Help::Section Controller::help() const {
+    QuasarAppUtils::Help::Section help {
+        {QObject::tr("Options that available after start"), {
+                {"stop",            QObject::tr("Stop a service")},
+                {"pause",           QObject::tr("Pause a service")},
+                {"resume",          QObject::tr("Resume a service")},
+                {"uninstall / u",   QObject::tr("Uninstall a service")}
+
+            }
+        },
+        {QObject::tr("Options that available after instalation"),
+            {
+                {"uninstall / u",   QObject::tr("Uninstall a service")},
+                {"start / s",       QObject::tr("Start a service as a daemon")},
+
+            }
+        }
+    };
+
+    return help;
+}
+
 void Controller::handleError(ControllerError error) {
     QuasarAppUtils::Params::log(errorToString(error),
                                 QuasarAppUtils::Error);
@@ -146,17 +164,7 @@ QList<Feature> Controller::features() {
 void Controller::printDefaultHelp() const {
 
     auto quasarappHelp = QuasarAppUtils::Params::getParamsHelp();
-
-    QuasarAppUtils::Help::Charters help{{"General options of this controller",{
-                {"start",       QObject::tr("Start a service")},
-                {"stop",        QObject::tr("Stop a service")},
-                {"pause",       QObject::tr("Pause a service")},
-                {"resume",      QObject::tr("Resume a service")},
-                {"install",     QObject::tr("Install a service")},
-                {"uninstall",   QObject::tr("Uninstall a service")}
-            }}};
-
-    QuasarAppUtils::Help::print(quasarappHelp.unite(help));
+    QuasarAppUtils::Help::print(quasarappHelp.unite(help()));
 }
 
 }

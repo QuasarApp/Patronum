@@ -74,6 +74,8 @@ void testPatronum::connectTest() {
         QCoreApplication::exit(0);
     });
 
+    QuasarAppUtils::Params::parseParams({"s"});
+
     QVERIFY(serv.exec() == 0);
 
 }

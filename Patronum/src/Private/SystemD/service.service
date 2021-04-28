@@ -5,7 +5,7 @@ Description=Automatet generated service of %0
 Type=forking
 User=root
 Group=root
-ExecStart=%0
+ExecStart=%0 start
 ExecStop=%0 stop
 
 [Install]

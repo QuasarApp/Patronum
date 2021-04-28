@@ -108,6 +108,7 @@ protected:
     QCoreApplication *_core = nullptr;
 private:
 
+    void printDefaultHelp();
 
     ServicePrivate *d_ptr = nullptr;
     Controller *_controller = nullptr;

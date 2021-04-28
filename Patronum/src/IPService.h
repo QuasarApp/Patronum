@@ -26,14 +26,14 @@ public:
 
     /**
      * @brief handleReceiveData This method get all received commnads and process its.
-     * For each command will invoke the handleReceive method.
-     * @param data
+     *  For each command will invoke the IService::handleReceive method.
+     * @param data This is array of the incomming requests (commands)
      */
     virtual void handleReceiveData(const QSet<Feature>& data) = 0;
 
     /**
      * @brief handleReceive This method invoked when service receive a request from terminal.
-     *  Override this method for work service.
+     *  Override this method for work your service.
      * @param data This is input data.
      * @return This method should be return true if the @a data command is supported and processed successful.
      * IF you return false then a negative message will be sent to a terminal app.
@@ -41,7 +41,8 @@ public:
     virtual bool handleReceive(const Feature &data) = 0;
 
     /**
-     * @brief supportedFeatures Override this method for add your features for the service.
+     * @brief supportedFeatures This method should be return the list of the supported fetures.
+     *  Override this method for add your features for the service.
      * @return should be return a set of supported features.
      */
     virtual QSet<Feature> supportedFeatures() = 0;

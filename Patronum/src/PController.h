@@ -10,6 +10,7 @@
 #include "Patronum_global.h"
 #include <IPController.h>
 #include "PFeature.h"
+#include <quasarapp.h>
 
 namespace Patronum {
 
@@ -29,21 +30,23 @@ public:
     /**
      * @brief Controller - Base constructor.
      * @param name - Name of you service.
-     * @param servicePath - Path to service executable. @note If servicePath argument well be empty then 'start' commnad not working
+     * @param servicePath - Path to service executable.
+     * @note If servicePath argument will set to empty then 'start' and install commands will not working
      */
     Controller(const QString& name, const QString& servicePath = "");
     ~Controller() override;
 
     /**
-     * @brief send - This method send request to service.
-     * @param argc - Count of arguments.
-     * @param argv - Arguments list.
+     * @brief send This method send request to service.
+     * @param argc This is count of arguments.
+     * @param argv This is arguments list.
      * @return true if all sendet successful.
      */
     bool send(int argc, char **argv);
 
     /**
-     * @brief send - This method send request to service. @warning Invoke this method if you invoked QuasarAppUtils::Params::parse() before invoke this method else use send(int argc, char **argv).
+     * @brief send - This method send request to service.
+     * @warning Invoke this method if you invoked QuasarAppUtils::Params::parse() before invoke this method else use send(int argc, char **argv).
      * @return true if all sendet successful.
      */
     bool send();
@@ -60,6 +63,12 @@ public:
      * @return true if all seccussful.
      */
     bool waitForResponce(int msec = 10000);
+
+    /**
+     * @brief help This method return help of the Controller.
+     * @return Available otions list.
+     */
+    QuasarAppUtils::Help::Section help() const;
 
     // IControler interface
 protected:

@@ -94,9 +94,31 @@ Controller *ServiceBase::controller() {
         return _controller;
 
     _controller = new Controller(_serviceName,
-                               QuasarAppUtils::Params::getCurrentExecutable());
+                                 QuasarAppUtils::Params::getCurrentExecutable());
 
     return _controller;
+}
+
+void ServiceBase::printDefaultHelp() {
+    auto serviceHelp = controller()->help();
+    serviceHelp.unite(QuasarAppUtils::Params::getParamsHelp());
+
+    serviceHelp.unite({{QObject::tr("Options that available befor install"),{
+                            {"start / s",       QObject::tr("Start a service in console")},
+                            {"daemon / d",      QObject::tr("Start a service as a daemon")},
+                            {"install / i",     QObject::tr("Install a service")},
+                        }}});
+
+    const auto features = supportedFeatures();
+    QuasarAppUtils::Help::Options optionsList;
+    for (const auto& cmd : features) {
+        optionsList.insert(cmd.cmd(), cmd.description());
+    }
+
+    serviceHelp.unite({{"Available commands of the service:", optionsList}});
+
+    QuasarAppUtils::Help::print(serviceHelp);
+
 }
 
 int ServiceBase::exec() {
@@ -104,13 +126,20 @@ int ServiceBase::exec() {
         createApplication();
     }
 
-    bool fExec = QuasarAppUtils::Params::isEndable("exec") || QuasarAppUtils::Params::isDebugBuild();
-
-    if (!(QuasarAppUtils::Params::size() || fExec)) {
-        return controller()->startDetached();
+    if (!QuasarAppUtils::Params::size()) {
+        printDefaultHelp();
+        return 0;
     }
 
-    if (fExec) {
+    bool fStart = QuasarAppUtils::Params::isEndable("start") || QuasarAppUtils::Params::isEndable("s");
+    bool fDaemon = QuasarAppUtils::Params::isEndable("daemon") || QuasarAppUtils::Params::isEndable("d");
+
+    if (fStart || fDaemon) {
+
+        if (fDaemon) {
+            return controller()->startDetached();
+        }
+
         QTimer::singleShot(0, nullptr, [this](){
             onStart();
             d_ptr->listen();

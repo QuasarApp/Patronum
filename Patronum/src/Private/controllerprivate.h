@@ -44,7 +44,13 @@ public:
 signals:
     void sigListFeatures(QList<Feature>);
 
+private slots:
+    void handleReceve(QByteArray data);
+
+
 private:
+
+    QString getExecutable() const;
 
     LocalSocket *_socket = nullptr;
     IController *_controller = nullptr;
@@ -54,8 +60,6 @@ private:
     Installer *_installer = nullptr;
     Parser * _parser;
 
-private slots:
-    void handleReceve(QByteArray data);
 };
 
 }

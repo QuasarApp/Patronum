@@ -33,7 +33,8 @@ enum class ControllerError {
 };
 
 /**
- * @brief The IController class
+ * @brief The IController class This is base interface for the handling network events.
+ *
  */
 class PATRONUM_LIBRARYSHARED_EXPORT IController
 {
@@ -43,14 +44,31 @@ public:
 
     /**
      * @brief errorToString This method convert the ControllerError to QString.
-     * @param error - Error id.
+     * @param error This is error id.
      * @return return text of error.
      */
     QString errorToString(ControllerError error) const;
 
+    /**
+     * @brief handleFeatures This method should be handle all Command::Features resuests.
+     *  This method will invoked when controller receive commands list for execute (features) from controller or terminal.
+     * @param features This is list of the requests (@a features)
+     */
     virtual void handleFeatures(const QList<Feature>& features) = 0;
-    virtual void handleResponce(const QVariantMap& feature) = 0;
-    virtual void handleError(ControllerError) = 0;
+
+    /**
+     * @brief handleResponce This method should be handle all responces of the service.
+     *  This method will invoked when controller receive responce from service.
+     * @param responce This is responce message.
+     */
+    virtual void handleResponce(const QVariantMap& responce) = 0;
+
+    /**
+     * @brief handleError This method shold be handle all error messages.
+     * This method will invoked when a controlee receive a error responce from a service.
+     * @param errorCode This is code of a error.
+     */
+    virtual void handleError(ControllerError errorCode) = 0;
 
 };
 }

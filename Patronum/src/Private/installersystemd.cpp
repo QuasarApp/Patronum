@@ -12,7 +12,7 @@
 #include <QProcess>
 namespace Patronum {
 
-const QString systemDPath = "/etc/systemd/system/";
+#define SYSTEMD_PATH "/etc/systemd/system/"
 
 InstallerSystemD::InstallerSystemD(const QString& name):
     BaseInstaller(name) {
@@ -106,7 +106,7 @@ bool InstallerSystemD::isInstalled() const {
 }
 
 QString InstallerSystemD::absaluteServicePath() const {
-    return systemDPath + serviceName() + ".service";
+    return SYSTEMD_PATH + serviceName() + ".service";
 }
 
 }
