@@ -69,6 +69,7 @@ void testPatronum::testRandomCommad() {
 
 
 void testPatronum::connectTest() {
+    QCoreApplication::setApplicationName("PatronumTest");
     DefaultService serv;
 
     QTimer::singleShot(10, this, [this]() {
