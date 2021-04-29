@@ -23,12 +23,6 @@ public:
 
 
     /**
-     * @brief getExecutable This method return saved path to installed executable.
-     * @return path to executable.
-     */
-    QString getExecutable() const override;
-
-    /**
      * @brief install This implementation prepare executable for instalation.
      * @param executable This is path to executable file of service.
      * @return true if service is not installed else false
@@ -52,12 +46,6 @@ public:
      * @return true if It service may be disabled
      */
     bool disable() override;
-
-protected:
-    void savePath() const;
-    QString getPath() const;
-
-    QString _executable = "";
 
 
 };

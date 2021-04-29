@@ -42,10 +42,6 @@ bool Controller::send() {
         printDefaultHelp();
     }
 
-    if (QuasarAppUtils::Params::isEndable("start") || QuasarAppUtils::Params::isEndable("s")) {
-        return d_ptr->start();
-    }
-
     if (QuasarAppUtils::Params::isEndable("install") || QuasarAppUtils::Params::isEndable("i")) {
         return d_ptr->install();
     }
@@ -81,7 +77,9 @@ bool Controller::send() {
     auto userParams = QuasarAppUtils::Params::getUserParamsMap();
     for (auto val = userParams.begin(); val != userParams.end(); ++val) {
 
-        bool fIgnore = val.key() == "verbose" || val.key() == "fileLog" || val.key() == "daemon" || val.key() == "d";
+        bool fIgnore = val.key() == "verbose" || val.key() == "fileLog" || val.key() == "daemon" || val.key() == "d" ||
+                val.key() == "start" || val.key() == "s";
+
         if (fIgnore) {
             continue;
         }

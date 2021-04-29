@@ -25,17 +25,12 @@ bool BaseInstaller::install(const QString &executable) {
         return false;
     }
 
-    _executable = executable;
-
     if (isInstalled()) {
         QuasarAppUtils::Params::log(QObject::tr("the service %0 alredy installed \n").
                                     arg(PCommon::instance()->getServiceName()),
                                     QuasarAppUtils::Info);
         return false;
     }
-
-    savePath();
-
 
     return true;
 }
@@ -70,23 +65,5 @@ bool BaseInstaller::disable() {
         return false;
     }
     return true;
-}
-
-QString BaseInstaller::getPath() const {
-    QSettings settings;
-
-    return settings.value("ServicePath", "").toString();
-}
-
-QString BaseInstaller::getExecutable() const {
-    return getPath();
-}
-
-void BaseInstaller::savePath() const{
-    QSettings settings;
-
-    settings.setValue("ServicePath", _executable);
-    settings.sync();
-
 }
 }

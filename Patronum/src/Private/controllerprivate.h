@@ -42,13 +42,14 @@ public:
 signals:
     void sigListFeatures(QList<Feature>);
 
+protected:
+    QString getServiceExe() const;
+    void setServiceExe(const QString &serviceExe);
+
 private slots:
     void handleReceve(QByteArray data);
 
-
 private:
-
-    QString getExecutable() const;
 
     LocalSocket *_socket = nullptr;
     IController *_controller = nullptr;

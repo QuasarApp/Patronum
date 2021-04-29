@@ -27,6 +27,11 @@ ServiceBase::ServiceBase(int argc, char *argv[]) {
 ServiceBase::~ServiceBase() {
     delete d_ptr;
 
+    QFile pidFile(PCommon::instance()->getPidfile());
+    if (pidFile.exists()) {
+        pidFile.remove();
+    }
+
     if (_core) {
         delete _core;
     }
@@ -34,6 +39,8 @@ ServiceBase::~ServiceBase() {
     if (_controller) {
         delete _controller;
     }
+
+
 }
 
 void ServiceBase::handleReceiveData(const QSet<Feature> &data) {
@@ -82,14 +89,10 @@ bool ServiceBase::sendResuylt(const QString &result) {
     return d_ptr->sendCmdResult({{"Result", result}});
 }
 
-bool ServiceBase::sendCloseeConnetion() {
-    return d_ptr->sendCloseConnection();
-}
-
 void ServiceBase::onStop() {
     sendResuylt("Success! Use default stop function");
 
-    QTimer::singleShot(100, nullptr, [](){
+    QTimer::singleShot(1000, nullptr, [](){
         QCoreApplication::quit();
     });
 }

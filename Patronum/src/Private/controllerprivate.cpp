@@ -12,6 +12,7 @@
 #include <QDateTime>
 #include <QFile>
 #include <QProcess>
+#include <QSettings>
 #include <quasarapp.h>
 #include "package.h"
 #include "installersystemd.h"
@@ -77,7 +78,7 @@ bool ControllerPrivate::sendCmd(const QSet<Feature> &result) {
 int ControllerPrivate::start() const {
 
     QProcess proc;
-    proc.setProgram(getExecutable());
+    proc.setProgram(QuasarAppUtils::Params::getCurrentExecutable());
 
     proc.setArguments({"s"});
     proc.setProcessEnvironment(QProcessEnvironment::systemEnvironment());
@@ -106,7 +107,7 @@ bool ControllerPrivate::install() const {
         return false;
     }
 
-    if (!_installer->install(getExecutable())) {
+    if (!_installer->install(getServiceExe())) {
         return false;
     }
 
@@ -234,15 +235,25 @@ void ControllerPrivate::handleReceve(QByteArray data) {
 
 }
 
-QString ControllerPrivate::getExecutable() const {
+QString ControllerPrivate::getServiceExe() const {
     if (QFile::exists(_serviceExe)) {
         return _serviceExe;
     }
 
-    if (!_installer) {
-        return "";
+    QSettings settings;
+    return settings.value("ServicePath", "").toString();
+}
+
+void ControllerPrivate::setServiceExe(const QString &serviceExe) {
+    _serviceExe = serviceExe;
+
+    if (!QFile::exists(_serviceExe)) {
+        return;
     }
 
-    return _installer->getExecutable();
+    QSettings settings;
+
+    settings.setValue("ServicePath", _serviceExe);
+    settings.sync();
 }
 }

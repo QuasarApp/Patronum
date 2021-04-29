@@ -70,12 +70,6 @@ protected:
     bool sendResuylt(const QString &result);
 
     /**
-     * @brief sendCloseeConnetion This method send signal that all request command processed.
-     * @return Return true if the message sent successul.
-     */
-    bool sendCloseeConnetion();
-
-    /**
      * @brief createApplication Default implementation create a Application object and parse arguments.
      */
     virtual void createApplication() = 0;
