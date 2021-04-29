@@ -31,7 +31,7 @@ bool BaseInstaller::install(const QString &executable) {
         QuasarAppUtils::Params::log(QObject::tr("the service %0 alredy installed \n").
                                     arg(PCommon::instance()->getServiceName()),
                                     QuasarAppUtils::Info);
-        return true;
+        return false;
     }
 
     savePath();
@@ -45,10 +45,10 @@ bool BaseInstaller::uninstall() {
         QuasarAppUtils::Params::log(QObject::tr("the service %0 alredy uninstalled \n").
                                     arg(PCommon::instance()->getServiceName()),
                                     QuasarAppUtils::Info);
-        return true;
+        return false;
     }
 
-    return false;
+    return true;
 }
 
 bool BaseInstaller::enable() {

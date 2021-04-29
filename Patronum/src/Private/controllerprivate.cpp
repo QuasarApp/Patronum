@@ -43,6 +43,8 @@ ControllerPrivate::~ControllerPrivate() {
         delete _installer;
     }
     delete _parser;
+
+    delete _socket;
 }
 
 bool ControllerPrivate::sendFeaturesRequest() {

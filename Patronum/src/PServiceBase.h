@@ -40,6 +40,7 @@ public:
      */
     virtual int exec();
 
+
 protected:
     /**
      * @brief handleReceiveData - This method invoice when service receive new command from terminal of controller of this service.
@@ -106,9 +107,17 @@ protected:
     Controller *controller();
 
     /**
-     * @brief _core This is point to the main application object.
+     * @brief core This method return a pointer to instance of the core application.
+     * @return pointer to core application object.
      */
-    QCoreApplication *_core = nullptr;
+    QCoreApplication *core();
+
+    /**
+     * @brief setCore This method sets new object of the core application.
+     * @param core This is new core application object.
+     */
+    void setCore(QCoreApplication *core);
+
 private:
 
     void printDefaultHelp();
@@ -116,6 +125,11 @@ private:
 
     ServicePrivate *d_ptr = nullptr;
     Controller *_controller = nullptr;
+
+    /**
+     * @brief _core This is point to the main application object.
+     */
+    QCoreApplication *_core = nullptr;
 
 };
 

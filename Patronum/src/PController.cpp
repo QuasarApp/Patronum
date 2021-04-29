@@ -42,17 +42,6 @@ bool Controller::send() {
         printDefaultHelp();
     }
 
-    if (!d_ptr->connectToHost()) {
-        return false;
-    }
-
-    if (printHelp) {
-        if (!d_ptr->sendFeaturesRequest()) {
-            return false;
-        }
-        return true;
-    }
-
     if (QuasarAppUtils::Params::isEndable("start") || QuasarAppUtils::Params::isEndable("s")) {
         return d_ptr->start();
     }
@@ -63,6 +52,17 @@ bool Controller::send() {
 
     if (QuasarAppUtils::Params::isEndable("uninstall") || QuasarAppUtils::Params::isEndable("u")) {
         return d_ptr->uninstall();
+    }
+
+    if (!d_ptr->connectToHost()) {
+        return false;
+    }
+
+    if (printHelp) {
+        if (!d_ptr->sendFeaturesRequest()) {
+            return false;
+        }
+        return true;
     }
 
     if (QuasarAppUtils::Params::isEndable("stop")) {

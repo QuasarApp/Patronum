@@ -104,11 +104,10 @@ protected:
     void createApplication() override {
         static_assert (std::is_base_of<Application, QCoreApplication>::value,
                 "the Application type must be QCoreApplication");
-        _core = new Application(_argc, _argv);
+        setCore(new Application(_argc, _argv));
     }
 
 private:
-    ServicePrivate *d_ptr = nullptr;
     int _argc = 0;
     char **_argv = 0;
 };

@@ -9,7 +9,7 @@ int argc = 2;
 
 DefaultService::DefaultService():
     Patronum::Service<QCoreApplication>(2, arg) {
-    _core = new QCoreApplication(argc, arg);
+    setCore(new QCoreApplication(argc, arg));
 }
 
 void DefaultService::onStart() {

@@ -11,6 +11,7 @@
 #include <quasarapp.h>
 #include <QSettings>
 #include <QProcess>
+
 namespace Patronum {
 
 #define SYSTEMD_PATH "/etc/systemd/system/"
@@ -26,18 +27,20 @@ Patronum::InstallerSystemD::~InstallerSystemD() {
 
 bool InstallerSystemD::install(const QString &executable) {
 
-    if (BaseInstaller::install(executable)) {
-        return true;
+    if (!BaseInstaller::install(executable)) {
+        return false;
     }
 
     QString service;
 
     QFile templ(":/systemd/SystemD/service.service");
-
+    QString name = PCommon::instance()->getServiceName();
     if (!templ.open(QIODevice::ReadOnly)) {
         QuasarAppUtils::Params::log(QString{"Cannot install %0. System error.\n"}.
-                                    arg(executable),
+                                    arg(name),
                                     QuasarAppUtils::Error);
+
+        return false;
     }
 
     service = templ.readAll();
@@ -50,10 +53,10 @@ bool InstallerSystemD::install(const QString &executable) {
     templ.setFileName(absaluteServicePath());
 
     if (!templ.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-        QuasarAppUtils::Params::log(QString{"Cannot install %0. Cannot write to: %1. Check permissions.\n"}.
-                                    arg(executable, absaluteServicePath()),
+        QuasarAppUtils::Params::log(QString{"Cannot install %0. %1\n"}.
+                                    arg(name, templ.errorString()),
                                     QuasarAppUtils::Error);
-
+        return false;
     }
 
     templ.write(service.toLatin1());
@@ -62,13 +65,15 @@ bool InstallerSystemD::install(const QString &executable) {
 }
 
 bool InstallerSystemD::uninstall() {
-    if (BaseInstaller::uninstall()) {
-        return true;
+    if (!BaseInstaller::uninstall()) {
+        return false;
     }
+
+    QString name = PCommon::instance()->getServiceName();
 
     if (!(disable() && QFile::remove(absaluteServicePath()))) {
         QuasarAppUtils::Params::log(QString("Cannot uninstall %0. Cannot remove %1. Check permissions.\n").
-                                    arg(PCommon::instance()->getServiceName(),
+                                    arg(name,
                                         absaluteServicePath()),
                                     QuasarAppUtils::Error);
         return false;

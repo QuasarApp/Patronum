@@ -26,6 +26,14 @@ ServiceBase::ServiceBase(int argc, char *argv[]) {
 
 ServiceBase::~ServiceBase() {
     delete d_ptr;
+
+    if (_core) {
+        delete _core;
+    }
+
+    if (_controller) {
+        delete _controller;
+    }
 }
 
 void ServiceBase::handleReceiveData(const QSet<Feature> &data) {
@@ -80,8 +88,10 @@ bool ServiceBase::sendCloseeConnetion() {
 
 void ServiceBase::onStop() {
     sendResuylt("Success! Use default stop function");
-    QCoreApplication::quit();
 
+    QTimer::singleShot(100, nullptr, [](){
+        QCoreApplication::quit();
+    });
 }
 
 void ServiceBase::onResume() {
@@ -134,8 +144,19 @@ void ServiceBase::startThisService() {
     }
 }
 
+QCoreApplication *ServiceBase::core() {
+    return _core;
+}
+
+void ServiceBase::setCore(QCoreApplication *core) {
+    if (_core)
+        delete _core;
+
+    _core = core;
+}
+
 int ServiceBase::exec() {
-    if (!_core) {
+    if (!core()) {
         createApplication();
     }
 
@@ -164,12 +185,12 @@ int ServiceBase::exec() {
     } else {
         QTimer::singleShot(0, nullptr, [this]() {
             if (!controller()->send()) {
-                _core->exit(static_cast<int>(ControllerError::ServiceUnavailable));
+                core()->exit(static_cast<int>(ControllerError::ServiceUnavailable));
             }
         });
     }
 
-    return _core->exec();
+    return core()->exec();
 }
 
 }
