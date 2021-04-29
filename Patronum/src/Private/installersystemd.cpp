@@ -49,6 +49,7 @@ bool InstallerSystemD::install(const QString &executable) {
     service = service.arg(executable);
     service = service.arg(PCommon::instance()->getPidfile());
     service = service.arg(PCommon::instance()->getPWD());
+    service = service.arg(PCommon::instance()->getServiceName());
 
     templ.setFileName(absaluteServicePath());
 

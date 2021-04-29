@@ -106,7 +106,7 @@ Controller *ServiceBase::controller() {
     if (_controller)
         return _controller;
 
-    _controller = new Controller(QuasarAppUtils::Params::getCurrentExecutable());
+    _controller = new Controller(findExecutable());
 
     return _controller;
 }
@@ -142,6 +142,20 @@ void ServiceBase::startThisService() {
             pidFile.close();
         }
     }
+}
+
+QString ServiceBase::findExecutable() const {
+    const QByteArray P_RUN_FILE = qgetenv("P_RUN_FILE");
+    if (P_RUN_FILE.size()) {
+        return P_RUN_FILE;
+    }
+
+    const QByteArray CQT_RUN_FILE = qgetenv("CQT_RUN_FILE");
+    if (CQT_RUN_FILE.size()) {
+        return P_RUN_FILE;
+    }
+
+    return QuasarAppUtils::Params::getCurrentExecutable();
 }
 
 QCoreApplication *ServiceBase::core() {

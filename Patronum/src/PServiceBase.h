@@ -123,6 +123,12 @@ private:
     void printDefaultHelp();
     void startThisService();
 
+    /**
+     * @brief findExecutable This method return path to executable or wraper of the service executable.
+     * @return path to executable or wraper of the service executable.
+     */
+    QString findExecutable() const;
+
     ServicePrivate *d_ptr = nullptr;
     Controller *_controller = nullptr;
 

@@ -75,6 +75,14 @@ template<class Application>
         return app.exec();
     }
  * @endcode
+ *
+ * @note The Service class use own executable like a main path to service executable.
+ *  If your application has custom dependencies and do not work without costom envirement then you need to add **P_RUN_FILE** or **CQT_RUN_FILE** variavle with full path into the your wraper or launcher file.
+ *  **Order of the search executable file of the service**
+ *  1. P_RUN_FILE variable
+ *  2. CQT_RUN_FILE variable
+ *  3. Absalute path to executable.
+ *
  */
 class Service : public ServiceBase
 {

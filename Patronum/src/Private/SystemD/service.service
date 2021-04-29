@@ -1,5 +1,5 @@
 [Unit]
-Description=Automatet generated service by Patronum
+Description=%3 service. This service generated automaticly by Patronum libarary. See https://github.com/QuasarApp/Patronum
 
 [Service]
 Type=forking
