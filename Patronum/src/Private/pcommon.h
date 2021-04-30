@@ -5,7 +5,6 @@
 
 namespace Patronum {
 
-
 /**
  * @brief The Common class contains utils methods of the patronum library.
  *

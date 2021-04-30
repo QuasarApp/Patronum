@@ -16,8 +16,8 @@
 
 namespace Patronum {
 
-Controller::Controller(const QString& servicePath) {
-    d_ptr = new ControllerPrivate(servicePath, this);
+Controller::Controller() {
+    d_ptr = new ControllerPrivate(this);
 }
 
 Controller::~Controller() {
@@ -40,14 +40,6 @@ bool Controller::send() {
 
     if (printHelp) {
         printDefaultHelp();
-    }
-
-    if (QuasarAppUtils::Params::isEndable("install") || QuasarAppUtils::Params::isEndable("i")) {
-        return d_ptr->install();
-    }
-
-    if (QuasarAppUtils::Params::isEndable("uninstall") || QuasarAppUtils::Params::isEndable("u")) {
-        return d_ptr->uninstall();
     }
 
     if (!d_ptr->connectToHost()) {
@@ -91,16 +83,12 @@ bool Controller::send() {
         return false;
     }
 
-    QTimer::singleShot(1000, nullptr, [this]() {
-        QuasarAppUtils::Params::log(errorToString(ControllerError::TimeOutError), QuasarAppUtils::Error);
-        QCoreApplication::exit(static_cast<int>(ControllerError::TimeOutError));
+    QTimer::singleShot(1000, nullptr, []() {
+        QuasarAppUtils::Params::log(errorToString(PatronumError::TimeOutError), QuasarAppUtils::Error);
+        QCoreApplication::exit(static_cast<int>(PatronumError::TimeOutError));
     });
 
     return true;
-}
-
-int Controller::startDetached() const {
-    return d_ptr->start();
 }
 
 QuasarAppUtils::Help::Section Controller::help() const {
@@ -108,15 +96,7 @@ QuasarAppUtils::Help::Section Controller::help() const {
         {QObject::tr("Options that available after start"), {
                 {"stop",            QObject::tr("Stop a service")},
                 {"pause",           QObject::tr("Pause a service")},
-                {"resume",          QObject::tr("Resume a service")},
-                {"uninstall / u",   QObject::tr("Uninstall a service")}
-
-            }
-        },
-        {QObject::tr("Options that available after instalation"),
-            {
-                {"uninstall / u",   QObject::tr("Uninstall a service")},
-                {"start / s",       QObject::tr("Start a service as a daemon")},
+                {"resume",          QObject::tr("Resume a service")}
 
             }
         }
@@ -125,7 +105,7 @@ QuasarAppUtils::Help::Section Controller::help() const {
     return help;
 }
 
-void Controller::handleError(ControllerError error) {
+void Controller::handleError(PatronumError error) {
     QuasarAppUtils::Params::log(errorToString(error),
                                 QuasarAppUtils::Error);
 }

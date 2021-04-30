@@ -109,7 +109,7 @@ Controller *ServiceBase::controller() {
     if (_controller)
         return _controller;
 
-    _controller = new Controller(findExecutable());
+    _controller = new Controller();
 
     return _controller;
 }
@@ -122,6 +122,7 @@ void ServiceBase::printDefaultHelp() {
                             {"start / s",       QObject::tr("Start a service in console")},
                             {"daemon / d",      QObject::tr("Start a service as a daemon")},
                             {"install / i",     QObject::tr("Install a service")},
+                            {"unistall / u",    QObject::tr("unistall a service")},
                         }}});
 
     const auto features = supportedFeatures();
@@ -134,31 +135,6 @@ void ServiceBase::printDefaultHelp() {
 
     QuasarAppUtils::Help::print(serviceHelp);
 
-}
-
-void ServiceBase::startThisService() {
-    onStart();
-    if (d_ptr->listen()) {
-        QFile pidFile(PCommon::instance()->getPidfile());
-        if (pidFile.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-            pidFile.write(QByteArray::number(QCoreApplication::applicationPid()));
-            pidFile.close();
-        }
-    }
-}
-
-QString ServiceBase::findExecutable() const {
-    const QByteArray P_RUN_FILE = qgetenv("P_RUN_FILE");
-    if (P_RUN_FILE.size()) {
-        return P_RUN_FILE;
-    }
-
-    const QByteArray CQT_RUN_FILE = qgetenv("CQT_RUN_FILE");
-    if (CQT_RUN_FILE.size()) {
-        return P_RUN_FILE;
-    }
-
-    return QuasarAppUtils::Params::getCurrentExecutable();
 }
 
 QCoreApplication *ServiceBase::core() {
@@ -190,19 +166,27 @@ int ServiceBase::exec() {
     bool fStart = QuasarAppUtils::Params::isEndable("start") || QuasarAppUtils::Params::isEndable("s");
     bool fDaemon = QuasarAppUtils::Params::isEndable("daemon") || QuasarAppUtils::Params::isEndable("d");
 
+    if (QuasarAppUtils::Params::isEndable("install") || QuasarAppUtils::Params::isEndable("i")) {
+        return d_ptr->install();
+    }
+
+    if (QuasarAppUtils::Params::isEndable("uninstall") || QuasarAppUtils::Params::isEndable("u")) {
+        return d_ptr->uninstall();
+    }
+
     if (fStart || fDaemon) {
 
         if (fDaemon) {
-            return controller()->startDetached();
+            return d_ptr->startDeamon();
         }
 
         QTimer::singleShot(0, nullptr, [this]() {
-            startThisService();
+            d_ptr->start();
         });
     } else {
         QTimer::singleShot(0, nullptr, [this]() {
             if (!controller()->send()) {
-                core()->exit(static_cast<int>(ControllerError::ServiceUnavailable));
+                core()->exit(static_cast<int>(PatronumError::ServiceUnavailable));
             }
         });
     }

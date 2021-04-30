@@ -7,11 +7,14 @@
 
 #include "pcommon.h"
 #include "serviceprivate.h"
+#include "installersystemd.h"
 
 #include "IPService.h"
 #include "localsocket.h"
 #include "package.h"
 #include <QCoreApplication>
+#include <QFile>
+#include <QProcess>
 #include <QTimer>
 #include <quasarapp.h>
 #include "parser.h"
@@ -26,6 +29,10 @@ Patronum::ServicePrivate::ServicePrivate(IService *service, QObject *parent):
 
     _service = service;
 
+#ifdef Q_OS_LINUX
+    _installer = new InstallerSystemD();
+#endif
+
     _parser = new Parser();
     QObject::connect(_socket, &LocalSocket::sigReceve,
                      this, &ServicePrivate::handleReceve);
@@ -34,6 +41,11 @@ Patronum::ServicePrivate::ServicePrivate(IService *service, QObject *parent):
 
 ServicePrivate::~ServicePrivate() {
     delete _parser;
+    delete _socket;
+
+    if (_installer) {
+        delete _installer;
+    }
 }
 
 bool ServicePrivate::sendCmdResult(const QVariantMap &result) {
@@ -57,12 +69,71 @@ bool ServicePrivate::sendCloseConnection() {
     return _socket->send(_parser->createPackage(Command::CloseConnection));
 }
 
-bool ServicePrivate::listen() const {
+bool ServicePrivate::install() {
+
+    if (!_installer) {
+        QuasarAppUtils::Params::log(errorToString(UnsupportedPlatform),
+                                    QuasarAppUtils::Error);
+        return false;
+    }
+
+    if (!_installer->install(getServiceLauncher())) {
+        return false;
+    }
+
+    QuasarAppUtils::Params::log("The service installed successful", QuasarAppUtils::Info);
+    return true;
+}
+
+bool ServicePrivate::uninstall() {
+    if (!_installer) {
+        QuasarAppUtils::Params::log(errorToString(UnsupportedPlatform),
+                                    QuasarAppUtils::Error);
+        return false;
+    }
+
+    if (!_installer->uninstall()) {
+        return false;
+    }
+
+    QuasarAppUtils::Params::log("The service uninstalled successful", QuasarAppUtils::Info);
+    return true;
+}
+
+bool ServicePrivate::start() {
     if (!_socket->listen()) {
-        QuasarAppUtils::Params::log("Fail to create a terminal socket!");
-        QCoreApplication::exit(1);
+        QuasarAppUtils::Params::log("Fail to create a terminal socket!",
+                                    QuasarAppUtils::Error);
+        QCoreApplication::exit(SocketIsBusy);
         return false;
     };
+
+    QFile pidFile(PCommon::instance()->getPidfile());
+    if (pidFile.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+        pidFile.write(QByteArray::number(QCoreApplication::applicationPid()));
+        pidFile.close();
+    }
+
+    _service->onStart();
+
+    return true;
+}
+
+bool ServicePrivate::startDeamon() {
+    QProcess proc;
+    proc.setProgram(QuasarAppUtils::Params::getCurrentExecutable());
+
+    proc.setArguments({"start"});
+    proc.setProcessEnvironment(QProcessEnvironment::systemEnvironment());
+    proc.setProcessChannelMode(QProcess::SeparateChannels);
+
+    if (!proc.startDetached()) {
+        QuasarAppUtils::Params::log("fail to start detached process: " + proc.errorString(),
+                                    QuasarAppUtils::Error);
+        return false;
+    }
+
+    QuasarAppUtils::Params::log("The service started successful", QuasarAppUtils::Info);
 
     return true;
 }
@@ -90,6 +161,20 @@ bool ServicePrivate::handleStandartCmd(QSet<Feature> *cmds) {
     }
 
     return true;
+}
+
+QString ServicePrivate::getServiceLauncher() const {
+    const QByteArray P_RUN_FILE = qgetenv("P_RUN_FILE");
+    if (P_RUN_FILE.size()) {
+        return P_RUN_FILE;
+    }
+
+    const QByteArray CQT_RUN_FILE = qgetenv("CQT_RUN_FILE");
+    if (CQT_RUN_FILE.size()) {
+        return P_RUN_FILE;
+    }
+
+    return QuasarAppUtils::Params::getCurrentExecutable();
 }
 
 void ServicePrivate::handleReceve(QByteArray data) {

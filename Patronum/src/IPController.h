@@ -17,25 +17,6 @@ namespace Patronum {
 class Feature;
 
 /**
- * @brief The ControllerError enum - controller work error codes
- */
-enum class ControllerError {
-    /// Unknown error
-    Undefined,
-    /// Service is unavailable. Try send start command or restart the service manually.
-    ServiceUnavailable,
-    /// Invalid package received.
-    InvalidPackage,
-    /// Library unsupported command received.
-    WrongCommand,
-    /// Timeout error. service unavailable or not started.
-    TimeOutError,
-    /// Internal error of the work of the Patronum library. Contact the developers and provide them with an error report. https://github.com/QuasarApp/Patronum/issues
-    SystemError
-
-};
-
-/**
  * @brief The IController class This is base interface for the handling network events.
  *
  */
@@ -44,13 +25,6 @@ class PATRONUM_LIBRARYSHARED_EXPORT IController
 public:
     IController() = default;
     virtual ~IController() = default;
-
-    /**
-     * @brief errorToString This method convert the ControllerError to QString.
-     * @param error This is error id.
-     * @return return text of error.
-     */
-    QString errorToString(ControllerError error) const;
 
     /**
      * @brief handleFeatures This method should be handle all Command::Features resuests.
@@ -71,7 +45,7 @@ public:
      * This method will invoked when a controlee receive a error responce from a service.
      * @param errorCode This is code of a error.
      */
-    virtual void handleError(ControllerError errorCode) = 0;
+    virtual void handleError(PatronumError errorCode) = 0;
 
     /**
      * @brief finished This method ivoked when controler received Command::CloseConnection from the server.

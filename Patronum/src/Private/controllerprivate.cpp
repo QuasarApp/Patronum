@@ -15,24 +15,17 @@
 #include <QSettings>
 #include <quasarapp.h>
 #include "package.h"
-#include "installersystemd.h"
 #include "parser.h"
 #include "pcommon.h"
 
 namespace Patronum {
 
-ControllerPrivate::ControllerPrivate(const QString &servicePath,
-                                     IController *controller, QObject *parent):
+ControllerPrivate::ControllerPrivate(IController *controller, QObject *parent):
     QObject(parent) {
     QString name = PCommon::instance()->getServiceName();
     _socket = new LocalSocket(name, this);
-    _serviceExe = servicePath;
     _controller = controller;
     _parser = new Parser();
-
-#ifdef Q_OS_LINUX
-    _installer = new InstallerSystemD();
-#endif
 
     QObject::connect(_socket, &LocalSocket::sigReceve,
                      this, &ControllerPrivate::handleReceve);
@@ -40,11 +33,7 @@ ControllerPrivate::ControllerPrivate(const QString &servicePath,
 }
 
 ControllerPrivate::~ControllerPrivate() {
-    if (_installer) {
-        delete _installer;
-    }
     delete _parser;
-
     delete _socket;
 }
 
@@ -52,7 +41,7 @@ bool ControllerPrivate::sendFeaturesRequest() {
     if (!_socket->isValid()) {
         QuasarAppUtils::Params::log("scoket is closed!",
                                     QuasarAppUtils::Debug);
-        _controller->handleError(ControllerError::ServiceUnavailable);
+        _controller->handleError(PatronumError::ServiceUnavailable);
         return false;
     }
 
@@ -63,7 +52,7 @@ bool ControllerPrivate::sendCmd(const QSet<Feature> &result) {
     if (!_socket->isValid()) {
         QuasarAppUtils::Params::log("scoket is closed!",
                                     QuasarAppUtils::Debug);
-        _controller->handleError(ControllerError::ServiceUnavailable);
+        _controller->handleError(PatronumError::ServiceUnavailable);
 
         return false;
     }
@@ -75,61 +64,8 @@ bool ControllerPrivate::sendCmd(const QSet<Feature> &result) {
     return false;
 }
 
-int ControllerPrivate::start() const {
-
-    QProcess proc;
-    proc.setProgram(QuasarAppUtils::Params::getCurrentExecutable());
-
-    proc.setArguments({"s"});
-    proc.setProcessEnvironment(QProcessEnvironment::systemEnvironment());
-    proc.setProcessChannelMode(QProcess::SeparateChannels);
-
-    qint64 pid;
-    if (!proc.startDetached(&pid)) {
-        QuasarAppUtils::Params::log("fail to start detached process: " + proc.errorString(),
-                                    QuasarAppUtils::Error);
-        return  static_cast<int>(ControllerError::SystemError);
-    }
-
-    _controller->handleResponce({{"Result", "start service successful"}});
-
-    return 0;
-}
-
 bool ControllerPrivate::stop() {
     return sendCmd({Feature("stop")});
-}
-
-bool ControllerPrivate::install() const {
-    if (!_installer) {
-        QuasarAppUtils::Params::log("Unsupported platform",
-                                    QuasarAppUtils::Error);
-        return false;
-    }
-
-    if (!_installer->install(getServiceExe())) {
-        return false;
-    }
-
-    _controller->handleResponce({{"Result", "Install service successful"}});
-
-    return true;
-}
-
-bool ControllerPrivate::uninstall() const {
-    if (!_installer) {
-        QuasarAppUtils::Params::log("Unsupported platform",
-                                    QuasarAppUtils::Error);
-        return false;
-    }
-
-    if (!_installer->uninstall()) {
-        return false;
-    }
-
-    _controller->handleResponce({{"Result", "Uninstall service successful"}});
-
-    return true;
 }
 
 bool ControllerPrivate::pause() {
@@ -156,7 +92,7 @@ bool ControllerPrivate::connectToHost() const {
     if (!_socket->connectToTarget()) {
         QuasarAppUtils::Params::log("Connect to service fail !",
                                     QuasarAppUtils::Debug);
-        _controller->handleError(ControllerError::ServiceUnavailable);
+        _controller->handleError(PatronumError::ServiceUnavailable);
 
         return false;
 
@@ -184,7 +120,7 @@ void ControllerPrivate::handleReceve(QByteArray data) {
             QuasarAppUtils::Params::log("Received invalid package!",
                                         QuasarAppUtils::Debug);
 
-            _controller->handleError(ControllerError::InvalidPackage);
+            _controller->handleError(PatronumError::InvalidPackage);
 
             continue;;
         }
@@ -225,7 +161,7 @@ void ControllerPrivate::handleReceve(QByteArray data) {
         default: {
             QuasarAppUtils::Params::log("Wrong command!",
                                         QuasarAppUtils::Debug);
-            _controller->handleError(ControllerError::WrongCommand);
+            _controller->handleError(PatronumError::WrongCommand);
 
             break;
         }
@@ -233,27 +169,5 @@ void ControllerPrivate::handleReceve(QByteArray data) {
 
     }
 
-}
-
-QString ControllerPrivate::getServiceExe() const {
-    if (QFile::exists(_serviceExe)) {
-        return _serviceExe;
-    }
-
-    QSettings settings;
-    return settings.value("ServicePath", "").toString();
-}
-
-void ControllerPrivate::setServiceExe(const QString &serviceExe) {
-    _serviceExe = serviceExe;
-
-    if (!QFile::exists(_serviceExe)) {
-        return;
-    }
-
-    QSettings settings;
-
-    settings.setValue("ServicePath", _serviceExe);
-    settings.sync();
 }
 }

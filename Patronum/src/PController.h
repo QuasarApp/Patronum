@@ -49,16 +49,17 @@ class ControllerPrivate;
         return app.exec();
     }
  * @endcode
+ *
+ * @note The Controller class provide only base functionality. Sending custom command and receive response of service. If you want to start or install/unistall service tou need to use the Patronum::Service class.
+ *
  */
 class PATRONUM_LIBRARYSHARED_EXPORT Controller : protected IController
 {
 public:
     /**
      * @brief Controller This is base constructor of the controller.
-     * @param servicePath This is path to service executable.
-     * @note If servicePath argument will set to empty then 'start' and install commands will not working
      */
-    Controller(const QString& servicePath = "");
+    Controller();
     ~Controller() override;
 
     /**
@@ -77,12 +78,6 @@ public:
     bool send();
 
     /**
-     * @brief startDetached
-     * @return true if service started successful.
-     */
-    int startDetached() const;
-
-    /**
      * @brief help This method return help of the Controller.
      * @return Available otions list.
      */
@@ -94,9 +89,9 @@ protected:
     /**
      * @brief handleError - override this method if you want track errors
         the default implementation print error message.
-       @param error - error id see ControllerError
+       @param error - error id see PatronumError
      */
-    void handleError(ControllerError error) override;
+    void handleError(PatronumError error) override;
 
     /**
      * @brief handleFeatures - Override this method if you want create a custom reaction of get service features.
