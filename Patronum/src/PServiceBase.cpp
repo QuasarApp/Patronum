@@ -167,11 +167,15 @@ int ServiceBase::exec() {
     bool fDaemon = QuasarAppUtils::Params::isEndable("daemon") || QuasarAppUtils::Params::isEndable("d");
 
     if (QuasarAppUtils::Params::isEndable("install") || QuasarAppUtils::Params::isEndable("i")) {
-        return d_ptr->install();
+        if (!d_ptr->install())
+            return Patronum::PatronumError::UnsupportedPlatform;
+        return 0;
     }
 
     if (QuasarAppUtils::Params::isEndable("uninstall") || QuasarAppUtils::Params::isEndable("u")) {
-        return d_ptr->uninstall();
+        if (!d_ptr->uninstall())
+            return Patronum::PatronumError::UnsupportedPlatform;
+        return 0;
     }
 
     if (fStart || fDaemon) {
