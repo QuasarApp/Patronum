@@ -39,8 +39,6 @@ ServiceBase::~ServiceBase() {
     if (_controller) {
         delete _controller;
     }
-
-
 }
 
 void ServiceBase::handleReceiveData(const QSet<Feature> &data) {
@@ -73,8 +71,6 @@ void ServiceBase::handleReceiveData(const QSet<Feature> &data) {
 
         sendResuylt(result);
     }
-
-
 }
 
 QSet<Feature> ServiceBase::supportedFeatures() {
