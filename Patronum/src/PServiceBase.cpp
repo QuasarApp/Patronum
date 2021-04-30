@@ -181,7 +181,9 @@ int ServiceBase::exec() {
     if (fStart || fDaemon) {
 
         if (fDaemon) {
-            return d_ptr->startDeamon();
+            if (!d_ptr->startDeamon())
+                return Patronum::PatronumError::UnsupportedPlatform;
+            return 0;
         }
 
         QTimer::singleShot(0, nullptr, [this]() {
