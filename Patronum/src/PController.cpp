@@ -69,8 +69,7 @@ bool Controller::send() {
     auto userParams = QuasarAppUtils::Params::getUserParamsMap();
     for (auto val = userParams.begin(); val != userParams.end(); ++val) {
 
-        bool fIgnore = val.key() == "verbose" || val.key() == "fileLog" || val.key() == "daemon" || val.key() == "d" ||
-                val.key() == "start" || val.key() == "s";
+        bool fIgnore = val.key() == "verbose" || val.key() == "fileLog";
 
         if (fIgnore) {
             continue;
