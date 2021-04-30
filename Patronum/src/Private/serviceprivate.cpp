@@ -171,7 +171,7 @@ QString ServicePrivate::getServiceLauncher() const {
 
     const QByteArray CQT_RUN_FILE = qgetenv("CQT_RUN_FILE");
     if (CQT_RUN_FILE.size()) {
-        return P_RUN_FILE;
+        return CQT_RUN_FILE;
     }
 
     return QuasarAppUtils::Params::getCurrentExecutable();
