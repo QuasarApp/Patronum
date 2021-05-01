@@ -37,7 +37,7 @@ enum PatronumError {
     SystemError,
     /// This error ocured when the socket file alredy created or application do not have a permision to the /var/tmp location.
     /// @note If Preview session of your service is crashed then
-    /// you need to remove the **/var/tmp/P<ServiceName>** file befor start new session of the service.
+    ///  you need to remove the **/var/tmp/P<ServiceName>** file befor start new session of the service.
     SocketIsBusy,
     /// This error ocured when service not supportded using platform.
     UnsupportedPlatform
