@@ -9,6 +9,7 @@ Becouse This library offers easy interface to control your demons likewise the m
 ## Main features
 
 * Support linux systemd daemons.
+* Deploy and install your services on the host.
 * Auto create a Service from your server or yor daemon utility.
 * Auto create a Controller of your Service. 
 
