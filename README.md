@@ -13,6 +13,15 @@ Becouse This library offers easy interface to control your demons likewise the m
 * Auto create a Service from your server or yor daemon utility.
 * Auto create a Controller of your Service. 
 
+## Deffault sopprted commands
+* install - deploys your daemon into your host system.
+* unistall - removes old deployed daemon.
+* start - starts your service
+* stop - stops ypur service
+* pause - sends pause command to your daemon
+* upause (resume) - sends resume coomand to your daemon
+
+
 ## Include
 
 ### For cmake projects
