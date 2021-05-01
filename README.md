@@ -1,6 +1,6 @@
 # Patronum
 
-This is extension libraries for control your daemons.
+This is extension libraries for control your daemons and rervices. This library will save you the time you spend building and deploying server daemons or services.
 
 ### Why is Patronum?
 
