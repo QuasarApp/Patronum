@@ -1,6 +1,8 @@
 # Patronum
 
-This is extension libraries for control your daemons.
+This is extension libraries for control your daemons and rervices. This library will save you the time you spend building and deploying server daemons or services. 
+
+If you want to get more inforamtion about library see our [documentation](https://quasarapp.ddns.net:3031/docs/QuasarApp/Patronum/latest/)
 
 ### Why is Patronum?
 
@@ -9,8 +11,18 @@ Becouse This library offers easy interface to control your demons likewise the m
 ## Main features
 
 * Support linux systemd daemons.
+* Deploy and install your services on the host.
 * Auto create a Service from your server or yor daemon utility.
 * Auto create a Controller of your Service. 
+
+## Deffault sopprted commands
+* install - deploys your daemon into your host system.
+* unistall - removes old deployed daemon.
+* start - starts your service
+* stop - stops ypur service
+* pause - sends pause command to your daemon
+* upause (resume) - sends resume coomand to your daemon
+
 
 ## Include
 
