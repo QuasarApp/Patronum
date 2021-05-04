@@ -120,6 +120,12 @@ bool ServicePrivate::start() {
 }
 
 bool ServicePrivate::startDeamon() {
+    if (_socket->isRunning()) {
+        QuasarAppUtils::Params::log("Failed to start a service because an another service alredy started",
+                                    QuasarAppUtils::Error);
+        return false;
+    }
+
     QProcess proc;
     proc.setProgram(QuasarAppUtils::Params::getCurrentExecutable());
 

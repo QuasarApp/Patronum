@@ -7,6 +7,7 @@
 
 #include "localsocket.h"
 
+#include <QFile>
 #include <QLocalServer>
 #include <QLocalSocket>
 #include <quasarapp.h>
@@ -93,6 +94,10 @@ bool LocalSocket::connectToTarget() {
     m_socket->connectToServer(m_target);
 
     return m_socket->isValid();
+}
+
+bool LocalSocket::isRunning() {
+    return (m_server && m_server->isListening()) || QFile::exists(m_target);
 }
 
 void LocalSocket::handleStateChanged(QLocalSocket::LocalSocketState socketState) {

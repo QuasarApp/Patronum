@@ -34,14 +34,15 @@ public:
 
     // ISocketWraper interface
 public:
-    bool send(const QByteArray &data);
-    bool isValid() const;
-    bool listen();
-    bool connectToTarget();
+    bool send(const QByteArray &data) override;
+    bool isValid() const override;
+    bool listen() override;
+    bool connectToTarget() override;
+    bool isRunning() override;
 
 signals:
-    void sigReceve(QByteArray data);
-    void sigStateChanged(State state);
+    void sigReceve(QByteArray data) override;
+    void sigStateChanged(State state) override;
 
 private:
     QLocalSocket *m_socket = nullptr;

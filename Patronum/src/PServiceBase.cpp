@@ -58,10 +58,10 @@ void ServiceBase::handleReceiveData(const QSet<Feature> &data) {
     }
 
     if (commandList.size()) {
-        QStringList stringList;
+        QString stringList;
 
         for (const auto&i : list) {
-            stringList += i.toString();
+            stringList += i.toString() + " ";
         }
 
         QVariantMap result;

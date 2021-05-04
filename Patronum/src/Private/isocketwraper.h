@@ -60,6 +60,12 @@ public:
      */
     virtual bool connectToTarget() = 0;
 
+    /**
+     * @brief isRunning This method shold be return true if the service is running else false.
+     * @return return true if the service is running else false.
+     */
+    virtual bool isRunning() = 0;
+
     State state() const;
 
 protected:
