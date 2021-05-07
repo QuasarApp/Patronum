@@ -17,7 +17,7 @@ QString PCommon::getPidfile() const {
 }
 
 QString PCommon::getPWD() const {
-    return QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+    return QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
 }
 
 QString PCommon::getServiceName() const {
