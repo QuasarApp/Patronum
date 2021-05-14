@@ -1,5 +1,7 @@
 # Patronum
 
+<p align="center"><img src="res/Banner_web.jpg" alt="Credits"></p>
+
 This is extension libraries for control your daemons and rervices. This library will save you the time you spend building and deploying server daemons or services. 
 
 If you want to get more inforamtion about library see our [documentation](https://quasarapp.ddns.net:3031/docs/QuasarApp/Patronum/latest/)
