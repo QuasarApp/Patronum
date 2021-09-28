@@ -112,7 +112,7 @@ Controller *ServiceBase::controller() {
 
 void ServiceBase::printDefaultHelp() {
     auto serviceHelp = controller()->help();
-    serviceHelp.unite(QuasarAppUtils::Params::getParamsHelp());
+    serviceHelp.unite(QuasarAppUtils::Params::getHelp());
 
     serviceHelp.unite({{QObject::tr("Options that available befor install"),{
                             {"start / s",       QObject::tr("Start a service in console")},
