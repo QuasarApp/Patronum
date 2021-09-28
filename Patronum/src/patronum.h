@@ -9,6 +9,7 @@
 #define PATRONUM_H
 
 #include "PController.h"
+#include "PFeature.h"
 #include "PService.h"
 
 /**

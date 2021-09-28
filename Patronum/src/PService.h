@@ -37,15 +37,15 @@ template<class Application>
 
         }
 
-        void start() {
+        void onStart() override {
             // call on server started
         }
 
-        void stop() {
+        void onStop() override {
             // call on server stoped
         }
 
-        bool HanoiService::handleReceive(const Patronum::Feature &data) {
+        bool handleReceive(const Patronum::Feature &data) override {
 
             if (data.cmd() == "ping") {
                 sendResuylt("Pong");
@@ -57,7 +57,7 @@ template<class Application>
         }
 
 
-        QList<Feature> supportedFeatures() {
+        QSet<Patronum::Feature> supportedFeatures() override {
             QSet<Patronum::Feature> data;
 
             data << Patronum::Feature("ping", "This is description of the ping command");
