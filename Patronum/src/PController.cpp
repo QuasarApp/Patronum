@@ -153,7 +153,7 @@ QList<Feature> Controller::features() {
 
 void Controller::printDefaultHelp() const {
 
-    auto quasarappHelp = QuasarAppUtils::Params::getParamsHelp();
+    auto quasarappHelp = QuasarAppUtils::Params::getHelp();
     QuasarAppUtils::Help::print(quasarappHelp.unite(help()));
 }
 
