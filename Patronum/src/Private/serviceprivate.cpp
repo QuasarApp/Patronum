@@ -18,6 +18,12 @@
 #include <QTimer>
 #include <quasarapp.h>
 #include "parser.h"
+#include <csignal>
+
+void handleTermSignals(int sig) {
+    QuasarAppUtils::Params::log("Shutdown application CTRL+C.", QuasarAppUtils::Info);
+    QCoreApplication::exit(0);
+}
 
 namespace Patronum {
 
@@ -36,6 +42,9 @@ Patronum::ServicePrivate::ServicePrivate(IService *service, QObject *parent):
     _parser = new Parser();
     QObject::connect(_socket, &LocalSocket::sigReceve,
                      this, &ServicePrivate::handleReceve);
+
+    signal(SIGINT, &handleTermSignals);
+    signal(SIGTERM, &handleTermSignals);
 
 }
 
