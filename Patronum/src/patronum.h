@@ -48,5 +48,11 @@
  *    terminal myCommand
  *  @endcode
  */
-namespace Patronum {}
+namespace Patronum {
+/**
+ * @brief patronumLibVersion This method return current version of library.
+ * @return current version of library
+ */
+QString patronumLibVersion();
+}
 #endif // PATRONUM_H

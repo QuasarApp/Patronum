@@ -16,7 +16,7 @@
 #  define PATRONUM_LIBRARYSHARED_EXPORT Q_DECL_IMPORT
 #endif
 
-#define PATRONUM_VERSION "0.2.."
+#define PATRONUM_VERSION "0.2.@GIT_COMMIT_COUNT@.@GIT_COMMIT_HASH@"
 
 namespace Patronum {
 

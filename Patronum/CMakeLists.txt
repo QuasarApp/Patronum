@@ -15,6 +15,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+updateGitVars()
 
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Network REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Network REQUIRED)
@@ -36,4 +37,7 @@ target_link_libraries(${CURRENT_PROJECT} PUBLIC Qt::Core Qt::Network QuasarApp)
 target_include_directories(${CURRENT_PROJECT} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")
 target_include_directories(${CURRENT_PROJECT} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src/Private")
 
-setVersion(0 2 0)
+set(global_file "${CMAKE_CURRENT_SOURCE_DIR}/src/Patronum_global.h")
+configure_file("${global_file}.in" ${global_file} @ONLY)
+
+setVersion(0 2 ${GIT_COMMIT_COUNT})

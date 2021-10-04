@@ -68,3 +68,5 @@ compile_commands.json
 CTestTestfile.cmake
 _deps
 *_autogen
+
+Patronum_global.h
