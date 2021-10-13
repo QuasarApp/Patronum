@@ -29,8 +29,9 @@ ServiceBase::ServiceBase(int argc, char *argv[]) {
 ServiceBase::~ServiceBase() {
     delete d_ptr;
 
-    QFile pidFile(PCommon::instance()->getPidfile());
-    if (pidFile.exists()) {
+    qint64 pid = PCommon::instance()->getPidFromPidfile();
+    if (pid == QCoreApplication::applicationPid()) {
+        QFile pidFile(PCommon::instance()->getPidfile());
         pidFile.remove();
     }
 

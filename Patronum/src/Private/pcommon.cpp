@@ -19,11 +19,15 @@ QString PCommon::getPidfile() const {
 
 qint64 PCommon::getPidFromPidfile() const {
     QFile file = getPidfile();
-
-    if (!file.exists())
+    if (!file.open(QIODevice::ReadOnly)) {
         return 0;
+    }
 
-    return file.readAll().toLongLong();
+    auto data = file.readAll();
+
+    file.close();
+
+    return data.toLongLong();
 }
 
 QString PCommon::getPWD() const {
