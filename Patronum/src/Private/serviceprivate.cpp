@@ -113,6 +113,7 @@ bool ServicePrivate::uninstall() {
 }
 
 bool ServicePrivate::start() {
+
     if (!_socket->listen()) {
         QuasarAppUtils::Params::log("Fail to create a terminal socket!",
                                     QuasarAppUtils::Error);
@@ -145,16 +146,8 @@ bool ServicePrivate::startDeamon() {
     proc.setProcessEnvironment(QProcessEnvironment::systemEnvironment());
     proc.setProcessChannelMode(QProcess::SeparateChannels);
 
-    proc.start();
-    if (!proc.waitForStarted(1000)) {
+    if (!proc.startDetached()) {
         QuasarAppUtils::Params::log("fail to start detached process: " + proc.errorString(),
-                                    QuasarAppUtils::Error);
-        return false;
-    }
-
-    if (proc.waitForFinished(1000) && proc.exitCode()) {
-        QuasarAppUtils::Params::log("fail to start detached process: " + proc.errorString() +
-                                    " Exit Code: " + QString::number(proc.exitCode()),
                                     QuasarAppUtils::Error);
         return false;
     }
