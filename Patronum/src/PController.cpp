@@ -98,6 +98,8 @@ bool Controller::sendStop() {
         return false;
     }
 
+    _disableFinished = true;
+
     return d_ptr->stop();
 }
 
@@ -155,7 +157,8 @@ void Controller::handleResponce(const QVariantMap &responce) {
 }
 
 void Controller::finished() {
-    QCoreApplication::exit(0);
+    if (!_disableFinished)
+        QCoreApplication::exit(0);
 }
 
 QList<Feature> Controller::features() {

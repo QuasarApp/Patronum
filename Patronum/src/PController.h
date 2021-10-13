@@ -130,7 +130,7 @@ protected:
 
 private:
     ControllerPrivate *d_ptr = nullptr;
-
+    bool _disableFinished = false;
     void printDefaultHelp() const;
 };
 }

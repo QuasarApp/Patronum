@@ -179,10 +179,6 @@ int ServiceBase::exec() {
     if (fStart || fDaemon) {
 
         if (fDaemon) {
-            if (controller()->sendStop()) {
-                std::this_thread::sleep_for (std::chrono::milliseconds(500));
-            }
-
             if (!d_ptr->startDeamon())
                 return Patronum::PatronumError::UnsupportedPlatform;
             return 0;
@@ -190,7 +186,7 @@ int ServiceBase::exec() {
 
         QTimer::singleShot(0, nullptr, [this]() {
             if (controller()->sendStop()) {
-                std::this_thread::sleep_for (std::chrono::milliseconds(500));
+                std::this_thread::sleep_for (std::chrono::milliseconds(1000));
             }
 
             if (!d_ptr->start()) {
