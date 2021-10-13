@@ -29,8 +29,8 @@ QString errorToString(PatronumError error) {
     case Patronum::PatronumError::TimeOutError:
         return QObject::tr("Timeout error. service unavailable or not started.");
 
-    case Patronum::PatronumError::SocketIsBusy:
-        return QObject::tr("The Socket file alredy created or application do not have a permision to the /var/tmp location.");
+    case Patronum::PatronumError::FailedToStart:
+        return QObject::tr("Failed to start service");
 
     case Patronum::PatronumError::UnsupportedPlatform:
         return QObject::tr("The service not supportded using platform.");

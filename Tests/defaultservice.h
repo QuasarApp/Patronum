@@ -10,7 +10,7 @@ public:
 
     // QtServiceBase interface
 protected:
-    void onStart() override;
+    bool onStart() override;
 
     // IService interface
 public:

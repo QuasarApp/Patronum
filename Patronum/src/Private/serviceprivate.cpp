@@ -120,15 +120,7 @@ bool ServicePrivate::start() {
         return false;
     };
 
-    QFile pidFile(PCommon::instance()->getPidfile());
-    if (pidFile.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-        pidFile.write(QByteArray::number(QCoreApplication::applicationPid()));
-        pidFile.close();
-    }
-
-    _service->onStart();
-
-    return true;
+    return _service->onStart();
 }
 
 bool ServicePrivate::startDeamon() {
@@ -146,11 +138,20 @@ bool ServicePrivate::startDeamon() {
     proc.setProcessEnvironment(QProcessEnvironment::systemEnvironment());
     proc.setProcessChannelMode(QProcess::SeparateChannels);
 
-    if (!proc.startDetached()) {
+    qint64 pid;
+    if (!proc.startDetached(&pid)) {
         QuasarAppUtils::Params::log("fail to start detached process: " + proc.errorString(),
                                     QuasarAppUtils::Error);
         return false;
     }
+
+    QFile pidFile(PCommon::instance()->getPidfile());
+    if (!pidFile.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
+        return false;
+    }
+
+    pidFile.write(QByteArray::number(pid));
+    pidFile.close();
 
     QuasarAppUtils::Params::log("The service started successful", QuasarAppUtils::Info);
 

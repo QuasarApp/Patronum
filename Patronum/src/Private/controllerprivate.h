@@ -30,7 +30,7 @@ public:
 
     QList<Feature> features() const;
     bool isConnected() const;
-    bool connectToHost() const;
+    bool connectToHost(bool echo = true) const;
 
 signals:
     void sigListFeatures(QList<Feature>);

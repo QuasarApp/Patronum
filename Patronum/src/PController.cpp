@@ -94,6 +94,10 @@ bool Controller::sendStop() {
     if (!d_ptr)
         return false;
 
+    if (!d_ptr->connectToHost(false)) {
+        return false;
+    }
+
     return d_ptr->stop();
 }
 

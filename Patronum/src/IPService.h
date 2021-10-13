@@ -49,8 +49,9 @@ public:
 
     /**
      * @brief onStart This method invoked when service is started successful.
+     * @return true if service started successful
      */
-    virtual void onStart() = 0;
+    virtual bool onStart() = 0;
 
     /**
      * @brief onStop This method invoked when service receive stop command from the terminal.

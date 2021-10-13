@@ -12,8 +12,9 @@ DefaultService::DefaultService():
     setCore(new QCoreApplication(argc, arg));
 }
 
-void DefaultService::onStart() {
+bool DefaultService::onStart() {
     QuasarAppUtils::Params::log("Server started!", QuasarAppUtils::Info);
+    return true;
 }
 
 bool DefaultService::handleReceive(const Patronum::Feature &data) {

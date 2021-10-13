@@ -84,15 +84,18 @@ bool ControllerPrivate::isConnected() const {
     return _socket->isValid();
 }
 
-bool ControllerPrivate::connectToHost() const {
+bool ControllerPrivate::connectToHost(bool echo) const {
     if (isConnected()) {
         return true;
     }
 
     if (!_socket->connectToTarget()) {
-        QuasarAppUtils::Params::log("Connect to service fail !",
-                                    QuasarAppUtils::Debug);
-        _controller->handleError(PatronumError::ServiceUnavailable);
+
+        if (echo) {
+            QuasarAppUtils::Params::log("Connect to service fail !",
+                                        QuasarAppUtils::Debug);
+            _controller->handleError(PatronumError::ServiceUnavailable);
+        }
 
         return false;
 

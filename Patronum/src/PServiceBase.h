@@ -77,7 +77,7 @@ protected:
     /**
      * @brief onStart Called when get start command from terminal. Override this method work correctly work of service.
      */
-    void onStart() override = 0;
+    bool onStart() override = 0;
 
     /**
      * @brief onStop Called when get stop command from terminal. The default implementation of this method invoke a quit method of QCoreApplication.
