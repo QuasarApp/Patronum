@@ -48,9 +48,10 @@ public:
 
     /**
      * @brief install This method install your service in thec current system.
+     * @param user This is name of custom user that will be run your service after reboot system.
      * @return return true if the service installed succesful
      */
-    bool install();
+    bool install(const QString &user);
 
     /**
      * @brief uninstall This method unistall your service in thec current system.

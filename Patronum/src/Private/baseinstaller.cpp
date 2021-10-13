@@ -18,7 +18,10 @@ BaseInstaller::BaseInstaller():
 
 }
 
-bool BaseInstaller::install(const QString &executable) {
+bool BaseInstaller::install(const QString &executable, const QString &user) {
+
+    Q_UNUSED(user)
+
     if (!QFile::exists(executable)) {
         QuasarAppUtils::Params::log(QObject::tr("The service executable file is not exists %0\n").arg(executable),
                                     QuasarAppUtils::Error);

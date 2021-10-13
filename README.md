@@ -18,8 +18,8 @@ Becouse This library offers easy interface to control your demons likewise the m
 * Auto create a Controller of your Service. 
 
 ## Deffault sopprted commands
-* install - deploys your daemon into your host system.
-* unistall - removes old deployed daemon.
+* install - deploys your daemon into your host system.  This command deploy service for root user if you want to deploy service for specify user just use   **-install <UserName>** command (root right required)
+* unistall - removes old deployed daemon. (root right required)
 * start - starts your service
 * stop - stops ypur service
 * pause - sends pause command to your daemon

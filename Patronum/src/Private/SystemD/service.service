@@ -3,8 +3,8 @@ Description=%3 service. This service generated automaticly by Patronum libarary.
 
 [Service]
 Type=forking
-User=root
-Group=root
+User=%4
+Group=%4
 ExecStart=%0 d
 ExecStop=%0 stop
 PIDFile=%1

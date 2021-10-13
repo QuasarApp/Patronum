@@ -25,9 +25,10 @@ public:
     /**
      * @brief install This implementation prepare executable for instalation.
      * @param executable This is path to executable file of service.
+     * @param user This is user that will be run installed service. by default it is root.
      * @return true if service is not installed else false
      */
-    bool install(const QString &executable) override;
+    bool install(const QString &executable, const QString& user = DEFAULT_USER) override;
 
     /**
      * @brief uninstall This method check if service installed.

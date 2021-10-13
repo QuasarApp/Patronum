@@ -25,7 +25,7 @@ Patronum::InstallerSystemD::~InstallerSystemD() {
 
 }
 
-bool InstallerSystemD::install(const QString &executable) {
+bool InstallerSystemD::install(const QString &executable, const QString& user) {
 
     if (!BaseInstaller::install(executable)) {
         return false;
@@ -50,6 +50,7 @@ bool InstallerSystemD::install(const QString &executable) {
     service = service.arg(PCommon::instance()->getPidfile());
     service = service.arg(PCommon::instance()->getPWD());
     service = service.arg(PCommon::instance()->getServiceName());
+    service = service.arg(user);
 
     templ.setFileName(absaluteServicePath());
 
