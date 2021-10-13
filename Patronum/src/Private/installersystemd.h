@@ -26,7 +26,7 @@ public:
 
     // Installer interface
 public:
-    bool install(const QString &executable) override;
+    bool install(const QString &executable, const QString &user = DEFAULT_USER) override;
     bool uninstall() override;
     bool enable() override;
     bool disable() override;

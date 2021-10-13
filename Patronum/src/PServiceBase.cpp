@@ -117,7 +117,7 @@ void ServiceBase::printDefaultHelp() {
     serviceHelp.unite({{QObject::tr("Options that available befor install"),{
                             {"start / s",       QObject::tr("Start a service in console")},
                             {"daemon / d",      QObject::tr("Start a service as a daemon")},
-                            {"install / i",     QObject::tr("Install a service")},
+                            {"install / i / -install username",     QObject::tr("Install a service. Add user name if you want to run service from custom user. Example: -install username")},
                             {"unistall / u",    QObject::tr("unistall a service")},
                         }}});
 
@@ -163,7 +163,7 @@ int ServiceBase::exec() {
     bool fDaemon = QuasarAppUtils::Params::isEndable("daemon") || QuasarAppUtils::Params::isEndable("d");
 
     if (QuasarAppUtils::Params::isEndable("install") || QuasarAppUtils::Params::isEndable("i")) {
-        if (!d_ptr->install())
+        if (!d_ptr->install(QuasarAppUtils::Params::getArg("install", "root")))
             return Patronum::PatronumError::UnsupportedPlatform;
         return 0;
     }
