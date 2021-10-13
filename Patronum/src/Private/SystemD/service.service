@@ -1,7 +1,13 @@
 [Unit]
 Description=%3 service. This service generated automaticly by Patronum libarary. See https://github.com/QuasarApp/Patronum
 
+StartLimitIntervalSec=500
+StartLimitBurst=5
+
 [Service]
+Restart=on-failure
+RestartSec=5s
+
 Type=forking
 User=%4
 Group=%4
