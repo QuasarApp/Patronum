@@ -78,6 +78,12 @@ public:
     bool send();
 
     /**
+     * @brief sendStop This method send stop command to service;
+     * @return trie if command sendet successfull
+     */
+    bool sendStop();
+
+    /**
      * @brief help This method return help of the Controller.
      * @return Available otions list.
      */

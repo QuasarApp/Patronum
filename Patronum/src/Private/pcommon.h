@@ -31,6 +31,12 @@ public:
     QString getPidfile() const;
 
     /**
+     * @brief getPidFromPidfile This method return the pid from pidFile.
+     * @return pid number from pidFile.
+     */
+    qint64 getPidFromPidfile() const;
+
+    /**
      * @brief getPWD This method return PWD of the service.
      * @return absalute path of the work directory.
      */

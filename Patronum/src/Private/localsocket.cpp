@@ -71,6 +71,10 @@ bool LocalSocket::listen() {
                 this, &LocalSocket::handleIncomming);
     }
 
+    if (!m_server->removeServer(m_target)) {
+        return false;
+    }
+
     if (!m_server->listen(m_target)) {
         QuasarAppUtils::Params::log("listen is failed! " + m_server->errorString(),
                                     QuasarAppUtils::Error);

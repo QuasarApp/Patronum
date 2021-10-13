@@ -78,13 +78,16 @@ bool ServicePrivate::sendCloseConnection() {
     return _socket->send(_parser->createPackage(Command::CloseConnection));
 }
 
-bool ServicePrivate::install(const QString& user) {
+bool ServicePrivate::install(QString user) {
 
     if (!_installer) {
         QuasarAppUtils::Params::log(errorToString(UnsupportedPlatform),
                                     QuasarAppUtils::Error);
         return false;
     }
+
+    if (user.isEmpty())
+        user = DEFAULT_USER;
 
     if (!_installer->install(getServiceLauncher(), user)) {
         return false;
@@ -113,7 +116,6 @@ bool ServicePrivate::start() {
     if (!_socket->listen()) {
         QuasarAppUtils::Params::log("Fail to create a terminal socket!",
                                     QuasarAppUtils::Error);
-        QCoreApplication::exit(SocketIsBusy);
         return false;
     };
 
@@ -129,6 +131,7 @@ bool ServicePrivate::start() {
 }
 
 bool ServicePrivate::startDeamon() {
+
     if (_socket->isRunning()) {
         QuasarAppUtils::Params::log("Failed to start a service because an another service alredy started",
                                     QuasarAppUtils::Error);
@@ -142,8 +145,16 @@ bool ServicePrivate::startDeamon() {
     proc.setProcessEnvironment(QProcessEnvironment::systemEnvironment());
     proc.setProcessChannelMode(QProcess::SeparateChannels);
 
-    if (!proc.startDetached()) {
+    proc.start();
+    if (!proc.waitForStarted(1000)) {
         QuasarAppUtils::Params::log("fail to start detached process: " + proc.errorString(),
+                                    QuasarAppUtils::Error);
+        return false;
+    }
+
+    if (proc.waitForFinished(1000) && proc.exitCode()) {
+        QuasarAppUtils::Params::log("fail to start detached process: " + proc.errorString() +
+                                    " Exit Code: " + QString::number(proc.exitCode()),
                                     QuasarAppUtils::Error);
         return false;
     }

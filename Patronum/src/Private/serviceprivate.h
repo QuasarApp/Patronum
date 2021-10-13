@@ -51,7 +51,7 @@ public:
      * @param user This is name of custom user that will be run your service after reboot system.
      * @return return true if the service installed succesful
      */
-    bool install(const QString &user);
+    bool install(QString user);
 
     /**
      * @brief uninstall This method unistall your service in thec current system.

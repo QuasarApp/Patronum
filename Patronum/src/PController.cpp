@@ -90,6 +90,13 @@ bool Controller::send() {
     return true;
 }
 
+bool Controller::sendStop() {
+    if (!d_ptr)
+        return false;
+
+    return d_ptr->stop();
+}
+
 QuasarAppUtils::Help::Section Controller::help() const {
     QuasarAppUtils::Help::Section help {
         {QObject::tr("Options that available after start"), {

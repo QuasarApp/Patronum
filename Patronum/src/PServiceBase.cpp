@@ -15,6 +15,8 @@
 #include <pcommon.h>
 #include "PController.h"
 #include "serviceprivate.h"
+#include <chrono>
+#include <thread>
 
 namespace Patronum {
 
@@ -163,7 +165,7 @@ int ServiceBase::exec() {
     bool fDaemon = QuasarAppUtils::Params::isEndable("daemon") || QuasarAppUtils::Params::isEndable("d");
 
     if (QuasarAppUtils::Params::isEndable("install") || QuasarAppUtils::Params::isEndable("i")) {
-        if (!d_ptr->install(QuasarAppUtils::Params::getArg("install", "root")))
+        if (!d_ptr->install(QuasarAppUtils::Params::getArg("install")))
             return Patronum::PatronumError::UnsupportedPlatform;
         return 0;
     }
@@ -183,7 +185,13 @@ int ServiceBase::exec() {
         }
 
         QTimer::singleShot(0, nullptr, [this]() {
-            d_ptr->start();
+            controller()->sendStop();
+            std::this_thread::sleep_for (std::chrono::milliseconds(500));
+
+            if (!d_ptr->start()) {
+                QCoreApplication::exit(SocketIsBusy);
+            }
+
         });
     } else {
         QTimer::singleShot(0, nullptr, [this]() {
