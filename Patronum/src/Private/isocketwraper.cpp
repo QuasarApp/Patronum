@@ -9,8 +9,19 @@
 
 namespace Patronum {
 
+ISocketWraper::ISocketWraper(){
+}
+
 State ISocketWraper::state() const {
     return m_state;
+}
+
+bool ISocketWraper::echo() const {
+    return _echo;
+}
+
+void ISocketWraper::setEcho(bool newEcho) {
+    _echo = newEcho;
 }
 
 }

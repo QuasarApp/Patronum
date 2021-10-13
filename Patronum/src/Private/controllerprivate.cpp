@@ -104,6 +104,11 @@ bool ControllerPrivate::connectToHost(bool echo) const {
     return true;
 }
 
+void ControllerPrivate::setEcho(bool echo) {
+    if (_socket)
+        _socket->setEcho(echo);
+}
+
 void ControllerPrivate::handleReceve(QByteArray data) {
 
     if (!_controller) {

@@ -32,6 +32,8 @@ public:
     bool isConnected() const;
     bool connectToHost(bool echo = true) const;
 
+    void setEcho(bool echo);
+
 signals:
     void sigListFeatures(QList<Feature>);
 

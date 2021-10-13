@@ -15,7 +15,7 @@
 namespace Patronum {
 
 LocalSocket::LocalSocket(const QString &target, QObject *ptr):
-    QObject(ptr) {
+    QObject(ptr), ISocketWraper() {
     m_target = "P" + target;
 }
 
@@ -131,6 +131,9 @@ void LocalSocket::handleIncomming() {
 }
 
 void LocalSocket::handleSocketError(QLocalSocket::LocalSocketError) {
+
+    if (!_echo)
+        return;
 
     auto _sender = dynamic_cast<QLocalSocket*>(sender());
 

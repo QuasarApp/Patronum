@@ -21,7 +21,7 @@ enum class State: int {
 class ISocketWraper
 {
 public:
-    ISocketWraper(){};
+    ISocketWraper();
     /**
      * @brief send - send data to service
      * @param data
@@ -68,8 +68,12 @@ public:
 
     State state() const;
 
+    bool echo() const;
+    void setEcho(bool newEcho);
+
 protected:
     State m_state = State::Disconeccted;
+    bool _echo = true;
 
 };
 
