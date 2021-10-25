@@ -47,10 +47,14 @@ bool InstallerSystemD::install(const QString &executable, const QString& user) {
     templ.close();
 
     service = service.arg(executable);
-    service = service.arg(PCommon::instance()->getPidfile());
-    service = service.arg(PCommon::instance()->getPWD());
+    service = service.arg(PCommon::instance()->getPidfile(user));
+    service = service.arg(PCommon::instance()->getPWD(user));
     service = service.arg(PCommon::instance()->getServiceName());
-    service = service.arg(user);
+
+    if (user.isEmpty())
+        service = service.arg(DEFAULT_USER);
+    else
+        service = service.arg(user);
 
     templ.setFileName(absaluteServicePath());
 

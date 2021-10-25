@@ -26,9 +26,10 @@ public:
 
     /**
      * @brief pidFilePath This method return the absalute path to the service pid file.
+     * @param customUser This is name of custom user for that will return PWD dir.
      * @return absalute path to the service pid file.
      */
-    QString getPidfile() const;
+    QString getPidfile(const QString& customUser = "") const;
 
     /**
      * @brief getPidFromPidfile This method return the pid from pidFile.
@@ -38,9 +39,10 @@ public:
 
     /**
      * @brief getPWD This method return PWD of the service.
+     * @param customUser This is name of custom user for that will return PWD dir.
      * @return absalute path of the work directory.
      */
-    QString getPWD() const;
+    QString getPWD(const QString &customUser = "") const;
 
     /**
      * @brief getServiceName return the service name.

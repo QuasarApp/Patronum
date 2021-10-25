@@ -78,16 +78,13 @@ bool ServicePrivate::sendCloseConnection() {
     return _socket->send(_parser->createPackage(Command::CloseConnection));
 }
 
-bool ServicePrivate::install(QString user) {
+bool ServicePrivate::install(const QString &user) {
 
     if (!_installer) {
         QuasarAppUtils::Params::log(errorToString(UnsupportedPlatform),
                                     QuasarAppUtils::Error);
         return false;
     }
-
-    if (user.isEmpty())
-        user = DEFAULT_USER;
 
     if (!_installer->install(getServiceLauncher(), user)) {
         return false;

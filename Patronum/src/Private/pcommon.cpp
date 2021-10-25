@@ -3,6 +3,7 @@
 
 #include <QFile>
 #include <QStandardPaths>
+#include "quasarapp.h"
 
 namespace Patronum {
 
@@ -13,8 +14,8 @@ const class PCommon *PCommon::instance() {
     return inst;
 }
 
-QString PCommon::getPidfile() const {
-    return getPWD() + "/" + getServiceName() + ".pid";
+QString PCommon::getPidfile(const QString& customUser) const {
+    return getPWD(customUser) + "/" + getServiceName() + ".pid";
 }
 
 qint64 PCommon::getPidFromPidfile() const {
@@ -30,8 +31,23 @@ qint64 PCommon::getPidFromPidfile() const {
     return data.toLongLong();
 }
 
-QString PCommon::getPWD() const {
+QString PCommon::getPWD(const QString& customUser) const {
+    if (!customUser.size())
+        return QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+
+#ifdef Q_OS_LINUX
+    if (customUser == "root")
+        return "/root/.local/share/" + getServiceName();
+
+    return "/home/" + customUser + "/.local/share/" + getServiceName();
+#else
+
+    QuasarAppUtils::Params::log("The custom user not support for " +
+                                QSysInfo::kernelType(),
+                                QuasarAppUtils::Error);
+
     return QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+#endif
 }
 
 QString PCommon::getServiceName() const {
