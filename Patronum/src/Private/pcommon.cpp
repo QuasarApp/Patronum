@@ -35,11 +35,13 @@ QString PCommon::getPWD(const QString& customUser) const {
     if (!customUser.size())
         return QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
 
-#ifdef Q_OS_LINUX
-    if (customUser == "root")
-        return "/root/.local/share/" + getServiceName();
 
-    return "/home/" + customUser + "/.local/share/" + getServiceName();
+#ifdef Q_OS_LINUX
+    QString postfix = QCoreApplication::organizationName() + "/" + getServiceName();
+    if (customUser == "root")
+        return "/root/.local/share/" + postfix;
+
+    return "/home/" + customUser + "/.local/share/" + postfix;
 #else
 
     QuasarAppUtils::Params::log("The custom user not support for " +
