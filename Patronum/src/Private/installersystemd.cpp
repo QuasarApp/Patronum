@@ -67,6 +67,8 @@ bool InstallerSystemD::install(const QString &executable, const QString& user) {
 
     templ.write(service.toLatin1());
 
+    templ.close();
+
     QProcess proc;
     proc.setProgram("systemctl");
     proc.setProcessEnvironment(QProcessEnvironment::systemEnvironment());
