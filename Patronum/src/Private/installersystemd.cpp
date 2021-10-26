@@ -67,7 +67,14 @@ bool InstallerSystemD::install(const QString &executable, const QString& user) {
 
     templ.write(service.toLatin1());
 
-    return enable();
+    QProcess proc;
+    proc.setProgram("systemctl");
+    proc.setProcessEnvironment(QProcessEnvironment::systemEnvironment());
+    proc.setArguments({"daemon-reload"});
+
+    proc.start();
+
+    return proc.waitForFinished() && enable();
 }
 
 bool InstallerSystemD::uninstall() {
