@@ -21,7 +21,8 @@
 #include <csignal>
 
 void handleTermSignals(int sig) {
-    QuasarAppUtils::Params::log("Shutdown application CTRL+C.", QuasarAppUtils::Info);
+    QuasarAppUtils::Params::log(QString("Shutdown application with %0 signal.").arg(sig),
+                                QuasarAppUtils::Info);
     QCoreApplication::exit(0);
 }
 
