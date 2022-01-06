@@ -26,7 +26,7 @@ if (NOT DEFINED PATRONUM_TESTS)
         endif()
     endif()
 
-    if (ANDROID)
+    if (ANDROID OR IOS)
         set(PATRONUM_TESTS OFF)
     endif()
 endif()
