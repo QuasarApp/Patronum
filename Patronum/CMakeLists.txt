@@ -27,6 +27,10 @@ add_definitions(-DPATRONUM_LIBRARY)
 file(GLOB SOURCE_CPP
     "src/*.cpp"
     "src/Private/*.cpp"
+
+    "src/*.h"
+    "src/Private/*.h"
+
     "src/Private/*.qrc"
 
 

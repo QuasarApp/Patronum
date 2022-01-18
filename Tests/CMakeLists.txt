@@ -19,6 +19,7 @@ find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Test REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Test REQUIRED)
 
 file(GLOB SOURCE_CPP
+    "*.h"
     "*.cpp"
 )
 
