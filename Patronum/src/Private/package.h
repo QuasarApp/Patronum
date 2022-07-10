@@ -43,12 +43,12 @@ struct Header {
     /**
      * @brief size This is size of package data (exclude header size).
      */
-    unsigned short size: 12;
+    unsigned short size: 13;
 
     /**
      * @brief cmd This is workCommand
      */
-    unsigned char cmd: 4;
+    unsigned char cmd: 3;
 
     bool isValid() const;
 };
