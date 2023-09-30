@@ -16,6 +16,12 @@ endif()
 include(submodules/QuasarAppLib/CMake/QuasarApp.cmake)
 # Add sub directories
 
+if (IOS)
+    message("The ios not support QProcess class.")
+    initAll()
+    return()
+endif()
+
 add_subdirectory(submodules/QuasarAppLib)
 
 add_subdirectory(Patronum)
