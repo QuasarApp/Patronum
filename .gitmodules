@@ -1,4 +1,4 @@
-[submodule "Patronum/QuasarAppLib"]
-	path = Patronum/QuasarAppLib
-	url = https://github.com/QuasarApp/QuasarAppLib.git
 
+[submodule "submodules/QuasarAppLib"]
+	path = submodules/QuasarAppLib
+	url = https://github.com/QuasarApp/QuasarAppLib.git

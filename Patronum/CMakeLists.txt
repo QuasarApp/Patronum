@@ -20,7 +20,6 @@ updateGitVars()
 find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Network REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Network REQUIRED)
 
-add_subdirectory(QuasarAppLib)
 
 add_definitions(-DPATRONUM_LIBRARY)
 

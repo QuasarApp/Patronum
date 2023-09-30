@@ -13,8 +13,17 @@ if(TARGET ${PROJECT_NAME})
 endif()
 
 
-include(Patronum/QuasarAppLib/CMake/QuasarApp.cmake)
+include(submodules/QuasarAppLib/CMake/QuasarApp.cmake)
 # Add sub directories
+
+if (IOS)
+    message("The ios not support QProcess class.")
+    initAll()
+    return()
+endif()
+
+add_subdirectory(submodules/QuasarAppLib)
+
 add_subdirectory(Patronum)
 
 if (NOT DEFINED PATRONUM_TESTS)
@@ -38,7 +47,6 @@ else()
     message("The ${PROJECT_NAME} tests is disabled.")
 endif()
 
-include(Patronum/QuasarAppLib/CMake/QuasarAppCITargets.cmake)
 initAll()
 
 addDoc("Patronum" ${CMAKE_CURRENT_SOURCE_DIR}/doxygen.conf)
