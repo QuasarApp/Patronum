@@ -5,8 +5,8 @@
  * of this license document, but changing it is not allowed.
 */
 
-#ifndef SERVICE_H
-#define SERVICE_H
+#ifndef PSERVICE_H
+#define PSERVICE_H
 #include "Patronum_global.h"
 #include "PFeature.h"
 #include <IPService.h>
@@ -123,4 +123,4 @@ private:
 }
 
 
-#endif // SERVICE_H
+#endif // PSERVICE_H
