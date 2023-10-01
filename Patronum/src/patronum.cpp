@@ -13,5 +13,10 @@ namespace Patronum {
 QString patronumLibVersion() {
     return PATRONUM_VERSION;
 }
+
+void init() {
+    initPatronumResources();
+}
+
 }
 

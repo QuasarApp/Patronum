@@ -17,12 +17,15 @@
 #include "serviceprivate.h"
 #include <chrono>
 #include <thread>
+#include "patronum.h"
 
 namespace Patronum {
 
 ServiceBase::ServiceBase(int argc, char *argv[]) {
     QuasarAppUtils::Params::parseParams(argc, argv);
     d_ptr = new ServicePrivate(this);
+
+    init();
 
 }
 

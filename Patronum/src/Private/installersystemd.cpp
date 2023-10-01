@@ -36,7 +36,7 @@ bool InstallerSystemD::install(const QString &executable, const QString& user) {
     QFile templ(":/systemd/SystemD/service.service");
     QString name = PCommon::instance()->getServiceName();
     if (!templ.open(QIODevice::ReadOnly)) {
-        QuasarAppUtils::Params::log(QString{"Cannot install %0. System error.\n"}.
+        QuasarAppUtils::Params::log(QString{"Cannot install %0. The service template not available.\n"}.
                                     arg(name),
                                     QuasarAppUtils::Error);
 

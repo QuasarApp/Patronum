@@ -12,6 +12,8 @@
 #include "PFeature.h"
 #include "PService.h"
 
+inline void initPatronumResources() { Q_INIT_RESOURCE(templates); }
+
 /**
  * @brief The Patronum namespace - It is main name space of Patronum Library.
  * The Patronum library support the two work mode
@@ -54,5 +56,7 @@ namespace Patronum {
  * @return current version of library
  */
 QString patronumLibVersion();
+
+void init() ;
 }
 #endif // PATRONUM_H

@@ -99,6 +99,7 @@ public:
 
         _argc = argc;
         _argv = argv;
+
     }
 
     ~Service() override {
