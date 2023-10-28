@@ -202,7 +202,7 @@ void ServicePrivate::handleReceve(QByteArray data) {
         return;
     }
 
-    for (const auto &pkg: qAsConst(packages)) {
+    for (const auto &pkg: std::as_const(packages)) {
         if (!pkg.isValid()) {
             QuasarAppUtils::Params::log("receive package is not valid!",
                                         QuasarAppUtils::Warning);
