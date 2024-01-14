@@ -29,7 +29,7 @@ public:
      *  For each command will invoke the IService::handleReceive method.
      * @param data This is array of the incomming requests (commands)
      */
-    virtual void handleReceiveData(const QSet<Feature>& data) = 0;
+    virtual void handleReceiveData(const QHash<QString, Feature>& data) = 0;
 
     /**
      * @brief handleReceive This method invoked when service receive a request from terminal.
@@ -37,6 +37,8 @@ public:
      * @param data This is input data.
      * @return This method should be return true if the @a data command is supported and processed successful.
      * IF you return false then a negative message will be sent to a terminal app.
+     * @see ServiceBase::handleReceiveData
+
      */
     virtual bool handleReceive(const Feature &data) = 0;
 

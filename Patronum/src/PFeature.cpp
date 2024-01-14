@@ -25,7 +25,6 @@ QString Feature::cmd() const {
 
 void Feature::setCmd(const QString &cmd) {
     _cmd = cmd;
-    _id = qHash(_cmd);
 }
 
 QString Feature::arg() const {
@@ -59,10 +58,6 @@ QString Feature::toString() const {
     return _cmd;
 }
 
-unsigned int Feature::id() const {
-    return _id;
-}
-
 QDataStream &operator<<(QDataStream &stream, const Feature &obj) {
     stream << obj._cmd << obj._arg;
 
@@ -78,12 +73,11 @@ QDataStream &operator>>(QDataStream &stream, Feature &obj) {
 }
 
 bool operator==(const Feature &left, const Feature &right) {
-    return left.id() == right.id();
+    return left.cmd() == right.cmd();
 }
 
-
 uint qHash(const Feature &feature) {
-    return feature.id();
+    return qHash(feature.cmd());
 }
 
 }

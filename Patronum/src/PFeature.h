@@ -10,7 +10,7 @@
 
 #include <QString>
 #include <QVariant>
-#include <QList>
+#include <QHash>
 #include <Patronum_global.h>
 
 namespace Patronum {
@@ -43,6 +43,11 @@ public:
      * @return Argument value.
      */
     QString arg() const;
+
+    /**
+     * @brief setArg This method sets arg value for this object.
+     * @param arg This is a new value.
+     */
     void setArg(const QString &arg);
 
     PATRONUM_LIBRARYSHARED_EXPORT friend QDataStream& operator<<(QDataStream& stream, const Feature& obj);
@@ -80,15 +85,8 @@ public:
      */
     QString toString() const;
 
-    /**
-     * @brief id This method retun id of the feature. The id is qHash from command string.
-     * @return id of the feature.
-     */
-    unsigned int id() const;
 
 private:
-
-    unsigned int _id;
     QString _cmd;
     QString _description;
     QString _example;

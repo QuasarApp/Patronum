@@ -156,7 +156,7 @@ bool ServicePrivate::startDeamon() {
     return true;
 }
 
-bool ServicePrivate::handleStandartCmd(QSet<Feature> *cmds) {
+bool ServicePrivate::handleStandartCmd(QHash<QString, Feature> *cmds) {
 
     if (!cmds)
         return false;
@@ -164,17 +164,17 @@ bool ServicePrivate::handleStandartCmd(QSet<Feature> *cmds) {
     if (!_service)
         return false;
 
-    if (cmds->contains(Feature{"stop"})) {
+    if (cmds->contains("stop")) {
         _service->onStop();
-        cmds->remove(Feature{"stop"});
+        cmds->remove("stop");
 
-    } else if (cmds->contains(Feature{"pause"})) {
+    } else if (cmds->contains("pause")) {
         _service->onPause();
-        cmds->remove(Feature{"pause"});
+        cmds->remove("pause");
 
-    } else if (cmds->contains(Feature{"resume"})) {
+    } else if (cmds->contains("resume")) {
         _service->onResume();
-        cmds->remove(Feature{"resume"});
+        cmds->remove("resume");
 
     }
 
@@ -239,7 +239,7 @@ void ServicePrivate::handleReceve(QByteArray data) {
 
             QDataStream stream(pkg.data());
 
-            QSet<Feature> feature;
+            QHash<QString, Feature> feature;
             stream >> feature;
             handleStandartCmd(&feature);
 

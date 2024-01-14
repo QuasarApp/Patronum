@@ -65,7 +65,7 @@ bool Controller::send() {
         return d_ptr->pause();
     }
 
-    QSet<Feature> sendData = {};
+    QHash<QString, Feature> sendData = {};
     auto userParams = QuasarAppUtils::Params::getUserParamsMap();
     for (auto val = userParams.begin(); val != userParams.end(); ++val) {
 
@@ -75,7 +75,7 @@ bool Controller::send() {
             continue;
         }
 
-        sendData.insert(Feature{val.key(), val.value()});
+        sendData.insert(val.key(), Feature{val.key(), val.value()});
     }
 
     if (!d_ptr->sendCmd(sendData)) {

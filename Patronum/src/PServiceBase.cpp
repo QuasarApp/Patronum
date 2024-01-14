@@ -47,7 +47,7 @@ ServiceBase::~ServiceBase() {
     }
 }
 
-void ServiceBase::handleReceiveData(const QSet<Feature> &data) {
+void ServiceBase::handleReceiveData(const QHash<QString, Feature> &data) {
     auto list = supportedFeatures();
 
     QString commandList;
