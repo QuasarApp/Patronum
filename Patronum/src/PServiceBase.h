@@ -72,6 +72,13 @@ protected:
     bool sendResuylt(const QString &result);
 
     /**
+     * @brief sendRawResuylt This method send raw text responce to controller.
+     * @param result - Message.
+     * @return True if data sendet is seccusseful.
+     */
+    bool sendRawResuylt(const QByteArray &result);
+
+    /**
      * @brief createApplication Default implementation create a Application object and parse arguments.
      */
     virtual void createApplication() = 0;

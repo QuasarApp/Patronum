@@ -91,6 +91,10 @@ bool ServiceBase::sendResuylt(const QString &result) {
     return d_ptr->sendCmdResult({{"Result", result}});
 }
 
+bool ServiceBase::sendRawResuylt(const QByteArray &result) {
+    return d_ptr->sendCmdResult({{"", result}});
+}
+
 void ServiceBase::onStop() {
     sendResuylt("Success! Use default stop function");
 

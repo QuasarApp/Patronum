@@ -10,6 +10,7 @@
 #include <QDateTime>
 #include <QFileInfo>
 #include <QVariantMap>
+#include <iostream>
 #include <quasarapp.h>
 #include <QCoreApplication>
 #include <QTimer>
@@ -149,6 +150,12 @@ void Controller::handleFeatures(const QList<Feature> &features) {
 }
 
 void Controller::handleResponce(const QVariantMap &responce) {
+    // raw responce
+    if (responce.size() == 1 && responce.firstKey().isEmpty()) {
+        std::cout << responce.first().toByteArray().toStdString();
+        return;
+    }
+
     QuasarAppUtils::Help::Options options;
 
     for(auto iter = responce.begin(); iter != responce.end(); ++iter) {
