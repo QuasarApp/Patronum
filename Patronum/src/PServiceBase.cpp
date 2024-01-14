@@ -47,7 +47,7 @@ ServiceBase::~ServiceBase() {
     }
 }
 
-void ServiceBase::handleReceiveData(const QSet<Feature> &data) {
+void ServiceBase::handleReceiveData(const QHash<QString, Feature> &data) {
     auto list = supportedFeatures();
 
     QString commandList;
@@ -89,6 +89,10 @@ bool ServiceBase::sendResuylt(const QVariantMap &result) {
 
 bool ServiceBase::sendResuylt(const QString &result) {
     return d_ptr->sendCmdResult({{"Result", result}});
+}
+
+bool ServiceBase::sendRawResuylt(const QByteArray &result) {
+    return d_ptr->sendCmdResult({{"", result}});
 }
 
 void ServiceBase::onStop() {

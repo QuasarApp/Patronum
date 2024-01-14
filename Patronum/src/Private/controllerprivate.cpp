@@ -48,7 +48,7 @@ bool ControllerPrivate::sendFeaturesRequest() {
     return _socket->send(_parser->createPackage(Command::FeaturesRequest));
 }
 
-bool ControllerPrivate::sendCmd(const QSet<Feature> &result) {
+bool ControllerPrivate::sendCmd(const QHash<QString, Feature> &result) {
     if (!_socket->isValid()) {
         QuasarAppUtils::Params::log("scoket is closed!",
                                     QuasarAppUtils::Debug);
@@ -64,16 +64,20 @@ bool ControllerPrivate::sendCmd(const QSet<Feature> &result) {
     return false;
 }
 
+bool ControllerPrivate::sendCmd(const QString &cmd) {
+    return sendCmd({{cmd, Feature(cmd)}});
+}
+
 bool ControllerPrivate::stop() {
-    return sendCmd({Feature("stop")});
+    return sendCmd("stop");
 }
 
 bool ControllerPrivate::pause() {
-    return sendCmd({Feature("pause")});
+    return sendCmd("pause");
 }
 
 bool ControllerPrivate::resume() {
-    return sendCmd({Feature("resume")});
+    return sendCmd("resume");
 }
 
 QList<Feature> ControllerPrivate::features() const {

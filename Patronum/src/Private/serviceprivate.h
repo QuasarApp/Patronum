@@ -88,7 +88,7 @@ private:
      * @param cmds
      * @return
      */
-    bool handleStandartCmd(QSet<Feature> *cmds);
+    bool handleStandartCmd(QHash<QString, Feature> *cmds);
 
     /**
      * @brief getServiceLauncher This method return path to launcher file.

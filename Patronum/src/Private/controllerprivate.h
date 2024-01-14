@@ -22,7 +22,8 @@ public:
     ControllerPrivate(IController* controller = nullptr, QObject *parent = nullptr);
     ~ControllerPrivate();
     bool sendFeaturesRequest();
-    bool sendCmd(const QSet<Feature> &result);
+    bool sendCmd(const QHash<QString, Feature> &result);
+    bool sendCmd(const QString &cmd);
 
     bool stop();
     bool pause();

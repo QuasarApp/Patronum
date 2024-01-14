@@ -46,8 +46,10 @@ protected:
      * @brief handleReceiveData - This method invoice when service receive new command from terminal of controller of this service.
      * @param data - Is list of commands from controller.
      * Default implementation send message about error, and invoke the.
+     * @note If you override this method the ServiceBase::handleReceive method wil not invoked wuthou base implementation of thism method.
+     * @see ServiceBase::handleReceive
      */
-    void handleReceiveData(const QSet<Feature> &data) override final;
+    void handleReceiveData(const QHash<QString, Feature> &data) override;
 
     /**
      * @brief supportedFeatures
@@ -68,6 +70,13 @@ protected:
      * @return True if data sendet is seccusseful.
      */
     bool sendResuylt(const QString &result);
+
+    /**
+     * @brief sendRawResuylt This method send raw text responce to controller.
+     * @param result - Message.
+     * @return True if data sendet is seccusseful.
+     */
+    bool sendRawResuylt(const QByteArray &result);
 
     /**
      * @brief createApplication Default implementation create a Application object and parse arguments.

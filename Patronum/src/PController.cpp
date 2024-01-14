@@ -10,6 +10,7 @@
 #include <QDateTime>
 #include <QFileInfo>
 #include <QVariantMap>
+#include <iostream>
 #include <quasarapp.h>
 #include <QCoreApplication>
 #include <QTimer>
@@ -65,7 +66,7 @@ bool Controller::send() {
         return d_ptr->pause();
     }
 
-    QSet<Feature> sendData = {};
+    QHash<QString, Feature> sendData = {};
     auto userParams = QuasarAppUtils::Params::getUserParamsMap();
     for (auto val = userParams.begin(); val != userParams.end(); ++val) {
 
@@ -75,7 +76,7 @@ bool Controller::send() {
             continue;
         }
 
-        sendData.insert(Feature{val.key(), val.value()});
+        sendData.insert(val.key(), Feature{val.key(), val.value()});
     }
 
     if (!d_ptr->sendCmd(sendData)) {
@@ -149,6 +150,12 @@ void Controller::handleFeatures(const QList<Feature> &features) {
 }
 
 void Controller::handleResponce(const QVariantMap &responce) {
+    // raw responce
+    if (responce.size() == 1 && responce.firstKey().isEmpty()) {
+        std::cout << responce.first().toByteArray().toStdString();
+        return;
+    }
+
     QuasarAppUtils::Help::Options options;
 
     for(auto iter = responce.begin(); iter != responce.end(); ++iter) {
