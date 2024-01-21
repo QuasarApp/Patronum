@@ -25,6 +25,8 @@ LocalSocket::LocalSocket(const QString &target, QObject *ptr):
         m_target = "P" + target;
     }
 
+    QuasarAppUtils::Params::log(m_target, QuasarAppUtils::Info);
+
 #else
     m_target = "P" + target;
 #endif
