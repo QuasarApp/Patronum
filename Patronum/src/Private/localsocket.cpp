@@ -20,8 +20,7 @@ LocalSocket::LocalSocket(const QString &target, QObject *ptr):
 
 #ifdef Q_OS_LINUX
     if (QuasarAppUtils::PlatformUtils::isSnap()) {
-        QDir().mkpath(QStandardPaths::writableLocation(QStandardPaths::CacheLocation));
-        m_target = QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + "/P" + target;
+        m_target = "~/P" + target;
     } else {
         m_target = "P" + target;
     }
