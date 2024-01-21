@@ -18,19 +18,7 @@ namespace Patronum {
 LocalSocket::LocalSocket(const QString &target, QObject *ptr):
     QObject(ptr), ISocketWraper() {
 
-#ifdef Q_OS_LINUX
-    if (QuasarAppUtils::PlatformUtils::isSnap()) {
-        m_target = "~/P" + target;
-    } else {
-        m_target = "P" + target;
-    }
-
-
-    QuasarAppUtils::Params::log(m_target, QuasarAppUtils::Info);
-
-#else
     m_target = "P" + target;
-#endif
 
 }
 
