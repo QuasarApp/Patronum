@@ -11,12 +11,24 @@
 #include <QLocalServer>
 #include <QLocalSocket>
 #include <quasarapp.h>
+#include <QStandardPaths>
 
 namespace Patronum {
 
 LocalSocket::LocalSocket(const QString &target, QObject *ptr):
     QObject(ptr), ISocketWraper() {
+
+#ifdef Q_OS_LINUX
+    if (QuasarAppUtils::PlatformUtils::isSnap()) {
+        m_target = QStandardPaths::writableLocation(QStandardPaths::CacheLocation) + "/P" + target;
+    } else {
+        m_target = "P" + target;
+    }
+
+#else
     m_target = "P" + target;
+#endif
+
 }
 
 LocalSocket::~LocalSocket() {
