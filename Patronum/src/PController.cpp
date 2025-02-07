@@ -84,7 +84,7 @@ bool Controller::send() {
     }
 
     QTimer::singleShot(1000, nullptr, []() {
-        QuasarAppUtils::Params::log(errorToString(PatronumError::TimeOutError), QuasarAppUtils::Error);
+        qCritical() << errorToString(PatronumError::TimeOutError);
         QCoreApplication::exit(static_cast<int>(PatronumError::TimeOutError));
     });
 
@@ -121,8 +121,7 @@ QuasarAppUtils::Help::Section Controller::help() const {
 }
 
 void Controller::handleError(PatronumError error) {
-    QuasarAppUtils::Params::log(errorToString(error),
-                                QuasarAppUtils::Error);
+    qCritical() << errorToString(error);
 }
 
 void Controller::handleFeatures(const QList<Feature> &features) {

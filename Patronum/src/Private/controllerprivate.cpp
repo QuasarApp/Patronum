@@ -39,8 +39,9 @@ ControllerPrivate::~ControllerPrivate() {
 
 bool ControllerPrivate::sendFeaturesRequest() {
     if (!_socket->isValid()) {
-        QuasarAppUtils::Params::log("scoket is closed!",
-                                    QuasarAppUtils::Debug);
+
+        qDebug() << "scoket is closed!";
+
         _controller->handleError(PatronumError::ServiceUnavailable);
         return false;
     }
@@ -50,8 +51,9 @@ bool ControllerPrivate::sendFeaturesRequest() {
 
 bool ControllerPrivate::sendCmd(const QHash<QString, Feature> &result) {
     if (!_socket->isValid()) {
-        QuasarAppUtils::Params::log("scoket is closed!",
-                                    QuasarAppUtils::Debug);
+
+        qDebug() << "scoket is closed!";
+
         _controller->handleError(PatronumError::ServiceUnavailable);
 
         return false;
@@ -96,8 +98,9 @@ bool ControllerPrivate::connectToHost(bool echo) const {
     if (!_socket->connectToTarget()) {
 
         if (echo) {
-            QuasarAppUtils::Params::log("Connect to service fail !",
-                                        QuasarAppUtils::Debug);
+
+            qDebug() << "Fail to connect to service!";
+
             _controller->handleError(PatronumError::ServiceUnavailable);
         }
 
@@ -116,8 +119,7 @@ void ControllerPrivate::setEcho(bool echo) {
 void ControllerPrivate::handleReceve(QByteArray data) {
 
     if (!_controller) {
-        QuasarAppUtils::Params::log("System error, controller is not inited!",
-                                    QuasarAppUtils::Error);
+        qCritical() << "System error, controller is not inited!";
         return;
     }
 
@@ -129,8 +131,7 @@ void ControllerPrivate::handleReceve(QByteArray data) {
     for (const auto& pkg: std::as_const(packages)) {
         if (!pkg.isValid()) {
 
-            QuasarAppUtils::Params::log("Received invalid package!",
-                                        QuasarAppUtils::Debug);
+            qDebug() << "Invalid Package received. ";
 
             _controller->handleError(PatronumError::InvalidPackage);
 
@@ -171,8 +172,8 @@ void ControllerPrivate::handleReceve(QByteArray data) {
 
         }
         default: {
-            QuasarAppUtils::Params::log("Wrong command!",
-                                        QuasarAppUtils::Debug);
+            qDebug() << "Wrong command!";
+
             _controller->handleError(PatronumError::WrongCommand);
 
             break;

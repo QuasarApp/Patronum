@@ -23,15 +23,12 @@ bool BaseInstaller::install(const QString &executable, const QString &user) {
     Q_UNUSED(user)
 
     if (!QFile::exists(executable)) {
-        QuasarAppUtils::Params::log(QObject::tr("The service executable file is not exists %0\n").arg(executable),
-                                    QuasarAppUtils::Error);
+        qCritical() << "The service executable file is not exists " << executable;
         return false;
     }
 
     if (isInstalled()) {
-        QuasarAppUtils::Params::log(QObject::tr("the service %0 alredy installed \n").
-                                    arg(PCommon::instance()->getServiceName()),
-                                    QuasarAppUtils::Info);
+        qInfo() << "The service " << PCommon::instance()->getServiceName() << " alredy installed";
         return false;
     }
 
@@ -40,9 +37,8 @@ bool BaseInstaller::install(const QString &executable, const QString &user) {
 
 bool BaseInstaller::uninstall() {
     if (!isInstalled()) {
-        QuasarAppUtils::Params::log(QObject::tr("the service %0 alredy uninstalled \n").
-                                    arg(PCommon::instance()->getServiceName()),
-                                    QuasarAppUtils::Info);
+
+        qInfo() << "The service " << PCommon::instance()->getServiceName() << " alredy uninstalled";
         return false;
     }
 
@@ -51,9 +47,10 @@ bool BaseInstaller::uninstall() {
 
 bool BaseInstaller::enable() {
     if (!isInstalled()) {
-        QuasarAppUtils::Params::log(QObject::tr("Cannot enabled the service %0 not installed, run install command befor enable. \n").
-                                    arg(PCommon::instance()->getServiceName()),
-                                    QuasarAppUtils::Info);
+
+        qInfo() << QObject::tr("Cannot enabled the service %0 not installed, run install command befor enable. \n").
+                   arg(PCommon::instance()->getServiceName());
+
         return false;
     }
 
@@ -62,9 +59,9 @@ bool BaseInstaller::enable() {
 
 bool BaseInstaller::disable() {
     if (!isInstalled()) {
-        QuasarAppUtils::Params::log(QObject::tr("Cannot disabled the service %0 not installed, run install command befor enable. \n").
-                                    arg(PCommon::instance()->getServiceName()),
-                                    QuasarAppUtils::Info);
+
+        qInfo() << QObject::tr("Cannot disabled the service %0 not installed, run install command befor enable. \n").
+                  arg(PCommon::instance()->getServiceName());
         return false;
     }
     return true;

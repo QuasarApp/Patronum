@@ -59,8 +59,8 @@ bool Parser::parse(const QByteArray &array,
         }
 
         if (_data.m_data.size() > _data.m_hdr.size) {
-            QuasarAppUtils::Params::log("Invalid Package received. ",
-                                        QuasarAppUtils::Warning);
+
+            qWarning() << "Invalid Package received. ";
             _data.reset();
             _hdrArray.clear();
 
