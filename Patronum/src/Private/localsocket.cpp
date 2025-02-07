@@ -76,8 +76,7 @@ bool LocalSocket::listen() {
     }
 
     if (!m_server->listen(m_target)) {
-        QuasarAppUtils::Params::log("listen is failed! " + m_server->errorString(),
-                                    QuasarAppUtils::Error);
+        qCritical() << "Can't start local server! " << m_server->errorString();
         return false;
     }
 
@@ -89,8 +88,8 @@ bool LocalSocket::connectToTarget() {
     if (!m_socket) {
         m_socket = new QLocalSocket(this);
         if (!registerSokcet(m_socket)) {
-            QuasarAppUtils::Params::log("registerSokcet is failed!",
-                                        QuasarAppUtils::Error);
+
+            qCritical() << "registerSokcet is failed!";
             return false;
         }
     }
@@ -138,12 +137,11 @@ void LocalSocket::handleSocketError(QLocalSocket::LocalSocketError) {
     auto _sender = dynamic_cast<QLocalSocket*>(sender());
 
     if (!_sender) {
-        QuasarAppUtils::Params::log("Unknown error occurred!", QuasarAppUtils::Error);
+        qCritical() << "Unknown error occurred!";
         return;
     }
 
-    QuasarAppUtils::Params::log("Socket connection fail: " + _sender->errorString(),
-                                QuasarAppUtils::Warning);
+    qWarning() << "Socket connection fail: " << _sender->errorString();
 
 }
 

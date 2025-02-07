@@ -21,8 +21,8 @@
 #include <csignal>
 
 void handleTermSignals(int sig) {
-    QuasarAppUtils::Params::log(QString("Shutdown application with %0 signal.").arg(sig),
-                                QuasarAppUtils::Info);
+
+    qInfo() << "Shutdown application with " << sig << " signal.";
     QCoreApplication::exit(0);
 }
 
@@ -61,8 +61,8 @@ ServicePrivate::~ServicePrivate() {
 bool ServicePrivate::sendCmdResult(const QVariantMap &result) {
 
     if (!_socket->isValid()) {
-        QuasarAppUtils::Params::log("scoket is closed!",
-                                    QuasarAppUtils::Error);
+        qCritical() << "socket is closed!";
+
         return false;
     }
 
@@ -71,8 +71,8 @@ bool ServicePrivate::sendCmdResult(const QVariantMap &result) {
 
 bool ServicePrivate::sendCloseConnection() {
     if (!_socket->isValid()) {
-        QuasarAppUtils::Params::log("scoket is closed!",
-                                    QuasarAppUtils::Error);
+        qCritical() << "socket is closed!";
+
         return false;
     }
 
@@ -82,8 +82,7 @@ bool ServicePrivate::sendCloseConnection() {
 bool ServicePrivate::install(const QString &user) {
 
     if (!_installer) {
-        QuasarAppUtils::Params::log(errorToString(UnsupportedPlatform),
-                                    QuasarAppUtils::Error);
+        qCritical() << errorToString(UnsupportedPlatform);
         return false;
     }
 
@@ -91,14 +90,14 @@ bool ServicePrivate::install(const QString &user) {
         return false;
     }
 
-    QuasarAppUtils::Params::log("The service installed successful", QuasarAppUtils::Info);
+    qInfo() << "The service installed successful";
     return true;
 }
 
 bool ServicePrivate::uninstall() {
     if (!_installer) {
-        QuasarAppUtils::Params::log(errorToString(UnsupportedPlatform),
-                                    QuasarAppUtils::Error);
+        qCritical() << errorToString(UnsupportedPlatform);
+
         return false;
     }
 
@@ -106,15 +105,15 @@ bool ServicePrivate::uninstall() {
         return false;
     }
 
-    QuasarAppUtils::Params::log("The service uninstalled successful", QuasarAppUtils::Info);
+    qInfo() << "The service uninstalled successful";
     return true;
 }
 
 bool ServicePrivate::start() {
 
     if (!_socket->listen()) {
-        QuasarAppUtils::Params::log("Fail to create a terminal socket!",
-                                    QuasarAppUtils::Error);
+
+        qCritical() << "Fail to create a terminal socket!";
         return false;
     };
 
@@ -124,8 +123,7 @@ bool ServicePrivate::start() {
 bool ServicePrivate::startDeamon() {
 
     if (_socket->isRunning()) {
-        QuasarAppUtils::Params::log("Failed to start a service because an another service alredy started",
-                                    QuasarAppUtils::Error);
+        qCritical() << "Failed to start a service because an another service alredy started";
         return false;
     }
 
@@ -138,8 +136,7 @@ bool ServicePrivate::startDeamon() {
 
     qint64 pid;
     if (!proc.startDetached(&pid)) {
-        QuasarAppUtils::Params::log("fail to start detached process: " + proc.errorString(),
-                                    QuasarAppUtils::Error);
+        qCritical() << "fail to start detached process: " + proc.errorString();
         return false;
     }
 
@@ -151,8 +148,7 @@ bool ServicePrivate::startDeamon() {
     pidFile.write(QByteArray::number(pid));
     pidFile.close();
 
-    QuasarAppUtils::Params::log("The service started successful", QuasarAppUtils::Info);
-
+    qInfo() << "The service started successful";
     return true;
 }
 
@@ -204,20 +200,20 @@ void ServicePrivate::handleReceve(QByteArray data) {
 
     for (const auto &pkg: std::as_const(packages)) {
         if (!pkg.isValid()) {
-            QuasarAppUtils::Params::log("receive package is not valid!",
-                                        QuasarAppUtils::Warning);
+
+            qWarning() << "Invalid Package received. ";
             return;
         }
 
         if (!_service) {
-            QuasarAppUtils::Params::log("System error, service is not inited!",
-                                        QuasarAppUtils::Error);
+
+            qCritical() << "System error, service is not inited!";
             return;;
         }
 
         if (!_socket->isValid()) {
-            QuasarAppUtils::Params::log("scoket is closed!",
-                                        QuasarAppUtils::Error);
+
+            qCritical() << "scoket is closed!";
             return;
         }
 
@@ -227,8 +223,7 @@ void ServicePrivate::handleReceve(QByteArray data) {
 
             if (!_socket->send(_parser->createPackage(Command::Features,
                                                       _service->supportedFeatures()))) {
-                QuasarAppUtils::Params::log("Fail to send ",
-                                            QuasarAppUtils::Error);
+                qCritical() << "Fail to send supported features!";
             }
 
             break;
@@ -251,8 +246,7 @@ void ServicePrivate::handleReceve(QByteArray data) {
         }
 
         default: {
-            QuasarAppUtils::Params::log("Wrong command!",
-                                        QuasarAppUtils::Error);
+            qCritical() << "Wrong command!";
             break;
         }
         }

@@ -36,9 +36,8 @@ bool InstallerSystemD::install(const QString &executable, const QString& user) {
     QFile templ(":/systemd/SystemD/service.service");
     QString name = PCommon::instance()->getServiceName();
     if (!templ.open(QIODevice::ReadOnly)) {
-        QuasarAppUtils::Params::log(QString{"Cannot install %0. The service template not available.\n"}.
-                                    arg(name),
-                                    QuasarAppUtils::Error);
+
+        qCritical() << "Cannot install " << name << ". The service template not available.";
 
         return false;
     }
@@ -59,9 +58,8 @@ bool InstallerSystemD::install(const QString &executable, const QString& user) {
     templ.setFileName(absaluteServicePath());
 
     if (!templ.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-        QuasarAppUtils::Params::log(QString{"Cannot install %0. %1\n"}.
-                                    arg(name, templ.errorString()),
-                                    QuasarAppUtils::Error);
+
+        qCritical() << "Cannot install " << name << ". " << templ.errorString();
         return false;
     }
 
@@ -87,10 +85,8 @@ bool InstallerSystemD::uninstall() {
     QString name = PCommon::instance()->getServiceName();
 
     if (!(disable() && QFile::remove(absaluteServicePath()))) {
-        QuasarAppUtils::Params::log(QString("Cannot uninstall %0. Cannot remove %1. Check permissions.\n").
-                                    arg(name,
-                                        absaluteServicePath()),
-                                    QuasarAppUtils::Error);
+
+        qCritical() << "Cannot uninstall " << name << ". Cannot remove " << absaluteServicePath() << ". Check permissions.";
         return false;
     }
     return true;
