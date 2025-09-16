@@ -19,7 +19,7 @@ QString PCommon::getPidfile(const QString& customUser) const {
 }
 
 qint64 PCommon::getPidFromPidfile() const {
-    QFile file = getPidfile();
+    QFile file(getPidfile());
     if (!file.open(QIODevice::ReadOnly)) {
         return 0;
     }
