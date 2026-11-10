@@ -5,8 +5,8 @@
  * of this license document, but changing it is not allowed.
 */
 
-#ifndef ICONTROLER_H
-#define ICONTROLER_H
+#ifndef ICONTROLLER_H
+#define ICONTROLLER_H
 
 #include <QList>
 #include <QVariantMap>
@@ -27,32 +27,32 @@ public:
     virtual ~IController() = default;
 
     /**
-     * @brief handleFeatures This method should be handle all Command::Features resuests.
+     * @brief handleFeatures This method should be handle all Command::Features requests.
      *  This method will invoked when controller receive commands list for execute (features) from controller or terminal.
      * @param features This is list of the requests (@a features)
      */
     virtual void handleFeatures(const QList<Feature>& features) = 0;
 
     /**
-     * @brief handleResponce This method should be handle all responces of the service.
-     *  This method will invoked when controller receive responce from service.
-     * @param responce This is responce message.
+     * @brief handleResponse This method should be handle all responses of the service.
+     *  This method will invoked when controller receive response from service.
+     * @param response This is response message.
      */
-    virtual void handleResponce(const QVariantMap& responce) = 0;
+    virtual void handleResponse(const QVariantMap& response) = 0;
 
     /**
-     * @brief handleError This method shold be handle all error messages.
-     * This method will invoked when a controlee receive a error responce from a service.
+     * @brief handleError This method should be handle all error messages.
+     * This method will invoked when a controlee receive a error response from a service.
      * @param errorCode This is code of a error.
      */
     virtual void handleError(PatronumError errorCode) = 0;
 
     /**
-     * @brief finished This method ivoked when controler received Command::CloseConnection from the server.
+     * @brief finished This method invoked when controller received Command::CloseConnection from the server.
      */
     virtual void finished() = 0;
 
 };
 }
 
-#endif // ICONTROLER_H
+#endif // ICONTROLLER_H
