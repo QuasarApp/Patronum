@@ -213,7 +213,7 @@ void ServicePrivate::handleReceve(QByteArray data) {
 
         if (!_socket->isValid()) {
 
-            qCritical() << "scoket is closed!";
+            qCritical() << "socket is closed!";
             return;
         }
 

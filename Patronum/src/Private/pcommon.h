@@ -46,7 +46,7 @@ public:
 
     /**
      * @brief getServiceName return the service name.
-     * @note To correct work of this method you need to invoke the     QCoreApplication::setApplicationName() methid.
+     * @note To correct work of this method you need to invoke the     QCoreApplication::setApplicationName() method.
      * @return application name
      */
     QString getServiceName() const;

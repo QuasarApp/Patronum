@@ -48,7 +48,7 @@ bool BaseInstaller::uninstall() {
 bool BaseInstaller::enable() {
     if (!isInstalled()) {
 
-        qInfo() << QObject::tr("Cannot enabled the service %0 not installed, run install command befor enable. \n").
+        qInfo() << QObject::tr("Cannot enabled the service %0 not installed, run install command before enable. \n").
                    arg(PCommon::instance()->getServiceName());
 
         return false;
@@ -60,7 +60,7 @@ bool BaseInstaller::enable() {
 bool BaseInstaller::disable() {
     if (!isInstalled()) {
 
-        qInfo() << QObject::tr("Cannot disabled the service %0 not installed, run install command befor enable. \n").
+        qInfo() << QObject::tr("Cannot disabled the service %0 not installed, run install command before enable. \n").
                   arg(PCommon::instance()->getServiceName());
         return false;
     }

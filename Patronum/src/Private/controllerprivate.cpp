@@ -40,7 +40,7 @@ ControllerPrivate::~ControllerPrivate() {
 bool ControllerPrivate::sendFeaturesRequest() {
     if (!_socket->isValid()) {
 
-        qDebug() << "scoket is closed!";
+        qDebug() << "socket is closed!";
 
         _controller->handleError(PatronumError::ServiceUnavailable);
         return false;
@@ -52,7 +52,7 @@ bool ControllerPrivate::sendFeaturesRequest() {
 bool ControllerPrivate::sendCmd(const QHash<QString, Feature> &result) {
     if (!_socket->isValid()) {
 
-        qDebug() << "scoket is closed!";
+        qDebug() << "socket is closed!";
 
         _controller->handleError(PatronumError::ServiceUnavailable);
 

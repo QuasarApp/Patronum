@@ -27,7 +27,7 @@ public:
      * @brief ServiceBase This is main constructor of the service.
      * @param argc This is count of input arguments.
      * @param argv This is raw C array of the input arguments.
-     * @note If you create a console client for your service then you need to sets some service name as a this. Fot This use the QCoreApplication::setApplicationName() methid. You need to invoke this method befor invoke the ServiceBase::exec method.
+     * @note If you create a console client for your service then you need to sets some service name as a this. For This use the QCoreApplication::setApplicationName() method. You need to invoke this method before invoke the ServiceBase::exec method.
      */
     ServiceBase(int argc, char *argv[]);
 
@@ -60,21 +60,21 @@ protected:
     /**
      * @brief sendResuylt - Call this method for send responce from service to tour controller.
      * @param result Message.
-     * @return True if data sendet is seccusseful.
+     * @return True if data sent is successful.
      */
     bool sendResuylt(const QVariantMap &result);
 
     /**
      * @brief sendResuylt This method send text responce to controller.
      * @param result - Message.
-     * @return True if data sendet is seccusseful.
+     * @return True if data sent is successful.
      */
     bool sendResuylt(const QString &result);
 
     /**
      * @brief sendRawResuylt This method send raw text responce to controller.
      * @param result - Message.
-     * @return True if data sendet is seccusseful.
+     * @return True if data sent is successful.
      */
     bool sendRawResuylt(const QByteArray &result);
 

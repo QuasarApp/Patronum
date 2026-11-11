@@ -17,12 +17,12 @@ namespace Patronum {
 class ControllerPrivate;
 
 /**
- * @brief The Controller class provide control functionality for your service.
+ * @brief The Controller class provides control functionality for your service.
  *
  * ### How to use :
  * - create QCoreApplication object
  * - just inherit from the Service Controller and override the methods you need.
- * - So, invoke the send method, and if you need to get a response from your service then invoke a waitForResponce method.
+ * - So, invoke the send method, and if you need to get a response from your service then invoke a waitForResponse method.
  * - or run application exec method.
  *
  * ### Example:
@@ -50,7 +50,7 @@ class ControllerPrivate;
     }
  * @endcode
  *
- * @note The Controller class provide only base functionality. Sending custom command and receive response of service. If you want to start or install/unistall service tou need to use the Patronum::Service class.
+ * @note The Controller class provides only base functionality. Sending custom commands and receive responses from service. If you want to start or install/uninstall service you need to to use the Patronum::Service class.
  *
  */
 class PATRONUM_LIBRARYSHARED_EXPORT Controller : protected IController
@@ -63,33 +63,33 @@ public:
     ~Controller() override;
 
     /**
-     * @brief send This method send request to service.
+     * @brief send This method sends request to service.
      * @param argc This is count of arguments.
      * @param argv This is arguments list.
-     * @return true if all sendet successful.
+     * @return true if all sent successfully.
      */
     bool send(int argc, char **argv);
 
     /**
-     * @brief send - This method send request to service.
+     * @brief send - This method sends request to service.
      * @warning Invoke this method if you invoked QuasarAppUtils::Params::parse() before invoke this method else use send(int argc, char **argv).
-     * @return true if all sendet successful.
+     * @return true if all sent successfully.
      */
     bool send();
 
     /**
-     * @brief sendStop This method send stop command to service;
-     * @return trie if command sendet successfull
+     * @brief sendStop This method sends stop command to service;
+     * @return true if command sent successfully
      */
     bool sendStop();
 
     /**
      * @brief help This method return help of the Controller.
-     * @return Available otions list.
+     * @return Available options list.
      */
     QuasarAppUtils::Help::Section help() const;
 
-    // IControler interface
+    // IController interface
 protected:
 
     /**
@@ -101,28 +101,28 @@ protected:
 
     /**
      * @brief handleFeatures - Override this method if you want create a custom reaction of get service features.
-     * default implementation print help of available command of your service.
+     * default implementation print help of available commands of your service.
      * @param features - List of features.
      */
     void handleFeatures(const QList<Feature> &features) override;
 
     /**
-     * @brief handleResponce - Override this method if you want create a custom reaction of get responce from service.
-     * Default inplementation print responce to console.
-     * @param responce - Responce from service.
+     * @brief handleResponse - Override this method if you want create a custom reaction of get response from service.
+     * Default implementation print response to console.
+     * @param responce - Response from service.
      */
-    void handleResponce(const QVariantMap &responce) override;
+    void handleResponse(const QVariantMap &response) override;
 
     /**
-     * @brief finished This method invoked when controler receive from service the Command::CloseConnection command
-     * This implementation invoke he exit method of the QCoreApplication and finished application.
+     * @brief finished This method invoked when controller receives from service the Command::CloseConnection command
+     * This implementation invoke the exit method of the QCoreApplication and finished application.
      *  If do not want to stop application after receive Command::CloseConnection then override this method.
      */
     void finished() override;
 
     /**
      * @brief features - This method return current features of connected service.
-     * @note If Respond from service not received then return empty list.
+     * @note If Response from service not received then return empty list.
      * @return Features list.
      */
     QList<Feature> features();

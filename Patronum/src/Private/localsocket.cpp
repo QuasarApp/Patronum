@@ -108,7 +108,7 @@ void LocalSocket::handleStateChanged(QLocalSocket::LocalSocketState socketState)
     if (socketState == QLocalSocket::LocalSocketState::ConnectedState) {
         m_state = State::Connected;
     } else {
-        m_state = State::Disconeccted;
+        m_state = State::Disconnected;
     }
 
     emit sigStateChanged(m_state);

@@ -124,7 +124,7 @@ void ServiceBase::printDefaultHelp() {
     auto serviceHelp = controller()->help();
     serviceHelp.unite(QuasarAppUtils::Params::getHelp());
 
-    serviceHelp.unite({{QObject::tr("Options that available befor install"),{
+    serviceHelp.unite({{QObject::tr("Options that available before install"),{
                             {"start / s",       QObject::tr("Start a service in console")},
                             {"daemon / d",      QObject::tr("Start a service as a daemon")},
                             {"install / i / -install username",     QObject::tr("Install a service. Add user name if you want to run service from custom user. Example: -install username")},
