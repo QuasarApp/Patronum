@@ -25,9 +25,9 @@ public:
     virtual ~IService() = default;
 
     /**
-     * @brief handleReceiveData This method get all received commnads and process its.
+     * @brief handleReceiveData This method get all received commands and process its.
      *  For each command will invoke the IService::handleReceive method.
-     * @param data This is array of the incomming requests (commands)
+     * @param data This is array of the incoming requests (commands)
      */
     virtual void handleReceiveData(const QHash<QString, Feature>& data) = 0;
 

@@ -34,7 +34,7 @@ public:
 
     /**
      * @brief uninstall This method remove service from autostart.
-     * @return trur if service removed successful
+     * @return true if service removed successful
      */
     virtual bool uninstall() = 0;
 
@@ -51,8 +51,8 @@ public:
     virtual bool disable() = 0;
 
     /**
-     * @brief isInstalled This method return true if service alredy installed.
-     * @return true if service alredy installed else flase.
+     * @brief isInstalled This method return true if service already installed.
+     * @return true if service already installed else false.
      */
     virtual bool isInstalled() const = 0;
 

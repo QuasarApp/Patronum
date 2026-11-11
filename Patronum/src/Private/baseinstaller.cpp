@@ -28,7 +28,7 @@ bool BaseInstaller::install(const QString &executable, const QString &user) {
     }
 
     if (isInstalled()) {
-        qInfo() << "The service " << PCommon::instance()->getServiceName() << " alredy installed";
+        qInfo() << "The service " << PCommon::instance()->getServiceName() << " already installed";
         return false;
     }
 
@@ -38,7 +38,7 @@ bool BaseInstaller::install(const QString &executable, const QString &user) {
 bool BaseInstaller::uninstall() {
     if (!isInstalled()) {
 
-        qInfo() << "The service " << PCommon::instance()->getServiceName() << " alredy uninstalled";
+        qInfo() << "The service " << PCommon::instance()->getServiceName() << " already uninstalled";
         return false;
     }
 

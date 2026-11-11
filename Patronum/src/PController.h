@@ -43,7 +43,7 @@ class ControllerPrivate;
     int main(int argc, char **argv) {
         QCoreApplication::setApplicationName("MyServiceName"); // <--
         QCoreApplication::setOrganizationName("MyCompany"); // <--
-        QCoreApplcication app
+        QCoreApplication app
         MyControllerApp controller;
         controller.send(argc, argv);
         return app.exec();

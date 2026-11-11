@@ -123,7 +123,7 @@ bool ServicePrivate::start() {
 bool ServicePrivate::startDeamon() {
 
     if (_socket->isRunning()) {
-        qCritical() << "Failed to start a service because an another service alredy started";
+        qCritical() << "Failed to start a service because an another service already started";
         return false;
     }
 
