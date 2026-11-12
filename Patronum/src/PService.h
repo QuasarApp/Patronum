@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2026 QuasarApp.
+ * Copyright (C) 2018-2027 QuasarApp.
  * Distributed under the lgplv3 software license, see the accompanying
  * Everyone is permitted to copy and distribute verbatim copies
  * of this license document, but changing it is not allowed.
@@ -42,7 +42,7 @@ template<class Application>
         }
 
         void onStop() override {
-            // call on server stoped
+            // call on server stopped
         }
 
         bool handleReceive(const Patronum::Feature &data) override {
@@ -77,7 +77,7 @@ template<class Application>
  * @endcode
  *
  * @note The Service class use own executable like a main path to service executable.
- *  If your application has custom dependencies and do not work without costom envirement then you need to add **P_RUN_FILE** or **CQT_RUN_FILE** variavle with full path into the your wraper or launcher file.
+ *  If your application has custom dependencies and do not work without custom environment then you need to add **P_RUN_FILE** or **CQT_RUN_FILE** variable with full path into the your wrapper or launcher file.
  *  **Order of the search executable file of the service**
  *  1. P_RUN_FILE variable
  *  2. CQT_RUN_FILE variable

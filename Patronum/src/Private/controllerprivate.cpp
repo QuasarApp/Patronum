@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2026 QuasarApp.
+ * Copyright (C) 2018-2027 QuasarApp.
  * Distributed under the lgplv3 software license, see the accompanying
  * Everyone is permitted to copy and distribute verbatim copies
  * of this license document, but changing it is not allowed.
@@ -40,7 +40,7 @@ ControllerPrivate::~ControllerPrivate() {
 bool ControllerPrivate::sendFeaturesRequest() {
     if (!_socket->isValid()) {
 
-        qDebug() << "scoket is closed!";
+        qDebug() << "socket is closed!";
 
         _controller->handleError(PatronumError::ServiceUnavailable);
         return false;
@@ -52,7 +52,7 @@ bool ControllerPrivate::sendFeaturesRequest() {
 bool ControllerPrivate::sendCmd(const QHash<QString, Feature> &result) {
     if (!_socket->isValid()) {
 
-        qDebug() << "scoket is closed!";
+        qDebug() << "socket is closed!";
 
         _controller->handleError(PatronumError::ServiceUnavailable);
 

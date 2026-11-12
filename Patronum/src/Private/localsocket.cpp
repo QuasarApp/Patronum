@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2026 QuasarApp.
+ * Copyright (C) 2018-2027 QuasarApp.
  * Distributed under the lgplv3 software license, see the accompanying
  * Everyone is permitted to copy and distribute verbatim copies
  * of this license document, but changing it is not allowed.
@@ -108,7 +108,7 @@ void LocalSocket::handleStateChanged(QLocalSocket::LocalSocketState socketState)
     if (socketState == QLocalSocket::LocalSocketState::ConnectedState) {
         m_state = State::Connected;
     } else {
-        m_state = State::Disconeccted;
+        m_state = State::Disconnected;
     }
 
     emit sigStateChanged(m_state);

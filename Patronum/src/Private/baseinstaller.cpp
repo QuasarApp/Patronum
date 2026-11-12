@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2026 QuasarApp.
+ * Copyright (C) 2018-2027 QuasarApp.
  * Distributed under the lgplv3 software license, see the accompanying
  * Everyone is permitted to copy and distribute verbatim copies
  * of this license document, but changing it is not allowed.
@@ -28,7 +28,7 @@ bool BaseInstaller::install(const QString &executable, const QString &user) {
     }
 
     if (isInstalled()) {
-        qInfo() << "The service " << PCommon::instance()->getServiceName() << " alredy installed";
+        qInfo() << "The service " << PCommon::instance()->getServiceName() << " already installed";
         return false;
     }
 
@@ -38,7 +38,7 @@ bool BaseInstaller::install(const QString &executable, const QString &user) {
 bool BaseInstaller::uninstall() {
     if (!isInstalled()) {
 
-        qInfo() << "The service " << PCommon::instance()->getServiceName() << " alredy uninstalled";
+        qInfo() << "The service " << PCommon::instance()->getServiceName() << " already uninstalled";
         return false;
     }
 
@@ -48,7 +48,7 @@ bool BaseInstaller::uninstall() {
 bool BaseInstaller::enable() {
     if (!isInstalled()) {
 
-        qInfo() << QObject::tr("Cannot enabled the service %0 not installed, run install command befor enable. \n").
+        qInfo() << QObject::tr("Cannot enabled the service %0 not installed, run install command before enable. \n").
                    arg(PCommon::instance()->getServiceName());
 
         return false;
@@ -60,7 +60,7 @@ bool BaseInstaller::enable() {
 bool BaseInstaller::disable() {
     if (!isInstalled()) {
 
-        qInfo() << QObject::tr("Cannot disabled the service %0 not installed, run install command befor enable. \n").
+        qInfo() << QObject::tr("Cannot disabled the service %0 not installed, run install command before enable. \n").
                   arg(PCommon::instance()->getServiceName());
         return false;
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2026 QuasarApp.
+ * Copyright (C) 2018-2027 QuasarApp.
  * Distributed under the lgplv3 software license, see the accompanying
  * Everyone is permitted to copy and distribute verbatim copies
  * of this license document, but changing it is not allowed.
@@ -124,7 +124,7 @@ void ServiceBase::printDefaultHelp() {
     auto serviceHelp = controller()->help();
     serviceHelp.unite(QuasarAppUtils::Params::getHelp());
 
-    serviceHelp.unite({{QObject::tr("Options that available befor install"),{
+    serviceHelp.unite({{QObject::tr("Options that available before install"),{
                             {"start / s",       QObject::tr("Start a service in console")},
                             {"daemon / d",      QObject::tr("Start a service as a daemon")},
                             {"install / i / -install username",     QObject::tr("Install a service. Add user name if you want to run service from custom user. Example: -install username")},

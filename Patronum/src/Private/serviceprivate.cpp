@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018-2026 QuasarApp.
+ * Copyright (C) 2018-2027 QuasarApp.
  * Distributed under the lgplv3 software license, see the accompanying
  * Everyone is permitted to copy and distribute verbatim copies
  * of this license document, but changing it is not allowed.
@@ -123,7 +123,7 @@ bool ServicePrivate::start() {
 bool ServicePrivate::startDeamon() {
 
     if (_socket->isRunning()) {
-        qCritical() << "Failed to start a service because an another service alredy started";
+        qCritical() << "Failed to start a service because an another service already started";
         return false;
     }
 
@@ -213,7 +213,7 @@ void ServicePrivate::handleReceve(QByteArray data) {
 
         if (!_socket->isValid()) {
 
-            qCritical() << "scoket is closed!";
+            qCritical() << "socket is closed!";
             return;
         }
 
