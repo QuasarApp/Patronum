@@ -19,7 +19,7 @@ namespace Patronum {
 
 /**
  * @brief The LocalSocket class
- * this socket work only with locale data.
+ * this socket work only with local data.
  */
 class LocalSocket : public QObject, public ISocketWraper
 {
@@ -41,7 +41,7 @@ public:
     bool isRunning() override;
 
 signals:
-    void sigReceve(QByteArray data) override;
+    void sigReceive(QByteArray data) override;
     void sigStateChanged(State state) override;
 
 private:
@@ -49,12 +49,12 @@ private:
     QLocalServer *m_server = nullptr;
     QString m_target;
 
-    bool registerSokcet(QLocalSocket *socket);
+    bool registerSocket(QLocalSocket *socket);
 
 private slots:
     void handleStateChanged(QLocalSocket::LocalSocketState socketState);
     void handleReadyRead();
-    void handleIncomming();
+    void handleIncoming();
     void handleSocketError(QLocalSocket::LocalSocketError);
 
 };

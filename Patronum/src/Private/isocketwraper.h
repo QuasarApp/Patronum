@@ -5,8 +5,8 @@
  * of this license document, but changing it is not allowed.
 */
 
-#ifndef SOCKETWRAPER_H
-#define SOCKETWRAPER_H
+#ifndef SOCKETWRAPPER_H
+#define SOCKETWRAPPER_H
 
 #include <QByteArray>
 
@@ -15,7 +15,7 @@ namespace Patronum {
 
 enum class State: int {
     Connected,
-    Disconeccted
+    Disconnected
 };
 
 class ISocketWraper
@@ -25,19 +25,19 @@ public:
     /**
      * @brief send - send data to service
      * @param data
-     * @return true if operation finished seccussful
+     * @return true if operation finished successful
      */
     virtual bool send(const QByteArray& data) = 0;
 
     /**
-     * @brief sigReceve - this method is a prototype of received data signal
+     * @brief sigReceive - this method is a prototype of received data signal
      * @param data - received data
      * @return
      */
     virtual void sigReceve(QByteArray data) = 0;
 
     /**
-     * @brief sigStateChanged - this method is a prototype of chnage state signal
+     * @brief sigStateChanged - this method is a prototype of change state signal
      * @param state
      */
     virtual void sigStateChanged(State state) = 0;
@@ -50,13 +50,13 @@ public:
 
     /**
      * @brief listen
-     * @return true if a scoket deploy seccusseful
+     * @return true if a socket deploy successful
      */
     virtual bool listen() = 0;
 
     /**
      * @brief connectToTarget
-     * @return true if a scoket connect seccusseful
+     * @return true if a scoket connect successful
      */
     virtual bool connectToTarget() = 0;
 
@@ -72,7 +72,7 @@ public:
     void setEcho(bool newEcho);
 
 protected:
-    State m_state = State::Disconeccted;
+    State m_state = State::Disconnected;
     bool _echo = true;
 
 };
@@ -82,4 +82,4 @@ protected:
 
 
 
-#endif // SOCKETWRAPER_H
+#endif // SOCKETWRAPPER_H

@@ -41,34 +41,28 @@ public:
     bool sendCloseConnection();
 
     /**
-     * @brief parseDefaultCmds
-     * @return
-     */
-    bool parseDefaultCmds();
-
-    /**
-     * @brief install This method install your service in thec current system.
+     * @brief install This method install your service in the current system.
      * @param user This is name of custom user that will be run your service after reboot system.
-     * @return return true if the service installed succesful
+     * @return return true if the service installed successful
      */
-    bool install(const QString &user);
+    bool
 
     /**
-     * @brief uninstall This method unistall your service in thec current system.
-     * @return return true if the service unistalled succesful
+     * @brief uninstall This method unistall your service in the current system.
+     * @return return true if the service uninstalled successful
      */
     bool uninstall();
 
     /**
      * @brief start This method start your service on this process. (as a classic application).
      *  This method run service and enable service sockets for listning clients.
-     * @return return true if service started successfull
+     * @return return true if service started successful
      */
     bool start();
 
     /**
-     * @brief start This method start your service detached of this process. (as a deamon)
-     * @return return true if service started successfull
+     * @brief start This method start your service detached of this process. (as a daemon)
+     * @return return true if service started successful
      */
     bool startDeamon();
 
@@ -78,7 +72,7 @@ public:
     void stop();
 
 private slots:
-    void handleReceve(QByteArray data);
+    void handleReceive(QByteArray data);
 
 
 private:
@@ -92,9 +86,9 @@ private:
 
     /**
      * @brief getServiceLauncher This method return path to launcher file.
-     * This method return absalute path to launch script. This method use the **P_RUN_FILE** and **CQT_RUN_FILE** envirement variables.
-     * @note If the **P_RUN_FILE** and **CQT_RUN_FILE** envirement variables not defined of defined with invalid pathes then this method return absalute path to the current executable.
-     * @return return absalute path to launcher script or executable file if search of path failed.
+     * This method return absolute path to launch script. This method use the **P_RUN_FILE** and **CQT_RUN_FILE** environment variables.
+     * @note If the **P_RUN_FILE** and **CQT_RUN_FILE** environment variables not defined or defined with invalid paths then this method return absolute path to the current executable.
+     * @return return absolute path to launcher script or executable file if search of path failed.
      */
     QString getServiceLauncher() const;
 

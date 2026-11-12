@@ -5,8 +5,8 @@
  * of this license document, but changing it is not allowed.
 */
 
-#ifndef FEaTURE_H
-#define FEaTURE_H
+#ifndef FEATURE_H
+#define FEATURE_H
 
 #include <QString>
 #include <QVariant>

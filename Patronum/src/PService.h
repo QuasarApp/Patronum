@@ -42,15 +42,15 @@ template<class Application>
         }
 
         void onStop() override {
-            // call on server stoped
+            // call on server stopped
         }
 
         bool handleReceive(const Patronum::Feature &data) override {
 
             if (data.cmd() == "ping") {
-                sendResuylt("Pong");
+                sendResult("Pong");
             } else if (data.cmd() == "state") {
-                sendResuylt("application status");
+                sendResult("application status");
             }
 
             return true;
@@ -77,11 +77,11 @@ template<class Application>
  * @endcode
  *
  * @note The Service class use own executable like a main path to service executable.
- *  If your application has custom dependencies and do not work without costom envirement then you need to add **P_RUN_FILE** or **CQT_RUN_FILE** variavle with full path into the your wraper or launcher file.
+ *  If your application has custom dependencies and do not work without custom environment then you need to add **P_RUN_FILE** or **CQT_RUN_FILE** variavle with full path into the your wrapper or launcher file.
  *  **Order of the search executable file of the service**
  *  1. P_RUN_FILE variable
  *  2. CQT_RUN_FILE variable
- *  3. Absalute path to executable.
+ *  3. Absolute path to executable.
  *
  */
 class Service : public ServiceBase
@@ -92,7 +92,7 @@ public:
      * @param argc This is count of input arguments.
      * @param argv This is raw C array with input arguments.
      * @param name This is name of your service.
-     * @note If you create a console client for youe service then you need to sets some service name as a this.
+     * @note If you create a console client for your service then you need to sets some service name as a this.
      */
     Service(int argc, char *argv[])
         : ServiceBase(argc, argv) {

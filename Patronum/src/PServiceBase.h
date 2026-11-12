@@ -27,7 +27,7 @@ public:
      * @brief ServiceBase This is main constructor of the service.
      * @param argc This is count of input arguments.
      * @param argv This is raw C array of the input arguments.
-     * @note If you create a console client for your service then you need to sets some service name as a this. Fot This use the QCoreApplication::setApplicationName() methid. You need to invoke this method befor invoke the ServiceBase::exec method.
+     * @note If you create a console client for your service then you need to sets some service name as a this. For This use the QCoreApplication::setApplicationName() method. You need to invoke this method befor invoke the ServiceBase::exec method.
      */
     ServiceBase(int argc, char *argv[]);
 
@@ -43,10 +43,10 @@ public:
 
 protected:
     /**
-     * @brief handleReceiveData - This method invoice when service receive new command from terminal of controller of this service.
+     * @brief handleReceiveData - This method invoked when service receive new command from terminal of controller of this service.
      * @param data - Is list of commands from controller.
      * Default implementation send message about error, and invoke the.
-     * @note If you override this method the ServiceBase::handleReceive method wil not invoked wuthou base implementation of thism method.
+     * @note If you override this method the ServiceBase::handleReceive method wil not invoked wuthou base implementation of this method.
      * @see ServiceBase::handleReceive
      */
     void handleReceiveData(const QHash<QString, Feature> &data) override;
@@ -58,23 +58,23 @@ protected:
     QSet<Feature> supportedFeatures() override;
 
     /**
-     * @brief sendResuylt - Call this method for send responce from service to tour controller.
+     * @brief sendResult - Call this method for send responce from service to tour controller.
      * @param result Message.
-     * @return True if data sendet is seccusseful.
+     * @return True if data sent is successful.
      */
-    bool sendResuylt(const QVariantMap &result);
+    bool sendResult(const QVariantMap &result);
 
     /**
-     * @brief sendResuylt This method send text responce to controller.
+     * @brief sendResult This method send text responce to controller.
      * @param result - Message.
-     * @return True if data sendet is seccusseful.
+     * @return True if data sent is successful.
      */
-    bool sendResuylt(const QString &result);
+    bool sendResult(const QString &result);
 
     /**
      * @brief sendRawResuylt This method send raw text responce to controller.
      * @param result - Message.
-     * @return True if data sendet is seccusseful.
+     * @return True if data sent is successful.
      */
     bool sendRawResuylt(const QByteArray &result);
 
@@ -84,7 +84,7 @@ protected:
     virtual void createApplication() = 0;
 
     /**
-     * @brief onStart Called when get start command from terminal. Override this method work correctly work of service.
+     * @brief onStart Called when get start command from terminal. Override this method work correctly of service.
      */
     bool onStart() override = 0;
 
@@ -104,7 +104,7 @@ protected:
     void onPause() override;
 
     /**
-     * @brief controller This method return the local controller object. If the controller object is not inited the this methd create a new object.
+     * @brief controller This method return the local controller object. If the controller object is not inited the this method create a new object.
      * @return Own controller instance.
      */
     Controller *controller();

@@ -91,7 +91,7 @@ bool ServiceBase::sendResuylt(const QString &result) {
     return d_ptr->sendCmdResult({{"Result", result}});
 }
 
-bool ServiceBase::sendRawResuylt(const QByteArray &result) {
+bool ServiceBase::sendRawResult(const QByteArray &result) {
     return d_ptr->sendCmdResult({{"", result}});
 }
 

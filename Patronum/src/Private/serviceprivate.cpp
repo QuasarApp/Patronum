@@ -41,8 +41,8 @@ Patronum::ServicePrivate::ServicePrivate(IService *service, QObject *parent):
 #endif
 
     _parser = new Parser();
-    QObject::connect(_socket, &LocalSocket::sigReceve,
-                     this, &ServicePrivate::handleReceve);
+    QObject::connect(_socket, &LocalSocket::sigReceive,
+                     this, &ServicePrivate::handleReceive);
 
     signal(SIGINT, &handleTermSignals);
     signal(SIGTERM, &handleTermSignals);
@@ -66,7 +66,7 @@ bool ServicePrivate::sendCmdResult(const QVariantMap &result) {
         return false;
     }
 
-    return _socket->send(_parser->createPackage(Command::FeatureResponce, result));
+    return _socket->send(_parser->createPackage(Command::FeatureResponse, result));
 }
 
 bool ServicePrivate::sendCloseConnection() {
@@ -191,7 +191,7 @@ QString ServicePrivate::getServiceLauncher() const {
     return QuasarAppUtils::Params::getCurrentExecutable();
 }
 
-void ServicePrivate::handleReceve(QByteArray data) {
+void ServicePrivate::handleReceive(QByteArray data) {
 
     QList<Package> packages;
     if (!_parser->parse(data, packages)) {
@@ -208,12 +208,12 @@ void ServicePrivate::handleReceve(QByteArray data) {
         if (!_service) {
 
             qCritical() << "System error, service is not inited!";
-            return;;
+            return;
         }
 
         if (!_socket->isValid()) {
 
-            qCritical() << "scoket is closed!";
+            qCritical() << "socket is closed!";
             return;
         }
 

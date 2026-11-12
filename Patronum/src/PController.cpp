@@ -108,7 +108,7 @@ bool Controller::sendStop() {
 
 QuasarAppUtils::Help::Section Controller::help() const {
     QuasarAppUtils::Help::Section help {
-        {QObject::tr("Options that available after start"), {
+        {QObject::tr("Options that are available after start"), {
                 {"stop",            QObject::tr("Stop a service")},
                 {"pause",           QObject::tr("Pause a service")},
                 {"resume",          QObject::tr("Resume a service")}

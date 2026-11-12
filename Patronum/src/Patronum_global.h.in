@@ -37,9 +37,9 @@ enum PatronumError {
     TimeOutError,
     /// Internal error of the work of the Patronum library. Contact the developers and provide them with an error report. https://github.com/QuasarApp/Patronum/issues
     SystemError,
-    /// This error ocured when user srvice failed to start.
+    /// This error occurred when user srvice failed to start.
     FailedToStart,
-    /// This error ocured when service not supportded using platform.
+    /// This error occurred when service not supported using platform.
     UnsupportedPlatform
 
 };

@@ -27,14 +27,14 @@ public:
     /**
      * @brief install This method install service on host.
      * @param executable This is path to service executable.
-     * @param user This is user tah will run serveice. If this argument is empty the service will be use root user.
-     * @return true if service installed successfull
+     * @param user This is user that will run service. If this argument is empty the service will be use root user.
+     * @return true if service installed successful
      */
     virtual bool install(const QString& executable, const QString& user = DEFAULT_USER) = 0;
 
     /**
      * @brief uninstall This method remove service from autostart.
-     * @return trur if service removed successful
+     * @return true if service removed successful
      */
     virtual bool uninstall() = 0;
 
@@ -51,8 +51,8 @@ public:
     virtual bool disable() = 0;
 
     /**
-     * @brief isInstalled This method return true if service alredy installed.
-     * @return true if service alredy installed else flase.
+     * @brief isInstalled This method return true if service already installed.
+     * @return true if service already installed else false.
      */
     virtual bool isInstalled() const = 0;
 

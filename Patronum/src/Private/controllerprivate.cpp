@@ -27,8 +27,8 @@ ControllerPrivate::ControllerPrivate(IController *controller, QObject *parent):
     _controller = controller;
     _parser = new Parser();
 
-    QObject::connect(_socket, &LocalSocket::sigReceve,
-                     this, &ControllerPrivate::handleReceve);
+    QObject::connect(_socket, &LocalSocket::sigReceive,
+                     this, &ControllerPrivate::handleReceive);
 
 }
 
@@ -40,7 +40,7 @@ ControllerPrivate::~ControllerPrivate() {
 bool ControllerPrivate::sendFeaturesRequest() {
     if (!_socket->isValid()) {
 
-        qDebug() << "scoket is closed!";
+        qDebug() << "socket is closed!";
 
         _controller->handleError(PatronumError::ServiceUnavailable);
         return false;
@@ -52,7 +52,7 @@ bool ControllerPrivate::sendFeaturesRequest() {
 bool ControllerPrivate::sendCmd(const QHash<QString, Feature> &result) {
     if (!_socket->isValid()) {
 
-        qDebug() << "scoket is closed!";
+        qDebug() << "socket is closed!";
 
         _controller->handleError(PatronumError::ServiceUnavailable);
 
@@ -116,7 +116,7 @@ void ControllerPrivate::setEcho(bool echo) {
         _socket->setEcho(echo);
 }
 
-void ControllerPrivate::handleReceve(QByteArray data) {
+void ControllerPrivate::handleReceive(QByteArray data) {
 
     if (!_controller) {
         qCritical() << "System error, controller is not inited!";
@@ -135,7 +135,7 @@ void ControllerPrivate::handleReceve(QByteArray data) {
 
             _controller->handleError(PatronumError::InvalidPackage);
 
-            continue;;
+            continue;
         }
 
         switch (pkg.cmd()) {
@@ -159,14 +159,14 @@ void ControllerPrivate::handleReceve(QByteArray data) {
             break;
         }
 
-        case Command::FeatureResponce: {
+        case Command::FeatureResponse: {
 
             QDataStream stream(pkg.data());
 
 
-            QVariantMap responce;
-            stream >> responce;
-            _controller->handleResponce(responce);
+            QVariantMap response;
+            stream >> response;
+            _controller->handleResponse(response);
 
             break;
 

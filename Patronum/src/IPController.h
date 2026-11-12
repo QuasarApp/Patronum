@@ -27,23 +27,23 @@ public:
     virtual ~IController() = default;
 
     /**
-     * @brief handleFeatures This method should be handle all Command::Features requests.
+     * @brief handleFeatures This method should be handled all Command::Features requests.
      *  This method will invoked when controller receive commands list for execute (features) from controller or terminal.
      * @param features This is list of the requests (@a features)
      */
     virtual void handleFeatures(const QList<Feature>& features) = 0;
 
     /**
-     * @brief handleResponse This method should be handle all responses of the service.
+     * @brief handleResponse This method should be handled all responses of the service.
      *  This method will invoked when controller receive response from service.
      * @param response This is response message.
      */
     virtual void handleResponse(const QVariantMap& response) = 0;
 
     /**
-     * @brief handleError This method should be handle all error messages.
-     * This method will invoked when a controlee receive a error response from a service.
-     * @param errorCode This is code of a error.
+     * @brief handleError This method should be handled all error messages.
+     * This method will invoked when a controller receive an error response from a service.
+     * @param errorCode This is code of an error.
      */
     virtual void handleError(PatronumError errorCode) = 0;
 

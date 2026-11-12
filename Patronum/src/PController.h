@@ -22,7 +22,7 @@ class ControllerPrivate;
  * ### How to use :
  * - create QCoreApplication object
  * - just inherit from the Service Controller and override the methods you need.
- * - So, invoke the send method, and if you need to get a response from your service then invoke a waitForResponce method.
+ * - So, invoke the send method, and if you need to get a response from your service then invoke a waitForResponse method.
  * - or run application exec method.
  *
  * ### Example:
@@ -43,7 +43,7 @@ class ControllerPrivate;
     int main(int argc, char **argv) {
         QCoreApplication::setApplicationName("MyServiceName"); // <--
         QCoreApplication::setOrganizationName("MyCompany"); // <--
-        QCoreApplcication app
+        QCoreApplication app
         MyControllerApp controller;
         controller.send(argc, argv);
         return app.exec();
@@ -66,30 +66,30 @@ public:
      * @brief send This method send request to service.
      * @param argc This is count of arguments.
      * @param argv This is arguments list.
-     * @return true if all sendet successful.
+     * @return true if all sent successful.
      */
     bool send(int argc, char **argv);
 
     /**
      * @brief send - This method send request to service.
      * @warning Invoke this method if you invoked QuasarAppUtils::Params::parse() before invoke this method else use send(int argc, char **argv).
-     * @return true if all sendet successful.
+     * @return true if all sent successful.
      */
     bool send();
 
     /**
      * @brief sendStop This method send stop command to service;
-     * @return trie if command sendet successfull
+     * @return true if command sent successfully
      */
     bool sendStop();
 
     /**
      * @brief help This method return help of the Controller.
-     * @return Available otions list.
+     * @return Available options list.
      */
     QuasarAppUtils::Help::Section help() const;
 
-    // IControler interface
+    // IController interface
 protected:
 
     /**
@@ -107,15 +107,15 @@ protected:
     void handleFeatures(const QList<Feature> &features) override;
 
     /**
-     * @brief handleResponce - Override this method if you want create a custom reaction of get responce from service.
+     * @brief handleResponse - Override this method if you want create a custom reaction of get responce from service.
      * Default inplementation print responce to console.
-     * @param responce - Responce from service.
+     * @param responce - Response from service.
      */
-    void handleResponce(const QVariantMap &responce) override;
+    void handleResponse(const QVariantMap &responce) override;
 
     /**
-     * @brief finished This method invoked when controler receive from service the Command::CloseConnection command
-     * This implementation invoke he exit method of the QCoreApplication and finished application.
+     * @brief finished This method invoked when controller receive from service the Command::CloseConnection command
+     * This implementation invoke the exit method of the QCoreApplication and finished application.
      *  If do not want to stop application after receive Command::CloseConnection then override this method.
      */
     void finished() override;

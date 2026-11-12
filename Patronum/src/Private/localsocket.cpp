@@ -31,7 +31,7 @@ LocalSocket::~LocalSocket() {
     }
 }
 
-bool LocalSocket::registerSokcet(QLocalSocket *socket) {
+bool LocalSocket::registerSocket(QLocalSocket *socket) {
     m_socket = socket;
 
     if (m_socket->parent() != this)
@@ -68,7 +68,7 @@ bool LocalSocket::listen() {
         m_server = new QLocalServer(this);
 
         connect(m_server, &QLocalServer::newConnection,
-                this, &LocalSocket::handleIncomming);
+                this, &LocalSocket::handleIncoming);
     }
 
     if (!m_server->removeServer(m_target)) {
@@ -87,11 +87,10 @@ bool LocalSocket::connectToTarget() {
 
     if (!m_socket) {
         m_socket = new QLocalSocket(this);
-        if (!registerSokcet(m_socket)) {
+        if (!registerSocket(m_socket)) {
 
-            qCritical() << "registerSokcet is failed!";
-            return false;
-        }
+        qCritical() << "registerSocket is failed!";
+        return false;
     }
 
     m_socket->connectToServer(m_target);
@@ -108,7 +107,7 @@ void LocalSocket::handleStateChanged(QLocalSocket::LocalSocketState socketState)
     if (socketState == QLocalSocket::LocalSocketState::ConnectedState) {
         m_state = State::Connected;
     } else {
-        m_state = State::Disconeccted;
+        m_state = State::Disconnected;
     }
 
     emit sigStateChanged(m_state);
@@ -116,17 +115,17 @@ void LocalSocket::handleStateChanged(QLocalSocket::LocalSocketState socketState)
 
 void LocalSocket::handleReadyRead() {
     auto data = m_socket->readAll();
-    emit sigReceve(data);
+    emit sigReceive(data);
 }
 
-void LocalSocket::handleIncomming() {
+void LocalSocket::handleIncoming() {
     if (m_socket) {
         m_socket->close();
         m_socket->deleteLater();
         m_socket = nullptr;
     }
 
-    registerSokcet(m_server->nextPendingConnection());
+    registerSocket(m_server->nextPendingConnection());
 }
 
 void LocalSocket::handleSocketError(QLocalSocket::LocalSocketError) {

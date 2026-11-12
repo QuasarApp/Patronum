@@ -55,7 +55,7 @@ bool InstallerSystemD::install(const QString &executable, const QString& user) {
     else
         service = service.arg(user);
 
-    templ.setFileName(absaluteServicePath());
+    templ.setFileName(absoluteServicePath());
 
     if (!templ.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
 
@@ -84,9 +84,9 @@ bool InstallerSystemD::uninstall() {
 
     QString name = PCommon::instance()->getServiceName();
 
-    if (!(disable() && QFile::remove(absaluteServicePath()))) {
+    if (!(disable() && QFile::remove(absoluteServicePath()))) {
 
-        qCritical() << "Cannot uninstall " << name << ". Cannot remove " << absaluteServicePath() << ". Check permissions.";
+        qCritical() << "Cannot uninstall " << name << ". Cannot remove " << absoluteServicePath() << ". Check permissions.";
         return false;
     }
     return true;
@@ -123,10 +123,10 @@ bool InstallerSystemD::disable() {
 }
 
 bool InstallerSystemD::isInstalled() const {
-    return QFile::exists(absaluteServicePath());
+    return QFile::exists(absoluteServicePath());
 }
 
-QString InstallerSystemD::absaluteServicePath() const {
+QString InstallerSystemD::absoluteServicePath() const {
     return SYSTEMD_PATH + PCommon::instance()->getServiceName() + ".service";
 }
 
